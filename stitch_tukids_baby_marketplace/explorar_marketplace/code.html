@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TuKids Explore Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fff8f6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#e7c269",
+                      "on-primary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "outline": "#89726e",
+                      "primary-fixed-dim": "#ffb4a8",
+                      "on-primary-fixed": "#410100",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#f1dedb",
+                      "background": "#fff8f6",
+                      "tertiary": "#765b06",
+                      "tertiary-fixed": "#ffdf96",
+                      "on-tertiary-container": "#513d00",
+                      "primary-container": "#ff8c7a",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#7cd7c6",
+                      "surface-container-high": "#f7e4e1",
+                      "primary": "#9e4134",
+                      "secondary": "#006b5e",
+                      "surface": "#fff8f6",
+                      "on-background": "#231918",
+                      "inverse-primary": "#ffb4a8",
+                      "on-primary-container": "#762419",
+                      "secondary-fixed": "#98f3e1",
+                      "on-secondary-fixed-variant": "#005046",
+                      "inverse-on-surface": "#ffedea",
+                      "primary-fixed": "#ffdad4",
+                      "inverse-surface": "#392e2c",
+                      "on-tertiary-fixed": "#251a00",
+                      "surface-tint": "#9e4134",
+                      "surface-bright": "#fff8f6",
+                      "on-primary-fixed-variant": "#7e2a1f",
+                      "outline-variant": "#dcc0bc",
+                      "on-error-container": "#93000a",
+                      "tertiary-container": "#cba852",
+                      "surface-container-low": "#fff0ee",
+                      "on-surface-variant": "#56423f",
+                      "on-tertiary-fixed-variant": "#594400",
+                      "surface-variant": "#f1dedb",
+                      "on-secondary-container": "#006f62",
+                      "secondary-container": "#95f0df",
+                      "on-secondary-fixed": "#00201b",
+                      "surface-container": "#fdeae7",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#231918",
+                      "surface-dim": "#e8d6d3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "gutter": "24px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "sm": "12px",
+                      "container-max": "1280px",
+                      "lg": "48px",
+                      "xl": "80px"
+              },
+              "fontFamily": {
+                      "h1": ["Plus Jakarta Sans"],
+                      "caption": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "h3": ["Plus Jakarta Sans"],
+                      "label-bold": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "h2": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-lg shadow-sm shadow-[#FF8C7A]/5 h-16 flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden flex items-center justify-center">
+<img alt="Mascot" data-alt="Cute baby toucan mascot 'Tuki' smiling with a soft pastel orange beak and colorful feathers on a clean white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDFAxp3TVWUi-MyvV2ZEaPWLJ_9D9vScEBLsGOreIml4si6Ela1fpRNn8UvRGRkIcMxsluuZIhWJJIkaKRvkG0Wba7X8GpKBdCKQ_ORRLchxYt_AGOeVGNVROuLLVWRmLmAmgMMExYcJEoPA8GrcC_WJckA0SGzQISynvTTUCtprtvnDBcVCuEJdgw1aXcH705Tc5DflGjqXOzXqlZig_gm-CGEVBSl1UNWjyacfJK0PApb4SWcpOMw6z8Zw0V-AB7VkN0qQ5nc5vK"/>
+</div>
+<span class="text-2xl font-extrabold text-[#FF8C7A] font-h3 tracking-tight">TuKids</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container"></div>
+</div>
+</nav>
+<main class="pt-24 pb-32 px-6 max-w-container-max mx-auto">
+<!-- Header & Search -->
+<header class="mb-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="space-y-2">
+<h1 class="font-h1 text-h1 text-on-surface">Explore items for your little ones</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Discover a curated world of premium baby essentials from trusted brands and the TuKids parent community.</p>
+</div>
+</div>
+<!-- Marketplace Toggle -->
+<div class="mt-8 flex bg-surface-container-low p-1.5 rounded-full w-fit">
+<button class="px-6 py-2.5 rounded-full font-label-bold text-label-bold bg-white shadow-sm text-primary transition-all">Official Stores</button>
+<button class="px-6 py-2.5 rounded-full font-label-bold text-label-bold text-on-surface-variant hover:text-on-surface transition-all">Parents to Parents</button>
+</div>
+<!-- Search and Filter Bar -->
+<div class="mt-8 flex flex-col md:flex-row gap-4">
+<div class="relative flex-1 group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-white border-none rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] focus:ring-2 focus:ring-secondary transition-all placeholder:text-outline/60" placeholder="Search for cribs, strollers, toys..." type="text"/>
+</div>
+<button class="flex items-center justify-center gap-2 px-8 py-4 bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] font-label-bold text-label-bold hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+                    Filters
+                </button>
+</div>
+<!-- Quick Filters -->
+<div class="mt-6 flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+<button class="whitespace-nowrap px-5 py-2.5 bg-white rounded-full border border-outline-variant font-body-sm text-body-sm hover:border-primary transition-colors">Condition: New</button>
+<button class="whitespace-nowrap px-5 py-2.5 bg-white rounded-full border border-outline-variant font-body-sm text-body-sm hover:border-primary transition-colors">Category: Nursery</button>
+<button class="whitespace-nowrap px-5 py-2.5 bg-white rounded-full border border-outline-variant font-body-sm text-body-sm hover:border-primary transition-colors">Age: 0-6 Months</button>
+<button class="whitespace-nowrap px-5 py-2.5 bg-white rounded-full border border-outline-variant font-body-sm text-body-sm hover:border-primary transition-colors">Price: Under $500</button>
+<button class="whitespace-nowrap px-5 py-2.5 bg-white rounded-full border border-outline-variant font-body-sm text-body-sm hover:border-primary transition-colors">Delivery: Next Day</button>
+</div>
+</header>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-gutter">
+<!-- Product Card 1 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Nursery Crib" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Modern white minimalist baby crib with wooden legs in a sunlit nursery with soft neutral tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfymnVtmkyzmOo7NMHyVpZAlty3W-IYSNJSpJ4I1kopvaWhf__0ISV-yslfauTHasBNbtV24mmRVBagHj5sYkPW_d8XQ10gPbgSxffzqxaWqHt_sMBEA2S4zzRLn0QOBjbj41V8DGcpJ0IdPTE5r8td08CU1u-bh4CVZZz_UXWTBBGeASdW8aZ_6BeIhZpxk44rOVC5KU8-YoqtD3nMlW_KYgwqnG4MX3SHn2wsfm2fT8HNA82T-xqXDSVEswfCuP_avYKwmGYi1y8"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+<button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Luna Convertible Crib</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Modern Nursery Co.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$420.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.9</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Organic Diapers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Stack of eco-friendly organic baby diapers on a soft wooden table with a sprig of lavender beside it" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi7sLyF0xSLAMmUj7UyeGDa_R_YaHTqhWDx4xqi_eOHX-NA2QZIWDQWgy6wnlyvgHiGCyAc0EvYs0nZqlVwoeELKS3jrkjPwaHDM7Fbdkz5ewXaW7__CDOo2Kh86lktYLeZejiT5ELGF0zoXjSXIBcA4rA73uL1j2C4-Bf06qEAek4iDcDlirRibxqNXOXJzW8Qjg8gRPfBlLG5SspUp34mme11uD9H3tny5XBQUBdbfV31gKJSt0PZRMe5g5YcNB1Hmq3ebEmZubR"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Eco-Soft Bamboo Diapers</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">PureBaby Store</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$24.99</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.8</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Wooden Stroller" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Premium lightweight baby stroller in sage green parked on a clean paved street with soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3EmKDr0c95C8h-r6DizbE-DLgGTpsQGfEmJIBxcNROCfyFzbpdW8TEVmh6nLPZnUiyJCwPzOYX8p7JZTSY1R7bzBzw8V2n1pdc4vwhLzqFE3aoFd5xzAbnEl19uOQRoXEJsR2FafIsoX_zVnbc463VG4iefpTTMeW5cUBDsFv3GyPwEU6XTlVC2AqnkFh5n2yOP0goVJGdI3_GVDBEXWISMYmFttg8vRhOsKjGrNJiZoNSu1ViDukDlJgaPekwKxVtxoBfet-GZ3I"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-secondary-container/90 backdrop-blur-md rounded-full text-caption font-label-bold text-on-secondary-container">Used-Mint</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">AeroGlide V2 Stroller</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Sarah's Pre-loved</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$185.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">5.0</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Wooden Toys" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Handcrafted wooden stacking rings in pastel colors on a beige rug, soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjOFZQwTQejRv7k0XizMmIdsjIgrqqpY7jCWGjrp-jlNXZhxxxVpokTHA2EICV-QT8PSA1WW7N_yxFQgdt5AgHLlDv4TnBA8l0Nmv0fHXC-0O_TIdMol0hwgJlUdcuOQx3ZPzydj0s0qHp60QJzLTY0erzLBVYN_6VRaaG0Z8IsmPFUQGHJaaaFngL-MVtYlq7k77YCf6Z3VGa3ZTl2PSzCGeTTobnrz8MRsiDTp3EM5HCHFmQxAEkz4USH8Dk33BZlvZjQ5yKbwst"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Montessori Stacker</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Little Learners</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$32.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.7</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 5 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Baby Monitor" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Sleek white high-tech baby monitor camera sitting on a nightstand with a blurry crib in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyV_kkTBspD6-rj27up1lWc09oGY5ChGFrFrO3hyb_ViY47Fz91m3F-pWNpPDQM4BUSlXDyjEdtvTNpEfwsNWQL6HHkTQlgyiK623Vzpu4XAUznuxgpUcmRuJBWltrPCdr3QyOUrc0u5W1FQUb4aAfv5AdHeuZrHt1Ezdi3bdLkTrrOUeHqbkavnG451nIKVKgcfAodun5Y_50lMNChm8LGWQBW-vnB2OgsCcc4kHSnN4t8QqJhQQQyQaidsgj2MEw7v84s3TgN018"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">SmartEyes HD Monitor</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">TechParent Official</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$159.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.9</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 6 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Nursing Pillow" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="U-shaped nursing pillow with a delicate floral pattern resting on a white armchair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAW8E7xawqm003DiWC_Ow0R4_ORN6q9Q3H-6Xp52pygHs-DVy4NAl-tjyP2I_WgWYUkcFVDRVWuv5rucHuXMjpil9_x1HKX5ZvgoIVj77owhqz1jS-OQR8gSCjWCNTEyNiZaxAOrLKlrWolQk4KrudVvsRtb5IIUG1B6BsO4CVq5LRd9lmDmU3bjSez3ogZxFj40g6_k8ZgkOk3bMA5GgNO9RcPtTgiiYwiooKPRnPAJDF9u0BZIkS19sQP4zNYYglwqQIQQQ64LRU"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-surface-container-highest/90 backdrop-blur-md rounded-full text-caption font-label-bold text-on-surface-variant">Used-Good</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Comfort-Plus Nursing Pillow</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Mike &amp; Emma</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$18.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.5</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 7 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Feeding Set" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Silicone baby feeding set with bowl, spoon, and bib in a soft dusty rose color on a marble surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfR5tB6ri3dG6-9zurUqBFZWzfXNYXN4nIAtrdeXb2vLpgupT50kEY_dRMAGopAP9-iBLxwxbF2iyUiNCeCCbN7LyxAwjlmX1hi984htWl3X0iC9tES-zN0E96b3D9rTJVA-jQrkKpLWjYS04TFFZwU3wSAwUrTh3nYsO37WIwUmXdkJn5cw3FP_GrDhgUhU0JF2hjgL6G9Rc5Dr-cPE651vW2SU70KgS7W17J9Tghqz4QTrjA_NCuBnznotpHeCO4f5hYoLTFVyJz"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">BPA-Free Silicone Set</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Tots Diner</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$22.50</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.8</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 8 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Baby Carrier" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Ergonomic dark grey baby carrier hanging against a neutral wall with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYz9nwual3xhOzC0Ze179VPy-zKVRwc_d6KabrfK1QsLvGI4bl3sHfS2CQjuAXpESZjle6kyeC8DSSwTAW_1nTQD2FkrmYtt_UqmXXNXtw4lQ9gCl9wKnkvAD_AzrxuKpoyFK3DIpvwVvKXzNmkDKahHrPueWJYFgEbhp0xMTUwKkRtC0_YubvRaCOQXKQDtl2kUE9vi7Fs8Zmyr1qX-Uh81CYLsTgTs3O3RUoXUcMzJqGpaSfCl8rdMoYdAV_N7Yl9YNb_zov_cQO"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Omni 360 Carrier</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Adventures with Baby</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$175.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.9</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 9 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Bath Tub" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Collapsible white and mint baby bath tub sitting in a modern airy bathroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJg04dZgDgMQPI8LRqbZjBtXbGQmSEa6ZOlkBaAEmKZTSiLrxa8_vI6nvlSKYU29cbPmFJ05-FLA5U97cm1C6mK9YI-fNpVMir8IHnNudqrcjbn8EMxKjMLfeOlqRBnRS3ZUPeTWcUOT6SL8c9rRyXP3kDg0bGl_QY7KLxAdStPLRMZMHCOYMvh-mmvu-q8-vUCGPFASDSdGGMdxeITzQiyJHd8GlsrBJ4lxFwC_-Rpv3j28WQo1TRu87pcd328WMfBQk0x-FUQA8F"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-caption font-label-bold text-primary">New</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Foldable Bath Basin</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">Bubbles &amp; Co.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$45.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">4.6</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Product Card 10 -->
+<article class="bg-white rounded-lg p-3 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(255,140,122,0.1)] transition-all group flex flex-col h-full">
+<div class="relative aspect-square rounded-lg overflow-hidden mb-4 bg-surface-container-low">
+<img alt="Baby Bedding" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Set of soft cotton baby bedding with tiny cloud prints, folded neatly on a light wood surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADNhjnzM7joDo6nbxA85zbOOjJ7FFjIuOyIsAwbagcPlwux0r757gLbVAkJCMx2RW-QUkgTtXXU3vfMWPtQprgYiEDD550sblCcvXTJXWzoOZiLHKxz575uLsEb__WH2hzk1BVm57bgVL9b2d7vTzb-0V0oMs2gio1jAl4VDKkwcZopdEh1x9iAJpteXl0K5Gsl_cRtQswVdhDoqDNEjHFSrPM-8tglOQw3q85lNlv8_gX4wvmUt5w6vlpkw9f4NQ-J4IwE9km1wH3"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-secondary-container/90 backdrop-blur-md rounded-full text-caption font-label-bold text-on-secondary-container">Used-Mint</div>
+</div>
+<div class="flex-1 flex flex-col">
+<h3 class="font-h3 text-body-md text-on-surface line-clamp-1 mb-1">Cloud Cotton Bedding Set</h3>
+<p class="font-body-sm text-caption text-on-surface-variant mb-2">The Nest Collective</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-h3 text-body-lg text-primary">$35.00</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption font-label-bold">5.0</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Load More Section -->
+<div class="mt-xl flex flex-col items-center gap-6">
+<div class="w-16 h-16 rounded-full bg-[#FF8C7A]/5 flex items-center justify-center">
+<img alt="Tuki" data-alt="Cute toucan mascot flapping its wings joyfully" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvpzUzPpqZEHmkpbxJEEjPgyp50LsVgWuXDcEih_kn3zGRVUSXwUAkOGyj3AA_6ekHehjEcItFMaXrQTy77B56MMm7out6P-mvoYr1VmAOLlpBVuErVgJGJqg7T7QaNMeYzxKDZaARHwZmnMIq9xlFzM_i4l9F6kBYlvPjxgaqV0W7nS-cvB4G5H_Ns_nRc5-0ah3lCqlvtpWN9uFzvlBIayITVan1oyMNKC4XvhGjZWMu2pKf5gaFRmz8BHRzXkDJ7K8vgXNAnrWQ"/>
+</div>
+<p class="font-body-md text-on-surface-variant text-center max-w-sm">Tuki found more treasures! Keep exploring for more baby essentials.</p>
+<button class="px-10 py-4 bg-primary text-white rounded-full font-label-bold text-label-bold hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-primary/20">View More Products</button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white z-50 rounded-t-[32px] shadow-[0_-10px_40px_rgba(255,140,122,0.08)]">
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold hover:bg-slate-50 rounded-full py-1 px-4 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#FF8C7A] bg-[#FF8C7A]/10 rounded-full px-4 py-1 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold active:scale-90 duration-300 ease-out" href="#">
+<span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span>Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold hover:bg-slate-50 rounded-full py-1 px-4 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span>Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold hover:bg-slate-50 rounded-full py-1 px-4 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span>Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold hover:bg-slate-50 rounded-full py-1 px-4 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</body></html>

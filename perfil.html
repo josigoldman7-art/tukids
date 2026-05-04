@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Perfil — TuKids</title>
+  <meta name="description" content="Dashboard de vendedor TuKids. Métricas, ventas, favoritos y gestión de productos."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .profile-hero {
+      background: linear-gradient(135deg, var(--coral-bg) 0%, var(--mint-bg) 100%);
+      padding: 48px 0 80px; margin-bottom: -56px;
+    }
+    [data-theme="dark"] .profile-hero { background: linear-gradient(135deg,#2a1e1c 0%, #1a2624 100%); }
+    .profile-card {
+      background: var(--white); border-radius: var(--r-xl);
+      box-shadow: var(--shadow-lg); padding: 28px; position: relative; z-index: 2;
+    }
+    .profile-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral), var(--coral-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 800; color: #fff;
+      font-family: var(--font-title); flex-shrink: 0;
+      border: 4px solid var(--white); box-shadow: var(--shadow-md);
+    }
+    .tabs-bar {
+      display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px;
+      scrollbar-width: none; border-bottom: 2px solid var(--fog);
+      margin-bottom: 28px;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 18px; border-radius: var(--r-md) var(--r-md) 0 0;
+      font-size: 0.875rem; font-weight: 600; cursor: pointer;
+      transition: var(--transition); white-space: nowrap;
+      font-family: var(--font-title); color: var(--gray-mid);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      background: none; border-top: none; border-left: none; border-right: none;
+    }
+    .tab-btn.active { color: var(--coral); border-bottom-color: var(--coral); }
+    .tab-btn:hover { color: var(--coral-dark); }
+    .tab-content { display: none; animation: fadeUp 0.3s ease forwards; }
+    .tab-content.active { display: block; }
+    .metric-card {
+      background: var(--white); border-radius: var(--r-xl);
+      padding: 20px; box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+    }
+    .metric-card::before {
+      content: ''; position: absolute; bottom: -20px; right: -20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      opacity: 0.08;
+    }
+    .metric-icon {
+      width: 42px; height: 42px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .metric-val { font-family: var(--font-title); font-size: 1.6rem; font-weight: 800; color: var(--carbon); }
+    .metric-label { font-size: 0.83rem; color: var(--gray-mid); }
+    .metric-delta { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .delta-up   { color: var(--mint-dark); }
+    .delta-down { color: var(--error); }
+    .chart-wrap { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-sm); }
+    .chart-month-labels { display: flex; gap: 8px; font-size: 0.72rem; color: var(--gray-mid); padding-top: 8px; }
+    .chart-month-labels span { flex: 1; text-align: center; }
+    .product-list-item {
+      display: flex; align-items: center; gap: 14px; padding: 16px;
+      background: var(--white); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+      transition: var(--transition); cursor: pointer;
+    }
+    .product-list-item:hover { box-shadow: var(--shadow-md); transform: translateX(4px); }
+    .product-thumb {
+      width: 64px; height: 64px; border-radius: var(--r-md);
+      object-fit: cover; flex-shrink: 0; background: var(--fog);
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+    }
+    .order-item {
+      display: flex; align-items: center; gap: 14px; padding: 16px;
+      background: var(--white); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+    }
+    .tracking-dot {
+      width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+    }
+    .tracking-dot.done { background: var(--mint); }
+    .tracking-dot.active { background: var(--coral); animation: pulse-ring 1.5s infinite; }
+    .tracking-dot.pending { background: var(--fog); border: 2px solid var(--gray-mid); }
+    .review-card { background: var(--white); border-radius: var(--r-xl); padding: 20px; box-shadow: var(--shadow-sm); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div style="flex:1;"></div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="explorar.html" class="nav-link">Explorar</a>
+      <a href="publicar.html" class="nav-link">Vender</a>
+      <a href="perfil.html" class="nav-link active">Mi perfil</a>
+    
+      <a href="donaciones.html" class="nav-link" style="color:var(--coral);font-weight:700;">❤️ Donaciones</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
+      <a href="publicar.html" class="btn btn-primary btn-sm">+ Publicar</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="profile-hero">
+  <div class="container">
+    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div class="profile-avatar">M</div>
+      <div style="flex:1;">
+        <div style="font-size:0.83rem;color:var(--coral);font-weight:600;font-family:var(--font-title);margin-bottom:4px;">🐦 ¡Hola, buenas!</div>
+        <h1 style="font-size:1.8rem;margin-bottom:6px;color:var(--carbon);">María González</h1>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span style="font-weight:700;font-family:var(--font-title);color:var(--carbon);">4.9</span>
+            <span style="font-size:0.83rem;color:var(--gray-mid);">· 23 ventas</span>
+          </div>
+          <span class="level-badge level-silver">🥈 Nivel Plata</span>
+          <span style="font-size:0.83rem;color:var(--gray-mid);">Miembro desde Ene 2025</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-shrink:0;">
+        <button class="btn btn-outline btn-sm" onclick="showToast('Próximamente','Función en desarrollo','yellow')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar perfil
+        </button>
+        <button class="btn btn-ghost btn-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Config
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="position:relative;z-index:2;padding-top:0;padding-bottom:80px;">
+  <!-- Tabs navigation -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="showTab('metrics',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Métricas
+    </button>
+    <button class="tab-btn" onclick="showTab('products',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Mis productos
+    </button>
+    <button class="tab-btn" onclick="showTab('orders',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m-1.5 4H21l-3 8H9l-3-7.5"/></svg>
+      Pedidos
+    </button>
+    <button class="tab-btn" onclick="showTab('income',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Ingresos
+    </button>
+    <button class="tab-btn" onclick="showTab('tracking',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Tracking
+    </button>
+    <button class="tab-btn" onclick="showTab('reviews',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Reseñas
+    </button>
+    <button class="tab-btn" onclick="showTab('favorites',this)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      Favoritos
+    </button>
+  </div>
+
+  <!-- ── METRICS TAB ── -->
+  <div class="tab-content active" id="tab-metrics">
+    <!-- Metric cards -->
+    <div class="grid grid-4 gap-4" style="margin-bottom:24px;">
+      <div class="metric-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="metric-icon" style="background:var(--coral-bg);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <span class="metric-delta delta-up">▲ +23%</span>
+        </div>
+        <div class="metric-val">$340K</div>
+        <div class="metric-label">Ingresos este mes</div>
+      </div>
+      <div class="metric-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="metric-icon" style="background:var(--mint-bg);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/></svg>
+          </div>
+          <span class="metric-delta delta-up">▲ +8</span>
+        </div>
+        <div class="metric-val">23</div>
+        <div class="metric-label">Ventas totales</div>
+      </div>
+      <div class="metric-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="metric-icon" style="background:var(--yellow-bg);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <span class="metric-delta delta-up">▲ +18%</span>
+        </div>
+        <div class="metric-val">1,247</div>
+        <div class="metric-label">Vistas totales</div>
+      </div>
+      <div class="metric-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="metric-icon" style="background:var(--lilac-bg);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lilac-dark)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <span class="metric-delta delta-up">▲ +34</span>
+        </div>
+        <div class="metric-val">187</div>
+        <div class="metric-label">Guardados totales</div>
+      </div>
+    </div>
+
+    <!-- Chart + Top Product -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;flex-wrap:wrap;">
+      <div class="chart-wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <h4>Ventas por mes</h4>
+          <select class="sort-select" style="height:36px;font-size:0.83rem;">
+            <option>Últimos 6 meses</option>
+            <option>Este año</option>
+          </select>
+        </div>
+        <div class="chart-bar" id="salesChart">
+          <div class="bar-item" style="height:40%;"></div>
+          <div class="bar-item" style="height:55%;"></div>
+          <div class="bar-item" style="height:35%;"></div>
+          <div class="bar-item" style="height:70%;"></div>
+          <div class="bar-item" style="height:60%;"></div>
+          <div class="bar-item" style="height:90%;background:linear-gradient(to top,var(--coral),var(--yellow));"></div>
+        </div>
+        <div class="chart-month-labels">
+          <span>Nov</span><span>Dic</span><span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="metric-card" style="background:linear-gradient(135deg,var(--coral-bg),var(--yellow-bg));">
+          <div style="font-size:0.78rem;font-weight:700;font-family:var(--font-title);color:var(--coral);">🔥 PRODUCTO MÁS VISTO</div>
+          <div style="font-family:var(--font-title);font-weight:700;font-size:1rem;color:var(--carbon);margin-top:8px;">Coche Chicco Urban</div>
+          <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:6px;">👁️ 234 vistas</div>
+          <div style="font-size:0.83rem;color:var(--gray-mid);">❤️ 47 guardados</div>
+          <div style="font-size:0.83rem;color:var(--gray-mid);">💬 3 preguntas</div>
+        </div>
+        <div class="metric-card">
+          <div style="font-size:0.78rem;font-weight:700;font-family:var(--font-title);color:var(--mint-dark);">📈 TASA DE CONVERSIÓN</div>
+          <div class="metric-val" style="font-size:1.4rem;margin-top:8px;">18.7%</div>
+          <div style="width:100%;height:6px;background:var(--fog);border-radius:9999px;margin-top:8px;overflow:hidden;">
+            <div style="height:100%;width:18.7%;background:var(--mint);border-radius:9999px;"></div>
+          </div>
+          <div style="font-size:0.78rem;color:var(--gray-mid);margin-top:6px;">Promedio plataforma: 12%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PRODUCTS TAB ── -->
+  <div class="tab-content" id="tab-products">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h4>Mis publicaciones (5)</h4>
+      <a href="publicar.html" class="btn btn-primary btn-sm">+ Nuevo producto</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="product-list-item">
+        <div class="product-thumb"><img src="images/stroller.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-md);"/></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:var(--font-title);font-weight:600;font-size:0.9rem;color:var(--carbon);">Coche Chicco Urban Plus</div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);">$850.000 · Nuevo</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:var(--gray-mid);">
+          <div>👁️ 234 vistas</div><div>❤️ 47 favs</div>
+        </div>
+        <span class="badge badge-new" style="margin-left:8px;">Activo</span>
+      </div>
+      <div class="product-list-item">
+        <div class="product-thumb"><img src="images/clothes.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-md);"/></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:var(--font-title);font-weight:600;font-size:0.9rem;color:var(--carbon);">Set bodies algodón 0-3m</div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);">$78.000 · Nuevo</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:var(--gray-mid);">
+          <div>👁️ 89 vistas</div><div>❤️ 23 favs</div>
+        </div>
+        <span class="badge badge-new" style="margin-left:8px;">Activo</span>
+      </div>
+      <div class="product-list-item">
+        <div class="product-thumb"><img src="images/toys.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-md);"/></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:var(--font-title);font-weight:600;font-size:0.9rem;color:var(--carbon);">Kit sensorial bebé 0-12m</div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);">$145.000 · Nuevo</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:var(--gray-mid);">
+          <div>👁️ 156 vistas</div><div>❤️ 38 favs</div>
+        </div>
+        <span class="badge badge-new" style="margin-left:8px;">Activo</span>
+      </div>
+      <div class="product-list-item" style="opacity:0.65;">
+        <div class="product-thumb" style="font-size:1.8rem;">🛏️</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:var(--font-title);font-weight:600;font-size:0.9rem;color:var(--carbon);">Moisés portátil mimbre</div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);">$210.000 · 2da mano</div>
+        </div>
+        <div style="text-align:right;font-size:0.78rem;color:var(--gray-mid);">
+          <div>👁️ 412 vistas</div><div>❤️ 81 favs</div>
+        </div>
+        <span class="badge badge-used" style="margin-left:8px;">Vendido</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ORDERS TAB ── -->
+  <div class="tab-content" id="tab-orders">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h4>Mis pedidos</h4>
+      <div style="display:flex;gap:8px;">
+        <button class="chip active" onclick="filterOrders('buy',this)">Compras</button>
+        <button class="chip" onclick="filterOrders('sell',this)">Ventas</button>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card" style="padding:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-family:var(--font-title);font-weight:700;">Pedido #TK-2847</div>
+            <div style="font-size:0.82rem;color:var(--gray-mid);">Hace 2 horas</div>
+          </div>
+          <a href="tracking.html" class="btn btn-outline btn-sm">Ver tracking</a>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img src="images/stroller.png" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:var(--r-md);"/>
+          <div>
+            <div style="font-weight:600;font-size:0.9rem;">Coche Chicco Urban Plus</div>
+            <div style="font-size:0.82rem;color:var(--gray-mid);">$850.000 · 1 unidad</div>
+          </div>
+          <div style="margin-left:auto;">
+            <span class="badge" style="background:var(--sky-bg);color:var(--sky-dark);font-size:0.78rem;">🔵 En camino</span>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:20px;opacity:0.8;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div style="font-family:var(--font-title);font-weight:700;">Pedido #TK-2641</div>
+            <div style="font-size:0.82rem;color:var(--gray-mid);">Hace 3 días</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Reseña','¡Gracias por calificar!','mint')">Dejar reseña</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <img src="images/clothes.png" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:var(--r-md);"/>
+          <div>
+            <div style="font-weight:600;font-size:0.9rem;">Set bodies algodón 0-3m</div>
+            <div style="font-size:0.82rem;color:var(--gray-mid);">$78.000 · 2 unidades</div>
+          </div>
+          <div style="margin-left:auto;">
+            <span class="badge badge-new" style="font-size:0.78rem;">✓ Entregado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INCOME TAB ── -->
+  <div class="tab-content" id="tab-income">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
+      <div class="metric-card" style="background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));">
+        <div class="metric-icon" style="background:var(--mint);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="metric-val">$1.82M</div>
+        <div class="metric-label">Total histórico</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--coral-bg);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="metric-val text-coral">$340K</div>
+        <div class="metric-label">Este mes</div>
+        <div class="metric-delta delta-up">▲ +23% vs mes anterior</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon" style="background:var(--yellow-bg);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="metric-val">23</div>
+        <div class="metric-label">Compradores únicos</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <h4 style="margin-bottom:20px;">Ingresos mensuales</h4>
+      <div class="chart-bar">
+        <div class="bar-item" style="height:35%;background:linear-gradient(to top,var(--coral-light),var(--coral));"></div>
+        <div class="bar-item" style="height:55%;background:linear-gradient(to top,var(--coral-light),var(--coral));"></div>
+        <div class="bar-item" style="height:40%;background:linear-gradient(to top,var(--coral-light),var(--coral));"></div>
+        <div class="bar-item" style="height:65%;background:linear-gradient(to top,var(--coral-light),var(--coral));"></div>
+        <div class="bar-item" style="height:50%;background:linear-gradient(to top,var(--coral-light),var(--coral));"></div>
+        <div class="bar-item" style="height:85%;background:linear-gradient(to top,var(--yellow),var(--coral));"></div>
+      </div>
+      <div class="chart-month-labels">
+        <span>Nov<br/>$210K</span><span>Dic<br/>$318K</span><span>Ene<br/>$245K</span><span>Feb<br/>$392K</span><span>Mar<br/>$285K</span><span>Abr<br/>$340K</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TRACKING TAB ── -->
+  <div class="tab-content" id="tab-tracking">
+    <div style="margin-bottom:16px;">
+      <h4>Pedido en camino — #TK-2847</h4>
+      <p style="font-size:0.83rem;">Juan Carlos · Mensajero TuKids</p>
+    </div>
+    <!-- Map placeholder -->
+    <div class="map-placeholder" style="height:240px;margin-bottom:24px;border-radius:var(--r-xl);">
+      <div class="map-grid"></div>
+      <div style="position:absolute;z-index:2;text-align:center;">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;box-shadow:var(--shadow-coral);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div style="background:rgba(255,255,255,0.95);border-radius:var(--r-lg);padding:10px 16px;box-shadow:var(--shadow-md);">
+          <div style="font-family:var(--font-title);font-weight:700;font-size:0.95rem;">Juan Carlos</div>
+          <div style="font-size:0.78rem;color:var(--gray-mid);">⏱️ ETA: 4:15 PM · 2.3 km</div>
+        </div>
+      </div>
+    </div>
+    <!-- Timeline -->
+    <div class="card" style="padding:24px;">
+      <h5 style="margin-bottom:20px;">Estado del pedido</h5>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:20px;border-left:2px solid var(--mint);padding-left:24px;position:relative;">
+          <div style="position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--mint);"></div>
+          <div style="flex:1;"><div style="font-weight:600;font-family:var(--font-title);">✅ Pedido confirmado</div><div style="font-size:0.83rem;color:var(--gray-mid);">El vendedor recibió tu orden</div></div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);white-space:nowrap;">10:23 AM</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:20px;border-left:2px solid var(--mint);padding-left:24px;position:relative;">
+          <div style="position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--mint);"></div>
+          <div style="flex:1;"><div style="font-weight:600;font-family:var(--font-title);">✅ Producto empacado</div><div style="font-size:0.83rem;color:var(--gray-mid);">Listo para el mensajero</div></div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);white-space:nowrap;">11:45 AM</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:20px;border-left:2px solid var(--mint);padding-left:24px;position:relative;">
+          <div style="position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--mint);"></div>
+          <div style="flex:1;"><div style="font-weight:600;font-family:var(--font-title);">✅ Entregado a mensajero</div><div style="font-size:0.83rem;color:var(--gray-mid);">Juan Carlos recogió el paquete</div></div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);white-space:nowrap;">02:15 PM</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:20px;border-left:2px dashed var(--coral);padding-left:24px;position:relative;">
+          <div style="position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--coral);animation:pulse-ring 1.5s infinite;"></div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-family:var(--font-title);color:var(--coral);">🔵 En camino</div>
+            <div style="font-size:0.83rem;color:var(--gray-mid);">Juan Carlos está llevando tu pedido</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button class="btn btn-outline btn-sm" style="height:34px;font-size:0.78rem;" onclick="showToast('Llamando','Conectando con Juan Carlos 📞','mint')">📞 Llamar</button>
+              <button class="btn btn-ghost btn-sm" style="height:34px;font-size:0.78rem;" onclick="showToast('Chat','Abriendo chat con Juan Carlos 💬','coral')">💬 Chat</button>
+            </div>
+          </div>
+          <div style="font-size:0.82rem;color:var(--coral);white-space:nowrap;font-weight:600;">03:30 PM</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-left:24px;position:relative;opacity:0.45;">
+          <div style="position:absolute;left:-7px;top:0;width:12px;height:12px;border-radius:50%;background:var(--fog);border:2px solid var(--gray-mid);"></div>
+          <div style="flex:1;"><div style="font-weight:600;font-family:var(--font-title);">⚪ Entregado</div><div style="font-size:0.83rem;color:var(--gray-mid);">Estimado: 4:15 PM</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REVIEWS TAB ── -->
+  <div class="tab-content" id="tab-reviews">
+    <div style="display:flex;align-items:center;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
+      <div style="text-align:center;">
+        <div style="font-family:var(--font-title);font-size:3.5rem;font-weight:800;color:var(--carbon);">4.9</div>
+        <div style="display:flex;justify-content:center;gap:4px;margin-top:4px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:4px;">23 reseñas</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:160px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;">
+          <span>5⭐</span>
+          <div style="flex:1;height:8px;background:var(--fog);border-radius:9999px;overflow:hidden;"><div style="height:100%;width:78%;background:var(--yellow);border-radius:9999px;"></div></div>
+          <span style="color:var(--gray-mid);">18</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;">
+          <span>4⭐</span>
+          <div style="flex:1;height:8px;background:var(--fog);border-radius:9999px;overflow:hidden;"><div style="height:100%;width:17%;background:var(--yellow);border-radius:9999px;"></div></div>
+          <span style="color:var(--gray-mid);">4</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;">
+          <span>3⭐</span>
+          <div style="flex:1;height:8px;background:var(--fog);border-radius:9999px;overflow:hidden;"><div style="height:100%;width:4%;background:var(--yellow);border-radius:9999px;"></div></div>
+          <span style="color:var(--gray-mid);">1</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="review-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="author-avatar">C</div>
+            <div><div style="font-weight:600;font-size:0.9rem;">Carlos Rodríguez</div><div style="font-size:0.75rem;color:var(--gray-mid);">Hace 5 días</div></div>
+          </div>
+          <div style="display:flex;gap:3px;">⭐⭐⭐⭐⭐</div>
+        </div>
+        <p style="font-size:0.875rem;">"Coche en perfecto estado, tal cual lo describió. Muy buena comunicación y envío rápido."</p>
+      </div>
+      <div class="review-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="author-avatar" style="background:var(--mint-bg);color:var(--mint-dark);">A</div>
+            <div><div style="font-weight:600;font-size:0.9rem;">Andrea López</div><div style="font-size:0.75rem;color:var(--gray-mid);">Hace 2 semanas</div></div>
+          </div>
+          <div style="display:flex;gap:3px;">⭐⭐⭐⭐⭐</div>
+        </div>
+        <p style="font-size:0.875rem;">"Excelente vendedora, muy amable y responsable. Los bodys llegaron perfectos."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FAVORITES TAB ── -->
+  <div class="tab-content" id="tab-favorites">
+    <h4 style="margin-bottom:20px;">Productos guardados (7)</h4>
+    <div class="products-grid">
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/crib.png" alt="Cuna"/>
+          <button class="fav-btn active" data-id="f1"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--coral)" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-used">♻️</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Cuna blanca Scandi con colchón</div>
+          <div class="price-row"><span class="price-current">$380.000</span><span class="price-original">$750.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar">C</div><span>Carlos · ⭐ 5.0</span></div></div>
+        </div>
+      </div>
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/toys.png" alt="Juguetes"/>
+          <button class="fav-btn active" data-id="f2"><svg width="18" height="18" viewBox="0 0 24 24" fill="var(--coral)" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-new">Nuevo</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Kit sensorial bebé 0-12m</div>
+          <div class="price-row"><span class="price-current">$145.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar" style="background:var(--mint-bg);color:var(--mint-dark);">B</div><span>BabyShop · ⭐ 4.8</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="index.html" class="mob-nav-item" data-page="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html" class="mob-nav-item mob-nav-publish"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="#" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat</a>
+    <a href="perfil.html" class="mob-nav-item active" data-page="perfil.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+function filterOrders(type, btn) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+}
+// Animate bars
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.bar-item').forEach((b, i) => {
+      b.style.transition = `height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.08}s`;
+    });
+  }, 400);
+});
+</script>
+</body>
+</html>

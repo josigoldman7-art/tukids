@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout — TuKids</title>
+  <meta name="description" content="Finaliza tu compra de forma segura en TuKids. Pago protegido con sistema escrow."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .checkout-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; padding: 40px 0 80px; }
+    @media(max-width: 900px){ .checkout-grid { grid-template-columns: 1fr; } }
+    .checkout-card { background: var(--white); border-radius: var(--r-xl); padding: 28px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+    .checkout-section-title { font-family: var(--font-title); font-size: 1rem; font-weight: 700; color: var(--carbon); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .payment-method {
+      display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+      border: 2px solid var(--fog); border-radius: var(--r-lg); cursor: pointer;
+      transition: var(--transition); margin-bottom: 10px;
+    }
+    .payment-method.selected { border-color: var(--coral); background: var(--coral-bg); }
+    .payment-icon { width: 40px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .order-summary { position: sticky; top: 88px; }
+    .order-item-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--fog); }
+    .order-thumb { width: 52px; height: 52px; border-radius: var(--r-md); object-fit: cover; flex-shrink: 0; }
+    .price-line { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; font-size: 0.875rem; }
+    .price-line.total { border-top: 2px solid var(--carbon); margin-top: 8px; padding-top: 16px; font-size: 1.1rem; font-family: var(--font-title); font-weight: 800; }
+    .card-input { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .success-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
+      z-index: 300; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: all 0.3s ease;
+    }
+    .success-overlay.show { opacity: 1; pointer-events: all; }
+    .success-dialog {
+      background: var(--white); border-radius: var(--r-2xl);
+      padding: 48px 40px; max-width: 460px; width: 90%;
+      text-align: center; transform: scale(0.9);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .success-overlay.show .success-dialog { transform: scale(1); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div style="flex:1;"></div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:var(--gray-mid);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      Pago 100% seguro · <strong style="color:var(--carbon);">Garantía TuKids</strong>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Breadcrumb -->
+  <div style="padding:20px 0 0;display:flex;align-items:center;gap:8px;font-size:0.83rem;color:var(--gray-mid);">
+    <a href="producto.html" style="color:var(--gray-mid);">Producto</a>
+    <span>›</span>
+    <span style="color:var(--coral);font-weight:600;">Checkout</span>
+  </div>
+
+  <div class="checkout-grid">
+    <!-- LEFT: Form -->
+    <div>
+      <!-- Contact -->
+      <div class="checkout-card animate-fade-up">
+        <div class="checkout-section-title">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;font-family:var(--font-title);">1</div>
+          Datos de contacto
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="input-group"><label class="input-label">Nombre *</label><input type="text" class="input-field" placeholder="María" value="María"/></div>
+            <div class="input-group"><label class="input-label">Apellido *</label><input type="text" class="input-field" placeholder="González" value="González"/></div>
+          </div>
+          <div class="input-group"><label class="input-label">Email *</label><input type="email" class="input-field" placeholder="maria@email.com" value="maria@email.com"/></div>
+          <div class="input-group"><label class="input-label">Teléfono *</label><input type="tel" class="input-field" placeholder="+57 300 000 0000" value="+57 314 555 8821"/></div>
+        </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="checkout-card animate-fade-up anim-delay-1">
+        <div class="checkout-section-title">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;font-family:var(--font-title);">2</div>
+          Dirección de entrega
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="input-group"><label class="input-label">Dirección *</label><input type="text" class="input-field" placeholder="Calle, número, barrio..." value="Cra. 15 #93-40, Piso 4"/></div>
+          <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="input-group">
+              <label class="input-label">Ciudad *</label>
+              <select class="input-field select-field">
+                <option selected>Bogotá</option>
+                <option>Medellín</option>
+                <option>Cali</option>
+                <option>Barranquilla</option>
+              </select>
+            </div>
+            <div class="input-group"><label class="input-label">Código postal</label><input type="text" class="input-field" placeholder="110221" value="110221"/></div>
+          </div>
+          <div class="input-group"><label class="input-label">Instrucciones adicionales</label><input type="text" class="input-field" placeholder="Piso, apto, portería..."/></div>
+        </div>
+        <!-- Delivery options -->
+        <div style="margin-top:20px;">
+          <div style="font-weight:600;font-family:var(--font-title);font-size:0.9rem;margin-bottom:12px;color:var(--carbon);">Método de entrega</div>
+          <div class="payment-method selected" id="del1" onclick="selectDel('del1')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Envío a domicilio</div><div style="font-size:0.78rem;color:var(--gray-mid);">2–4 días hábiles</div></div>
+            <span style="font-weight:700;color:var(--mint-dark);">Gratis</span>
+          </div>
+          <div class="payment-method" id="del2" onclick="selectDel('del2')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--carbon-soft)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Punto de recogida</div><div style="font-size:0.78rem;color:var(--gray-mid);">Recoge en el día</div></div>
+            <span style="font-weight:700;color:var(--carbon-soft);">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="checkout-card animate-fade-up anim-delay-2">
+        <div class="checkout-section-title">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;font-family:var(--font-title);">3</div>
+          Método de pago
+        </div>
+        <div style="margin-bottom:16px;">
+          <div class="payment-method selected" id="pay-card" onclick="selectPay('pay-card')">
+            <div class="payment-icon" style="background:linear-gradient(135deg,#1a1f71,#4046a6);">💳</div>
+            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Tarjeta crédito/débito</div><div style="font-size:0.78rem;color:var(--gray-mid);">Visa, Mastercard, Amex</div></div>
+            <div style="display:flex;gap:4px;">
+              <div style="width:28px;height:18px;background:#1a1f71;border-radius:3px;"></div>
+              <div style="width:28px;height:18px;background:#eb2030;border-radius:3px;"></div>
+            </div>
+          </div>
+          <div class="payment-method" id="pay-mp" onclick="selectPay('pay-mp')">
+            <div class="payment-icon" style="background:#009EE3;">💸</div>
+            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Mercado Pago</div><div style="font-size:0.78rem;color:var(--gray-mid);">PSE, Nequi, Bancolombia</div></div>
+          </div>
+          <div class="payment-method" id="pay-pse" onclick="selectPay('pay-pse')">
+            <div class="payment-icon" style="background:#e8f4f8;">🏦</div>
+            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">PSE</div><div style="font-size:0.78rem;color:var(--gray-mid);">Débito bancario directo</div></div>
+          </div>
+        </div>
+        <!-- Card fields -->
+        <div id="cardFields">
+          <div class="input-group" style="margin-bottom:12px;">
+            <label class="input-label">Número de tarjeta</label>
+            <input type="text" class="input-field" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNum" oninput="formatCard(this)"/>
+          </div>
+          <div class="card-input">
+            <div class="input-group"><label class="input-label">Vencimiento</label><input type="text" class="input-field" placeholder="MM/AA" maxlength="5"/></div>
+            <div class="input-group"><label class="input-label">CVV</label><input type="text" class="input-field" placeholder="123" maxlength="4"/></div>
+          </div>
+          <div class="input-group" style="margin-top:12px;">
+            <label class="input-label">Nombre en la tarjeta</label>
+            <input type="text" class="input-field" placeholder="MARÍA GONZÁLEZ" style="text-transform:uppercase;"/>
+          </div>
+        </div>
+        <!-- Security note -->
+        <div style="display:flex;align-items:center;gap:8px;margin-top:16px;padding:12px 14px;background:var(--mint-bg);border-radius:var(--r-lg);font-size:0.78rem;color:var(--mint-dark);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          Tus datos están cifrados con SSL 256-bit · Pago procesado por Stripe
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Order Summary -->
+    <div class="order-summary">
+      <div class="checkout-card">
+        <div class="checkout-section-title" style="margin-bottom:16px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Tu pedido (1 artículo)
+        </div>
+        <!-- Product -->
+        <div class="order-item-row">
+          <img src="images/stroller.png" alt="Coche" class="order-thumb"/>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:0.9rem;color:var(--carbon);">Coche Chicco Urban Plus</div>
+            <div style="font-size:0.78rem;color:var(--gray-mid);">Verde oliva · Segunda mano · IA ✓</div>
+            <div style="font-size:0.83rem;font-weight:700;color:var(--carbon);margin-top:4px;">$850.000</div>
+          </div>
+          <span style="font-size:0.83rem;color:var(--gray-mid);">x1</span>
+        </div>
+        <!-- Price breakdown -->
+        <div style="margin-top:16px;">
+          <div class="price-line"><span>Subtotal</span><span>$850.000</span></div>
+          <div class="price-line"><span>Envío</span><span style="color:var(--mint-dark);font-weight:600;">Gratis</span></div>
+          <div class="price-line"><span>Comisión plataforma</span><span>$85.000</span></div>
+          <div class="price-line"><span style="font-size:0.78rem;color:var(--gray-mid);">Seguro envío</span><span style="font-size:0.78rem;color:var(--gray-mid);">$0</span></div>
+          <div class="price-line total"><span>Total</span><span class="text-coral">$935.000</span></div>
+        </div>
+        <!-- Escrow -->
+        <div style="margin-top:20px;padding:14px;background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));border-radius:var(--r-lg);font-size:0.8rem;">
+          <div style="font-weight:700;color:var(--mint-dark);margin-bottom:6px;">🛡️ Garantía TuKids (Escrow)</div>
+          <p style="font-size:0.78rem;color:var(--carbon-soft);margin:0;line-height:1.6;">Tu dinero está retenido en custodia hasta que confirmes la recepción del producto en perfecto estado.</p>
+        </div>
+        <!-- Submit -->
+        <button class="btn btn-primary btn-lg w-full" style="margin-top:20px;" onclick="submitOrder()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          Pagar $935.000
+        </button>
+        <p style="text-align:center;font-size:0.75rem;color:var(--gray-mid);margin-top:12px;">Al pagar aceptas los <a href="#" style="color:var(--coral);">Términos y condiciones</a> de TuKids</p>
+        <!-- Seller info -->
+        <div style="border-top:1px solid var(--fog);padding-top:16px;margin-top:16px;">
+          <div style="font-size:0.78rem;color:var(--gray-mid);margin-bottom:10px;font-weight:600;">VENDEDOR</div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--font-title);">M</div>
+            <div>
+              <div style="font-weight:600;font-size:0.875rem;">María González</div>
+              <div style="font-size:0.75rem;color:var(--gray-mid);">⭐ 4.9 · Nivel Plata</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:20px;padding:16px;font-size:0.75rem;color:var(--gray-mid);">
+        <span>🔒 SSL</span>
+        <span>💳 Stripe</span>
+        <span>🛡️ Escrow</span>
+        <span>📧 Confirmación</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-dialog">
+    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--mint-dark));display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="margin-bottom:8px;">¡Compra exitosa! 🎉</h2>
+    <p style="margin-bottom:8px;">Tu pedido <strong>#TK-2847</strong> ha sido confirmado.</p>
+    <div style="background:var(--fog);border-radius:var(--r-lg);padding:16px;margin:20px 0;font-size:0.875rem;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Total pagado</span><span style="font-weight:700;">$935.000</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Entrega estimada</span><span style="font-weight:700;color:var(--mint-dark);">2–4 días</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--gray-mid);">Confirmación enviada a</span><span style="font-weight:700;">maria@email.com</span></div>
+    </div>
+    <div style="padding:12px 16px;background:var(--lilac-bg);border-radius:var(--r-lg);font-size:0.83rem;color:var(--lilac-dark);margin-bottom:20px;">
+      🐦 <strong>Tuki dice:</strong> "Recibirás actualizaciones del pedido por email y notificación."
+    </div>
+    <div style="display:flex;gap:10px;flex-direction:column;">
+      <a href="tracking.html" class="btn btn-primary btn-md w-full">Seguir mi pedido en vivo</a>
+      <a href="index.html" class="btn btn-ghost btn-md w-full">Seguir comprando</a>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="index.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html" class="mob-nav-item mob-nav-publish"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="#" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat</a>
+    <a href="perfil.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+function selectPay(id) {
+  ['pay-card','pay-mp','pay-pse'].forEach(p => document.getElementById(p).classList.remove('selected'));
+  document.getElementById(id).classList.add('selected');
+  document.getElementById('cardFields').style.display = id === 'pay-card' ? 'block' : 'none';
+}
+function selectDel(id) {
+  ['del1','del2'].forEach(d => document.getElementById(d).classList.remove('selected'));
+  document.getElementById(id).classList.add('selected');
+}
+function formatCard(input) {
+  let val = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = val.replace(/(.{4})/g,'$1 ').trim();
+}
+function submitOrder() {
+  // Simulate processing
+  const btn = event.target.closest('button');
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" style="animation:spin 0.8s linear infinite" fill="none" stroke="#fff" stroke-width="2.5"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M9 12l2 2 4-4"/></svg> Procesando...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '✓ Pago procesado';
+    setTimeout(() => {
+      document.getElementById('successOverlay').classList.add('show');
+    }, 500);
+  }, 2000);
+}
+</script>
+</body>
+</html>

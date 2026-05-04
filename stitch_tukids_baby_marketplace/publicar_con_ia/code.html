@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#e7c269",
+                    "on-primary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#89726e",
+                    "primary-fixed-dim": "#ffb4a8",
+                    "on-primary-fixed": "#410100",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#f1dedb",
+                    "background": "#fff8f6",
+                    "tertiary": "#765b06",
+                    "tertiary-fixed": "#ffdf96",
+                    "on-tertiary-container": "#513d00",
+                    "primary-container": "#ff8c7a",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#7cd7c6",
+                    "surface-container-high": "#f7e4e1",
+                    "primary": "#9e4134",
+                    "secondary": "#006b5e",
+                    "surface": "#fff8f6",
+                    "on-background": "#231918",
+                    "inverse-primary": "#ffb4a8",
+                    "on-primary-container": "#762419",
+                    "secondary-fixed": "#98f3e1",
+                    "on-secondary-fixed-variant": "#005046",
+                    "inverse-on-surface": "#ffedea",
+                    "primary-fixed": "#ffdad4",
+                    "inverse-surface": "#392e2c",
+                    "on-tertiary-fixed": "#251a00",
+                    "surface-tint": "#9e4134",
+                    "surface-bright": "#fff8f6",
+                    "on-primary-fixed-variant": "#7e2a1f",
+                    "outline-variant": "#dcc0bc",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#cba852",
+                    "surface-container-low": "#fff0ee",
+                    "on-surface-variant": "#56423f",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "surface-variant": "#f1dedb",
+                    "on-secondary-container": "#006f62",
+                    "secondary-container": "#95f0df",
+                    "on-secondary-fixed": "#00201b",
+                    "surface-container": "#fdeae7",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#231918",
+                    "surface-dim": "#e8d6d3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "gutter": "24px",
+                    "md": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "lg": "48px",
+                    "xl": "80px"
+            },
+            "fontFamily": {
+                    "h1": ["Plus Jakarta Sans"],
+                    "caption": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h3": ["Plus Jakarta Sans"],
+                    "label-bold": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h2": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .silhouette-overlay {
+            background-color: rgba(255, 140, 122, 0.05);
+            border: 2px dashed #ff8c7a;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen font-body-md">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm shadow-[#FF8C7A]/5 fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 h-16">
+<div class="flex items-center gap-3">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden bg-primary-fixed flex items-center justify-center">
+<img alt="Tuki mascot" class="w-6 h-6" data-alt="Cute baby toucan mascot Tuki with colorful feathers and friendly eyes, mascot illustration style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQUA1yQbkUz_sVVandBqNK_DCiH_Tx1o9mkZGpW70ykZEFWXcl9c0sG4v5nK4mhW4ems7fLNYxr2v_2pEVSWsZCZ9lwZSfJvlZClLBP78ngwlYsxD80X0SNfzyvhb5acz88ziFvmUlV9JFiK6aD9HVzJn8sXGb2-SP_HT6mtZjt1tf7-HME9iu2yXWPPb2S0t1r6-sR46t8nY1MYn7-c2rLoxA6s5gcK1IoYhH5Sf6K6M66wDocTUZt9MUYlXju-KDeSLPeABiFI2m"/>
+</div>
+<h1 class="font-['Plus_Jakarta_Sans'] font-extrabold text-2xl tracking-tight text-[#FF8C7A]">TuKids</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-bold text-primary px-3 py-1 bg-primary-fixed rounded-full">Step 2 of 5</span>
+<span class="material-symbols-outlined text-slate-400">notifications</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-gutter max-w-container-max mx-auto">
+<!-- Progress Bar -->
+<div class="w-full bg-surface-container-highest h-2 rounded-full mb-lg overflow-hidden">
+<div class="bg-primary-container h-full w-2/5 transition-all duration-500"></div>
+</div>
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Left Side: Instruction & Photo Grid -->
+<div class="lg:col-span-7 space-y-md">
+<div class="space-y-xs">
+<h2 class="font-h2 text-h2 text-on-background">Analyze your item</h2>
+<p class="font-body-lg text-on-surface-variant">Take 3 photos (Front, Side, Details) to help Tuki identify the value.</p>
+</div>
+<!-- Photo Upload Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Front View -->
+<div class="aspect-[3/4] rounded-lg silhouette-overlay flex flex-col items-center justify-center gap-sm cursor-pointer hover:bg-primary-fixed/20 transition-colors group">
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'opsz' 48;">photo_camera</span>
+<div class="text-center">
+<p class="font-label-bold text-primary">Front View</p>
+<p class="text-caption text-on-surface-variant">Reference Silhouette</p>
+</div>
+<!-- Mock Silhouette Content -->
+<div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[120px]">checkroom</span>
+</div>
+</div>
+<!-- Side View -->
+<div class="aspect-[3/4] rounded-lg bg-surface-container flex flex-col items-center justify-center gap-sm relative overflow-hidden">
+<img alt="Item side view" class="absolute inset-0 w-full h-full object-cover" data-alt="Side view of a high-end designer baby wooden high chair in a minimalist nursery setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDVaFuYHGRhzTdVh0p6KJf7Z2lj217RNu6YMP54Rn2eaqNGXbyHx92pFC5TzqoLMRP1RKcJU48GjDbxoVcqPLFbqw5RuDOmsNxB2nqu-RSzG2gW8eSIpQRa38UWpJEzDIdqJCmKNQbEeLOUa3URjkBZd5F0Q_VOLu_nhjcQaqMKod7i7ld5kBcCjytOuZKn79SZnWM_cpzs9FDw_OVuTXppslA8E1sNOAsnWZYfGjQVHy_mkJ5cW22UuLNAs81CwJoNleb8ZIjzd5k"/>
+<div class="absolute inset-0 bg-black/20"></div>
+<div class="z-10 bg-white/90 rounded-full p-2">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+<p class="z-10 font-label-bold text-white">Side View</p>
+</div>
+<!-- Details -->
+<div class="aspect-[3/4] rounded-lg silhouette-overlay flex flex-col items-center justify-center gap-sm cursor-pointer hover:bg-primary-fixed/20 transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl">zoom_in</span>
+<div class="text-center">
+<p class="font-label-bold text-primary">Details</p>
+<p class="text-caption text-on-surface-variant">Labels &amp; Wear</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: AI Analysis & Tuki Guidance -->
+<div class="lg:col-span-5 space-y-md">
+<!-- AI Result Card -->
+<div class="glass-card rounded-xl p-md shadow-lg shadow-primary-container/10 border-primary-fixed/30 space-y-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-bold text-secondary">Tuki AI Analysis</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-fixed-variant px-3 py-1 rounded-full text-caption">
+                            Matched: Premium High Chair
+                        </div>
+</div>
+<div class="space-y-sm">
+<p class="font-body-sm text-on-surface-variant">Detected Condition:</p>
+<div class="flex items-center gap-2">
+<span class="font-h3 text-h3 text-on-background">Very Good</span>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+</div>
+</div>
+<div class="bg-primary-fixed/30 rounded-lg p-md space-y-xs">
+<p class="font-body-sm text-on-primary-fixed-variant">Suggested price range:</p>
+<h2 class="font-h1 text-h1 text-primary-container">$40k - $50k</h2>
+<p class="text-caption text-on-surface-variant italic">Based on 12 similar items sold this month</p>
+</div>
+<div class="space-y-sm pt-md">
+<button class="w-full bg-primary-container text-white py-4 rounded-full font-label-bold shadow-md shadow-primary-container/20 hover:scale-[1.02] transition-transform active:scale-95">
+                            Accept Suggestion
+                        </button>
+<button class="w-full border-2 border-outline text-outline py-4 rounded-full font-label-bold hover:bg-outline/5 transition-colors active:scale-95">
+                            Adjust Price
+                        </button>
+</div>
+</div>
+<!-- Tuki Mascot Message -->
+<div class="flex gap-md items-start p-md bg-secondary-fixed/20 rounded-xl">
+<img alt="Tuki giving advice" class="w-16 h-16 shrink-0" data-alt="Tuki the baby toucan mascot winking and pointing a wing, friendly and helpful cartoon character style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_dZL6clTf92LONuj5Nc7tD4jffKWWR_uBYUcNV7FKuBie9Nki79rbHQBQRRdI7fgdpTdFKiw3ByXnxqFx_9YRVaNdRdzMNqm4u0kFtcUz5mChGRroapiozuxf2a7b-OmopzK2YrhPAyfNrd8jOg3JcQ-QYq1rx-T0ikitljxOlpuPFwYPT-GjLMc9C3CzHB4IoFCUDmSbMNDIG25H4Rs1e21wZqq3X-hB7nM2BDaEHiA9TShlHvZQkC3QJeZwPRPRd0PYaIUwdk2s"/>
+<div class="space-y-xs">
+<p class="font-label-bold text-on-secondary-fixed">Tuki's Tip</p>
+<p class="font-body-sm text-on-surface-variant">"Items with clear detail shots of the wheels and fabric sell 40% faster! Your side view looks great, let's get those details!"</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Only for Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white dark:bg-slate-900 shadow-[0_-10px_40px_rgba(255,140,122,0.08)] z-50 rounded-t-[32px]">
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full p-2 active:scale-90 duration-300">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full p-2 active:scale-90 duration-300">
+<span class="material-symbols-outlined">search</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#FF8C7A] bg-[#FF8C7A]/10 rounded-full px-4 py-1 active:scale-90 duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Sell</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full p-2 active:scale-90 duration-300">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full p-2 active:scale-90 duration-300">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Profile</span>
+</button>
+</nav>
+</body></html>

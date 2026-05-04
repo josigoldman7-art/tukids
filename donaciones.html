@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donaciones — TuKids · Tu ayuda transforma vidas ❤️</title>
+  <meta name="description" content="Dona artículos para niños y niñas de escasos recursos. El 100% de tu donación llega directamente a quienes más lo necesitan."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+
+  <style>
+  /* ══════════════════════════════════════════════════════════
+     DONACIONES — Design Tokens & Base
+  ══════════════════════════════════════════════════════════ */
+  :root {
+    --don-hero-bg: linear-gradient(135deg,#FF8C7A 0%,#FF6461 35%,#C084F5 70%,#818CF8 100%);
+    --don-accent:  #FF6461;
+    --r-3xl: 28px;
+  }
+
+  /* ── HERO ─────────────────────────────────────────────── */
+  .don-hero {
+    min-height: 92vh; position: relative; overflow: hidden;
+    display: flex; align-items: center;
+    background: var(--don-hero-bg);
+    padding: 96px 0 80px;
+  }
+  .don-hero::after {
+    content:''; position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events:none;
+  }
+
+  /* Blobs */
+  .hero-blob {
+    position: absolute; border-radius: 50%; filter: blur(60px);
+    pointer-events: none; opacity: .35;
+  }
+  .hb1 { width: 500px; height: 500px; background: #FF8C7A; top: -100px; right: -120px; }
+  .hb2 { width: 380px; height: 380px; background: #7DD8C7; bottom: -80px; left: -60px; }
+  .hb3 { width: 260px; height: 260px; background: #FFD97D; top: 30%; left: 25%; animation: float 8s ease-in-out infinite; }
+
+  .don-hero-inner {
+    position: relative; z-index: 3;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px;
+    align-items: center;
+  }
+  @media(max-width:860px){ .don-hero-inner { grid-template-columns: 1fr; } }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.3);
+    backdrop-filter: blur(10px); border-radius: 9999px;
+    padding: 8px 18px; font-size: .82rem; font-weight: 700;
+    font-family: var(--font-title); color: #fff; margin-bottom: 22px;
+    letter-spacing: .03em;
+  }
+  .don-hero h1 {
+    font-family: var(--font-title); font-size: clamp(2.2rem,6vw,3.8rem);
+    font-weight: 900; line-height: 1.1; color: #fff;
+    margin-bottom: 20px; text-shadow: 0 2px 20px rgba(0,0,0,.15);
+  }
+  .don-hero h1 .accent { color: #FFD97D; }
+  .don-hero .lead {
+    font-size: 1.05rem; color: rgba(255,255,255,.88);
+    line-height: 1.75; max-width: 480px; margin-bottom: 36px;
+  }
+  .cta-group { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-donate-main {
+    background: #fff; color: var(--coral); border: none; cursor: pointer;
+    font-family: var(--font-title); font-weight: 800; font-size: 1.05rem;
+    padding: 16px 36px; border-radius: var(--r-xl);
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    display: flex; align-items: center; gap: 10px;
+    transition: .22s cubic-bezier(.4,0,.2,1);
+  }
+  .btn-donate-main:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,.26); }
+  .btn-how { background: rgba(255,255,255,.15); color: #fff; border: 2px solid rgba(255,255,255,.4); cursor: pointer;
+    font-family: var(--font-title); font-weight: 700; font-size: .95rem;
+    padding: 15px 28px; border-radius: var(--r-xl); backdrop-filter: blur(8px);
+    display: flex; align-items: center; gap: 8px; transition: .2s;
+  }
+  .btn-how:hover { background: rgba(255,255,255,.25); }
+
+  /* Live counters */
+  .live-counters {
+    display: flex; gap: 0; background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2); border-radius: var(--r-xl);
+    backdrop-filter: blur(12px); overflow: hidden;
+  }
+  .counter-item {
+    flex: 1; text-align: center; padding: 20px 16px;
+    border-right: 1px solid rgba(255,255,255,.15);
+  }
+  .counter-item:last-child { border-right: none; }
+  .counter-num {
+    font-family: var(--font-title); font-size: 1.8rem; font-weight: 900;
+    color: #FFD97D; display: block; line-height: 1;
+  }
+  .counter-label { font-size: .72rem; color: rgba(255,255,255,.8); font-weight: 600; margin-top: 4px; letter-spacing: .04em; text-transform: uppercase; }
+
+  /* Hero visual */
+  .hero-visual { position: relative; }
+  .hero-cards-stack {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    position: relative; z-index: 2;
+  }
+  .hero-card {
+    background: rgba(255,255,255,.15); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.25); border-radius: var(--r-xl);
+    padding: 20px; color: #fff; cursor: default;
+    transition: .25s; animation: float 4s ease-in-out infinite;
+  }
+  .hero-card:nth-child(2){ animation-delay: .8s; }
+  .hero-card:nth-child(3){ animation-delay: 1.6s; }
+  .hero-card:nth-child(4){ animation-delay: 2.4s; }
+  .hero-card:hover { background: rgba(255,255,255,.22); transform: translateY(-4px); }
+  .hc-icon { font-size: 2rem; margin-bottom: 8px; }
+  .hc-title { font-family: var(--font-title); font-weight: 700; font-size: .9rem; }
+  .hc-desc  { font-size: .75rem; opacity: .8; margin-top: 4px; }
+  .hc-badge { display: inline-block; background: rgba(255,215,125,.3); border-radius: 9999px; padding: 3px 10px; font-size: .68rem; font-weight: 700; margin-top: 8px; color: #FFD97D; }
+
+  /* Floating hearts */
+  .floating-hearts { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .fh { position: absolute; font-size: 1.2rem; animation: floatUp 7s ease-in infinite; opacity: .4; }
+  @keyframes floatUp { 0%{ transform: translateY(110%) rotate(0); opacity: .5; } 100%{ transform: translateY(-120%) rotate(25deg); opacity: 0; } }
+
+  /* ── SECTION COMMONS ──────────────────────────────────── */
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--coral-bg); border: 1px solid rgba(255,140,122,.2);
+    color: var(--coral); border-radius: 9999px; padding: 6px 16px;
+    font-size: .78rem; font-weight: 700; font-family: var(--font-title);
+    letter-spacing: .04em; text-transform: uppercase;
+  }
+  .section-badge.mint { background: var(--mint-bg); border-color: rgba(125,216,199,.3); color: var(--mint-dark); }
+  .section-badge.yellow { background: var(--yellow-bg); border-color: rgba(255,217,125,.4); color: var(--yellow-dark); }
+  .section-badge.lilac { background: var(--lilac-bg); border-color: rgba(184,164,227,.3); color: var(--lilac-dark); }
+
+  /* ── HOW IT WORKS ─────────────────────────────────────── */
+  .how-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-top: 44px;
+    position: relative;
+  }
+  .how-grid::before {
+    content:''; position: absolute; top: 36px; left: calc(25% - 20px); right: calc(25% - 20px);
+    height: 2px; background: linear-gradient(90deg,var(--coral),var(--mint));
+    border-radius: 9999px; opacity: .35; pointer-events: none;
+  }
+  @media(max-width:860px){ .how-grid { grid-template-columns: 1fr 1fr; } .how-grid::before { display: none; } }
+  @media(max-width:500px){ .how-grid { grid-template-columns: 1fr; } }
+  .how-step { text-align: center; position: relative; }
+  .how-icon {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 16px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+    box-shadow: var(--shadow-md); position: relative; z-index: 2;
+    transition: .25s;
+  }
+  .how-step:hover .how-icon { transform: scale(1.1) translateY(-4px); }
+  .how-step-num {
+    position: absolute; top: -8px; right: calc(50% - 48px); width: 22px; height: 22px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 800; font-family: var(--font-title);
+    color: #fff; z-index: 3;
+  }
+  .how-step h5 { font-family: var(--font-title); font-size: .95rem; font-weight: 700; margin-bottom: 6px; }
+  .how-step p  { font-size: .82rem; color: var(--gray-mid); line-height: 1.6; max-width: 180px; margin: 0 auto; }
+
+  /* ── CAMPAIGNS ────────────────────────────────────────── */
+  .camp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 36px; }
+  @media(max-width:860px){ .camp-grid { grid-template-columns:1fr 1fr; } }
+  @media(max-width:560px){ .camp-grid { grid-template-columns:1fr; } }
+  .camp-card {
+    background: var(--white); border-radius: var(--r-xl); overflow: hidden;
+    box-shadow: var(--shadow-sm); transition: .25s; cursor: pointer;
+  }
+  .camp-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .camp-image { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 5rem; position: relative; }
+  .camp-urgency {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--coral); color: #fff; border-radius: 9999px;
+    font-size: .68rem; font-weight: 800; font-family: var(--font-title);
+    padding: 4px 10px; letter-spacing: .04em;
+  }
+  .camp-body { padding: 18px; }
+  .camp-body h5 { font-family: var(--font-title); font-weight: 700; margin-bottom: 6px; font-size: .95rem; }
+  .camp-body p  { font-size: .8rem; color: var(--gray-mid); margin-bottom: 12px; line-height: 1.5; }
+  .camp-progress-wrap { background: var(--fog); border-radius: 9999px; height: 8px; margin-bottom: 8px; overflow: hidden; }
+  .camp-progress-fill { height: 100%; border-radius: 9999px; background: linear-gradient(90deg,var(--coral),var(--yellow)); transition: width 1.2s ease; }
+  .camp-meta { display: flex; justify-content: space-between; font-size: .73rem; color: var(--gray-mid); font-weight: 600; }
+
+  /* ── MULTI-STEP FORM ──────────────────────────────────── */
+  .wizard-wrap { max-width: 760px; margin: 0 auto; }
+  .wizard-progress {
+    display: flex; align-items: center; gap: 0; margin-bottom: 40px;
+    padding: 0 8px;
+  }
+  .wp-step {
+    flex: 1; display: flex; flex-direction: column; align-items: center; position: relative;
+  }
+  .wp-step::after {
+    content:''; position: absolute; top: 20px; left: 50%; width: 100%;
+    height: 2px; background: var(--fog); z-index: 0;
+  }
+  .wp-step:last-child::after { display: none; }
+  .wp-step.done::after      { background: var(--mint); }
+  .wp-step.active::after    { background: linear-gradient(90deg,var(--coral),var(--fog)); }
+  .wp-dot {
+    width: 40px; height: 40px; border-radius: 50%; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-title); font-weight: 800; font-size: .85rem;
+    border: 2.5px solid var(--fog); background: var(--white);
+    color: var(--gray-mid); transition: .3s;
+  }
+  .wp-step.done .wp-dot   { background: var(--mint); border-color: var(--mint); color: #fff; }
+  .wp-step.active .wp-dot { background: var(--coral); border-color: var(--coral); color: #fff; box-shadow: 0 0 0 6px var(--coral-bg); }
+  .wp-label { font-size: .7rem; font-weight: 600; margin-top: 6px; color: var(--gray-mid); text-align: center; white-space: nowrap; }
+  .wp-step.active .wp-label { color: var(--coral); }
+  .wp-step.done   .wp-label { color: var(--mint-dark); }
+
+  /* Form card */
+  .form-card { background: var(--white); border-radius: var(--r-xl); padding: 36px; box-shadow: var(--shadow-md); }
+  .form-step { display: none; }
+  .form-step.active { display: block; animation: fadeInRight .35s ease forwards; }
+  @keyframes fadeInRight { from{ opacity:0; transform:translateX(16px); } to{ opacity:1; transform:translateX(0); } }
+
+  .fs-title { font-family: var(--font-title); font-size: 1.3rem; font-weight: 800; color: var(--carbon); margin-bottom: 6px; }
+  .fs-desc  { font-size: .875rem; color: var(--gray-mid); margin-bottom: 28px; line-height: 1.6; }
+
+  .form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:560px){ .form-row2 { grid-template-columns: 1fr; } }
+  .form-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media(max-width:700px){ .form-row3 { grid-template-columns: 1fr; } }
+
+  /* Input field enhanced */
+  .field-wrap { margin-bottom: 18px; }
+  .field-label { font-size: .82rem; font-weight: 700; color: var(--carbon); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .req-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); display: inline-block; }
+  .field-input {
+    width: 100%; padding: 13px 16px; border: 2px solid var(--fog);
+    border-radius: var(--r-lg); font-size: .9rem; font-family: var(--font-body);
+    color: var(--carbon); background: var(--white); outline: none;
+    transition: .2s; box-sizing: border-box;
+  }
+  .field-input:focus { border-color: var(--coral); box-shadow: 0 0 0 4px var(--coral-bg); }
+  .field-input.error-field { border-color: #FF6B6B; box-shadow: 0 0 0 4px rgba(255,107,107,.12); }
+  .field-input.ok-field    { border-color: var(--mint); }
+  .field-error { font-size: .75rem; color: #FF6B6B; margin-top: 5px; display: none; font-weight: 600; }
+  .field-error.show { display: block; }
+  .char-count { font-size: .73rem; color: var(--gray-mid); text-align: right; margin-top: 4px; }
+
+  /* Category pills */
+  .cat-pill-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  @media(max-width:600px){ .cat-pill-grid { grid-template-columns: repeat(2,1fr); } }
+  .cat-item {
+    border: 2px solid var(--fog); border-radius: var(--r-lg);
+    padding: 12px 8px; text-align: center; cursor: pointer;
+    transition: .2s; background: var(--white);
+  }
+  .cat-item:hover { border-color: var(--coral-light); background: var(--coral-bg); }
+  .cat-item.selected { border-color: var(--coral); background: var(--coral-bg); }
+  .cat-item .ci-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+  .cat-item .ci-label { font-size: .72rem; font-weight: 700; font-family: var(--font-title); color: var(--carbon-soft); }
+  .cat-item.selected .ci-label { color: var(--coral); }
+
+  /* Condition options */
+  .cond-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+  .cond-btn {
+    flex: 1; min-width: 130px; border: 2px solid var(--fog); border-radius: var(--r-lg);
+    padding: 14px 10px; text-align: center; cursor: pointer; transition: .2s;
+    background: var(--white);
+  }
+  .cond-btn:hover { border-color: var(--mint); background: var(--mint-bg); }
+  .cond-btn.selected { border-color: var(--mint); background: var(--mint-bg); }
+  .cond-btn .cb-emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+  .cond-btn .cb-label { font-size: .8rem; font-weight: 700; font-family: var(--font-title); color: var(--carbon-soft); }
+  .cond-btn.selected .cb-label { color: var(--mint-dark); }
+
+  /* Photo upload */
+  .photo-upload {
+    border: 2px dashed var(--fog); border-radius: var(--r-xl);
+    padding: 32px; text-align: center; cursor: pointer; transition: .25s;
+    position: relative; background: var(--fog)/50%;
+  }
+  .photo-upload:hover { border-color: var(--coral); background: var(--coral-bg); }
+  .photo-upload input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .photo-preview { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 16px; }
+  .photo-thumb { position: relative; border-radius: var(--r-md); overflow: hidden; aspect-ratio: 1; }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-remove {
+    position: absolute; top: 4px; right: 4px; width: 24px; height: 24px;
+    border-radius: 50%; background: rgba(45,52,54,.75); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; cursor: pointer; border: none;
+  }
+
+  /* Map */
+  .map-box {
+    background: var(--fog); border-radius: var(--r-xl); height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; cursor: pointer; transition: .2s; position: relative; overflow: hidden;
+  }
+  .map-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(180,180,180,.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(180,180,180,.3) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .map-box:hover { border: 2px solid var(--coral); }
+  .map-box.confirmed { background: var(--mint-bg); border: 2px solid var(--mint); }
+
+  /* Summary card (step 4) */
+  .summary-card { background: var(--fog); border-radius: var(--r-xl); padding: 24px; margin-bottom: 20px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,.06); }
+  .summary-row:last-child { border: none; }
+  .sr-key { font-size: .82rem; color: var(--gray-mid); font-weight: 600; }
+  .sr-val { font-size: .88rem; color: var(--carbon); font-weight: 600; text-align: right; max-width: 60%; }
+
+  /* Anonymous toggle */
+  .anon-toggle {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    background: var(--fog); border-radius: var(--r-lg); cursor: pointer;
+  }
+
+  /* Form nav buttons */
+  .form-nav { display: flex; gap: 12px; justify-content: space-between; margin-top: 28px; }
+  .btn-back { background: var(--fog); color: var(--carbon); border: none; border-radius: var(--r-lg); padding: 13px 28px; font-family: var(--font-title); font-weight: 700; cursor: pointer; font-size: .9rem; transition: .2s; }
+  .btn-back:hover { background: rgba(0,0,0,.08); }
+  .btn-next {
+    background: var(--coral); color: #fff; border: none; border-radius: var(--r-lg);
+    padding: 13px 36px; font-family: var(--font-title); font-weight: 800; cursor: pointer;
+    font-size: .95rem; transition: .22s; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 6px 20px rgba(255,140,122,.35);
+  }
+  .btn-next:hover { background: var(--coral-dark); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,140,122,.45); }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--coral), var(--don-accent));
+    color: #fff; border: none; border-radius: var(--r-lg);
+    padding: 16px 40px; font-family: var(--font-title); font-weight: 800; cursor: pointer;
+    font-size: 1rem; display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 28px rgba(255,100,97,.4); transition: .22s;
+  }
+  .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(255,100,97,.5); }
+
+  /* ── FAQ ──────────────────────────────────────────────── */
+  .faq-item {
+    border-bottom: 1px solid var(--fog); overflow: hidden;
+  }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 0; cursor: pointer; font-weight: 700;
+    font-family: var(--font-title); font-size: .95rem; color: var(--carbon);
+    transition: color .2s;
+  }
+  .faq-q:hover { color: var(--coral); }
+  .faq-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--fog); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: .25s; }
+  .faq-item.open .faq-icon { background: var(--coral); transform: rotate(45deg); }
+  .faq-item.open .faq-icon svg { stroke: #fff; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .2s; font-size: .875rem; color: var(--gray-mid); line-height: 1.7; }
+  .faq-item.open .faq-a { max-height: 300px; padding-bottom: 18px; }
+
+  /* ── LEVELS ───────────────────────────────────────────── */
+  .levels-scroll { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+  @media(max-width:900px){ .levels-scroll { grid-template-columns: repeat(3,1fr); } }
+  @media(max-width:560px){ .levels-scroll { grid-template-columns: repeat(2,1fr); } }
+  .level-card {
+    text-align: center; padding: 20px 12px; background: var(--white);
+    border-radius: var(--r-xl); box-shadow: var(--shadow-sm);
+    border: 2px solid transparent; transition: .25s; cursor: default;
+  }
+  .level-card.current { border-color: var(--coral); background: var(--coral-bg); }
+  .level-emoji { font-size: 2.2rem; margin-bottom: 8px; display: block; }
+  .level-name  { font-family: var(--font-title); font-weight: 800; font-size: .82rem; color: var(--carbon); }
+  .level-pts   { font-size: .72rem; color: var(--gray-mid); margin-top: 4px; }
+
+  /* ── SUCCESS SCREEN ───────────────────────────────────── */
+  .success-screen {
+    position: fixed; inset: 0; z-index: 600;
+    background: rgba(30,35,37,.65); backdrop-filter: blur(14px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .success-screen.show { display: flex; }
+  .success-modal {
+    background: var(--white); border-radius: var(--r-3xl);
+    width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    padding: 52px 44px 40px; text-align: center; position: relative;
+    animation: modalPop .45s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @media(max-width:540px){ .success-modal { padding: 36px 24px 28px; } }
+  @keyframes modalPop { from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+  /* Animated SVG check */
+  .check-circle {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--mint), var(--mint-dark));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; box-shadow: 0 16px 40px rgba(125,216,199,.45);
+  }
+  .check-svg { width: 52px; height: 52px; }
+  .check-path { stroke-dasharray: 60; stroke-dashoffset: 60; animation: drawCheck .5s ease .3s forwards; }
+  @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+
+  /* Points counter */
+  .pts-earned {
+    font-family: var(--font-title); font-size: 3.5rem; font-weight: 900;
+    color: var(--coral); display: block; line-height: 1;
+    animation: ptsPop .6s cubic-bezier(.34,1.56,.64,1) .6s both;
+  }
+  @keyframes ptsPop { from{ transform: scale(0) rotate(-15deg); } to{ transform: scale(1) rotate(0); } }
+
+  /* Level progress bar */
+  .lvl-progress-track { background: var(--fog); border-radius: 9999px; height: 12px; overflow: hidden; margin: 10px 0; }
+  .lvl-progress-fill  { height: 100%; border-radius: 9999px; background: linear-gradient(90deg,var(--coral),var(--yellow)); transition: width 1.2s ease .8s; width: 0; }
+
+  /* Share buttons */
+  .share-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .sh-btn {
+    display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+    border-radius: 10px; border: none; font-size: .8rem; font-weight: 700;
+    font-family: var(--font-title); cursor: pointer; transition: .2s; text-decoration: none;
+  }
+  .sh-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .sh-wa  { background: #25D366; color: #fff; }
+  .sh-ig  { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+  .sh-tw  { background: #1DA1F2; color: #fff; }
+  .sh-fb  { background: #1877F2; color: #fff; }
+  .sh-cp  { background: var(--fog); color: var(--carbon); border: 1.5px solid var(--fog); }
+
+  /* Certificate button */
+  .btn-cert {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 14px; background: linear-gradient(135deg,var(--lilac-bg),var(--sky-bg));
+    border: 1.5px solid var(--lilac); border-radius: var(--r-lg);
+    font-family: var(--font-title); font-weight: 700; font-size: .9rem;
+    color: var(--lilac-dark); cursor: pointer; transition: .2s; margin-top: 12px;
+  }
+  .btn-cert:hover { background: var(--lilac-bg); box-shadow: var(--shadow-sm); }
+
+  /* Confetti */
+  #confettiCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 700; }
+
+  /* ── DONOR DASHBOARD (mini inside page) ───────────────── */
+  .donor-history { background: var(--white); border-radius: var(--r-xl); padding: 24px; }
+  .dh-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--fog); }
+  .dh-row:last-child { border: none; }
+  .dh-avatar { width: 44px; height: 44px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .dh-status { padding: 4px 10px; border-radius: 9999px; font-size: .68rem; font-weight: 800; font-family: var(--font-title); }
+  .dh-status.pending   { background: var(--yellow-bg); color: var(--yellow-dark); }
+  .dh-status.pickup    { background: var(--coral-bg);  color: var(--coral); }
+  .dh-status.delivered { background: var(--mint-bg);   color: var(--mint-dark); }
+
+  /* ── TRANSPARENCY ─────────────────────────────────────── */
+  .trust-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 36px; }
+  @media(max-width:700px){ .trust-grid { grid-template-columns: 1fr; } }
+  .trust-card {
+    background: var(--white); border-radius: var(--r-xl); padding: 28px;
+    text-align: center; box-shadow: var(--shadow-sm); transition: .25s;
+  }
+  .trust-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .trust-icon { font-size: 2.4rem; margin-bottom: 12px; }
+  .trust-card h5 { font-family: var(--font-title); font-weight: 800; margin-bottom: 6px; }
+  .trust-card p  { font-size: .82rem; color: var(--gray-mid); line-height: 1.6; margin: 0; }
+
+  /* ── RESPONSIVE TWEAKS ───────────────────────────────── */
+  @media(max-width:480px){
+    .form-card { padding: 24px 18px; }
+    .success-modal { padding: 28px 18px; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════ -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div class="search-bar" style="flex:1;max-width:400px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Buscar productos para tu bebé..."/>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html"    class="nav-link">Home</a>
+      <a href="explorar.html" class="nav-link">Explorar</a>
+      <a href="publicar.html" class="nav-link">Vender</a>
+      <!-- DONACIONES: destacado, con badge de campaña activa -->
+      <a href="donaciones.html" class="nav-link" style="color:var(--coral);font-weight:700;position:relative;">
+        ❤️ Donaciones
+        <span style="position:absolute;top:-6px;right:-10px;background:var(--coral);color:#fff;border-radius:9999px;font-size:.6rem;font-weight:900;font-family:var(--font-title);padding:2px 6px;line-height:1.2;animation:pulse 2s infinite;">3</span>
+      </a>
+      <a href="perfil.html"   class="nav-link">Mi perfil</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema"><div class="toggle-knob"></div></button>
+      <a href="publicar.html" class="btn btn-primary btn-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Publicar
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO SECTION EMOCIONAL
+════════════════════════════════════════════════════════ -->
+<section class="don-hero" id="donHero" aria-label="Sección principal de donaciones">
+  <!-- Blobs decorativos -->
+  <div class="hero-blob hb1" aria-hidden="true"></div>
+  <div class="hero-blob hb2" aria-hidden="true"></div>
+  <div class="hero-blob hb3" aria-hidden="true"></div>
+
+  <!-- Corazones flotantes -->
+  <div class="floating-hearts" aria-hidden="true">
+    <span class="fh" style="left:5%; animation-delay:0s; animation-duration:6s;">❤️</span>
+    <span class="fh" style="left:15%;animation-delay:1.5s;animation-duration:8s;">💛</span>
+    <span class="fh" style="left:28%;animation-delay:3s; animation-duration:5.5s;">💚</span>
+    <span class="fh" style="left:50%;animation-delay:.7s; animation-duration:9s;">💜</span>
+    <span class="fh" style="left:68%;animation-delay:2s; animation-duration:7s;">🩵</span>
+    <span class="fh" style="left:83%;animation-delay:4s; animation-duration:6.5s;">🧡</span>
+    <span class="fh" style="left:92%;animation-delay:1s; animation-duration:7.5s;">❤️</span>
+  </div>
+
+  <div class="container">
+    <div class="don-hero-inner">
+      <!-- Left: Copy -->
+      <div class="animate-fade-up">
+        <div class="hero-eyebrow" role="note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          Donaciones solidarias · 100% para niños
+        </div>
+        <h1>Tu ayuda<br/><span class="accent">transforma</span><br/>vidas ✨</h1>
+        <p class="lead">Dona ropa, juguetes y útiles que ya no usas. Coordinamos la recogida y garantizamos que cada artículo llegue directamente a manos de niños y niñas que más lo necesitan.</p>
+        <div class="cta-group">
+          <button class="btn-donate-main" onclick="scrollToForm()" aria-label="Ir al formulario de donación">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            Quiero donar ahora
+          </button>
+          <button class="btn-how" onclick="scrollToHow()" aria-label="Ver cómo funciona">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            ¿Cómo funciona?
+          </button>
+        </div>
+        <!-- Live counters -->
+        <div class="live-counters" role="region" aria-label="Estadísticas de donaciones">
+          <div class="counter-item">
+            <span class="counter-num" id="ctr1" data-target="3840">0</span>
+            <span class="counter-label">Artículos donados</span>
+          </div>
+          <div class="counter-item">
+            <span class="counter-num" id="ctr2" data-target="1247">0</span>
+            <span class="counter-label">Niños beneficiados</span>
+          </div>
+          <div class="counter-item">
+            <span class="counter-num" id="ctr3" data-target="47">0</span>
+            <span class="counter-label">Fundaciones aliadas</span>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Visual cards -->
+      <div class="hero-visual animate-fade-in anim-delay-2" aria-hidden="true">
+        <div class="hero-cards-stack">
+          <div class="hero-card">
+            <div class="hc-icon">👕</div>
+            <div class="hc-title">Ropa infantil</div>
+            <div class="hc-desc">Cientos de prendas en camino</div>
+            <div class="hc-badge">+340 esta semana</div>
+          </div>
+          <div class="hero-card">
+            <div class="hc-icon">🧸</div>
+            <div class="hc-title">Juguetes</div>
+            <div class="hc-desc">Alegría para más de 400 niños</div>
+            <div class="hc-badge">+198 esta semana</div>
+          </div>
+          <div class="hero-card">
+            <div class="hc-icon">📚</div>
+            <div class="hc-title">Útiles escolares</div>
+            <div class="hc-desc">Herramientas para aprender</div>
+            <div class="hc-badge">+127 esta semana</div>
+          </div>
+          <div class="hero-card">
+            <div class="hc-icon">🏆</div>
+            <div class="hc-title">Tuki King</div>
+            <div class="hc-desc">¡Sé un Embajador del Cambio!</div>
+            <div class="hc-badge">5000+ puntos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════ -->
+<section class="section" id="howItWorks" aria-labelledby="how-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-badge mint" style="margin:0 auto 16px;width:fit-content;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Proceso simple y transparente
+      </div>
+      <h2 id="how-title">¿Cómo funciona<br/>TuKids Donaciones?</h2>
+      <p style="max-width:480px;margin:12px auto 0;">En solo 4 pasos, tu artículo llega a las manos correctas.</p>
+    </div>
+    <div class="how-grid reveal">
+      <!-- Paso 1 -->
+      <div class="how-step">
+        <div class="how-icon" style="background:var(--coral-bg);">🎁</div>
+        <div class="how-step-num" style="background:var(--coral);right:calc(50% - 46px);">1</div>
+        <h5>Llena el formulario</h5>
+        <p>Describe el artículo, su estado y cuándo podemos recogerlo.</p>
+      </div>
+      <!-- Paso 2 -->
+      <div class="how-step">
+        <div class="how-icon" style="background:var(--mint-bg);">📍</div>
+        <div class="how-step-num" style="background:var(--mint-dark);right:calc(50% - 46px);">2</div>
+        <h5>Coordinamos la recogida</h5>
+        <p>Un voluntario de TuKids va hasta ti en la fecha que elijas.</p>
+      </div>
+      <!-- Paso 3 -->
+      <div class="how-step">
+        <div class="how-icon" style="background:var(--yellow-bg);">🏠</div>
+        <div class="how-step-num" style="background:var(--yellow-dark);right:calc(50% - 46px);">3</div>
+        <h5>Llegamos a las fundaciones</h5>
+        <p>Entregamos a nuestras 47 fundaciones aliadas verificadas.</p>
+      </div>
+      <!-- Paso 4 -->
+      <div class="how-step">
+        <div class="how-icon" style="background:var(--lilac-bg);">🌟</div>
+        <div class="how-step-num" style="background:var(--lilac-dark);right:calc(50% - 46px);">4</div>
+        <h5>¡Impacto real!</h5>
+        <p>Recibes confirmación y ganas puntos por tu generosidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     CAMPAÑAS ACTIVAS
+════════════════════════════════════════════════════════ -->
+<section class="section-sm" style="background:var(--fog);">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-badge yellow" style="margin-bottom:10px;">🔥 Campañas activas ahora</div>
+        <h2>¿A cuál te unes hoy?</h2>
+      </div>
+      <div></div>
+    </div>
+    <div class="camp-grid reveal">
+      <!-- Campaña 1 -->
+      <div class="camp-card" onclick="scrollToForm()" role="button" tabindex="0" aria-label="Donar a campaña Regresa a Clases">
+        <div class="camp-image" style="background:linear-gradient(135deg,#FFE8E5,#FFC5BE);">
+          📚<span class="camp-urgency">🔥 URGENTE</span>
+        </div>
+        <div class="camp-body">
+          <h5>Regresa a Clases 2026</h5>
+          <p>Útiles escolares para 800 estudiantes de colegios en zonas vulnerables.</p>
+          <div class="camp-progress-wrap"><div class="camp-progress-fill" style="width:72%" aria-valuenow="72"></div></div>
+          <div class="camp-meta">
+            <span>576/800 niños</span><span style="color:var(--coral);">72% completado</span>
+          </div>
+        </div>
+      </div>
+      <!-- Campaña 2 -->
+      <div class="camp-card" onclick="scrollToForm()" role="button" tabindex="0" aria-label="Donar a campaña Abrigo de Invierno">
+        <div class="camp-image" style="background:linear-gradient(135deg,#EDFAF8,#B2EDE6);">
+          🧥<span class="camp-urgency" style="background:var(--mint-dark);">NUEVA</span>
+        </div>
+        <div class="camp-body">
+          <h5>Abrigo de Invierno</h5>
+          <p>Ropa de abrigo para niños en municipios con temporada de frío.</p>
+          <div class="camp-progress-wrap"><div class="camp-progress-fill" style="width:28%;background:linear-gradient(90deg,var(--mint),var(--sky));" aria-valuenow="28"></div></div>
+          <div class="camp-meta">
+            <span>112/400 prendas</span><span style="color:var(--mint-dark);">28% completado</span>
+          </div>
+        </div>
+      </div>
+      <!-- Campaña 3 -->
+      <div class="camp-card" onclick="scrollToForm()" role="button" tabindex="0" aria-label="Donar a campaña Juguetes de Amor">
+        <div class="camp-image" style="background:linear-gradient(135deg,#FFFBEE,#FFF3C0);">
+          🧸<span class="camp-urgency" style="background:var(--lilac-dark);">3 días</span>
+        </div>
+        <div class="camp-body">
+          <h5>Juguetes de Amor</h5>
+          <p>Juguetes para el día del niño. Quedan 3 días para la fecha límite.</p>
+          <div class="camp-progress-wrap"><div class="camp-progress-fill" style="width:88%;background:linear-gradient(90deg,var(--lilac),var(--coral));" aria-valuenow="88"></div></div>
+          <div class="camp-meta">
+            <span>352/400 juguetes</span><span style="color:var(--lilac-dark);">88% completado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SISTEMA DE NIVELES
+════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="text-center reveal" style="margin-bottom:36px;">
+      <div class="section-badge yellow" style="margin:0 auto 14px;width:fit-content;">🏆 Sistema de recompensas</div>
+      <h2>Escala de Sembrador<br/>a <span style="color:var(--coral);">Embajador del Cambio</span></h2>
+      <p style="max-width:480px;margin:10px auto 0;">Cada donación acumula puntos y te lleva a un nivel superior. ¡Sé un héroe solidario!</p>
+    </div>
+    <div class="levels-scroll reveal" role="list" aria-label="Niveles de donante">
+      <div class="level-card" role="listitem">
+        <span class="level-emoji">🌱</span>
+        <div class="level-name">Sembrador</div>
+        <div class="level-pts">0 – 100 pts</div>
+      </div>
+      <div class="level-card current" role="listitem" aria-current="true">
+        <span class="level-emoji">💫</span>
+        <div class="level-name">Colaborador</div>
+        <div class="level-pts">101 – 500 pts</div>
+        <div style="font-size:.68rem;color:var(--coral);font-weight:700;margin-top:6px;">← Tu nivel</div>
+      </div>
+      <div class="level-card" role="listitem">
+        <span class="level-emoji">⭐</span>
+        <div class="level-name">Benefactor</div>
+        <div class="level-pts">501 – 1.500 pts</div>
+      </div>
+      <div class="level-card" role="listitem">
+        <span class="level-emoji">🏆</span>
+        <div class="level-name">Héroe Solidario</div>
+        <div class="level-pts">1.501 – 5.000 pts</div>
+      </div>
+      <div class="level-card" role="listitem">
+        <span class="level-emoji">👑</span>
+        <div class="level-name">Embajador</div>
+        <div class="level-pts">5.000+ pts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     MULTI-STEP FORM
+════════════════════════════════════════════════════════ -->
+<section class="section-sm" style="background:linear-gradient(180deg,var(--fog) 0%,var(--white) 100%);" id="donForm" aria-labelledby="form-title">
+  <div class="container">
+    <div class="text-center reveal" style="margin-bottom:44px;">
+      <div class="section-badge" style="margin:0 auto 14px;width:fit-content;">❤️ Formulario de donación</div>
+      <h2 id="form-title">Empieza tu donación<br/>en 4 pasos</h2>
+    </div>
+    <div class="wizard-wrap">
+      <!-- Progress bar -->
+      <div class="wizard-progress reveal" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1">
+        <div class="wp-step active" id="prog-1">
+          <div class="wp-dot">1</div><div class="wp-label">Tus datos</div>
+        </div>
+        <div class="wp-step" id="prog-2">
+          <div class="wp-dot">2</div><div class="wp-label">Artículo</div>
+        </div>
+        <div class="wp-step" id="prog-3">
+          <div class="wp-dot">3</div><div class="wp-label">Recogida</div>
+        </div>
+        <div class="wp-step" id="prog-4">
+          <div class="wp-dot">4</div><div class="wp-label">Confirmar</div>
+        </div>
+      </div>
+
+      <!-- FORM CARD -->
+      <div class="form-card reveal">
+
+        <!-- ═══ STEP 1: Donor data ═══ -->
+        <div class="form-step active" id="step1" role="region" aria-label="Paso 1: Tus datos">
+          <div class="fs-title">👤 Cuéntanos quién eres</div>
+          <div class="fs-desc">Tu información nos ayuda a coordinar la recogida. Prometemos no usar tus datos para otra cosa.</div>
+          <div class="form-row2">
+            <div class="field-wrap">
+              <label class="field-label" for="f-name">Nombre completo <span class="req-dot" aria-label="requerido"></span></label>
+              <input class="field-input" type="text" id="f-name" placeholder="Ej: María García" autocomplete="name" aria-required="true" oninput="validateField(this,'name')"/>
+              <div class="field-error" id="e-name">Por favor ingresa tu nombre completo</div>
+            </div>
+            <div class="field-wrap">
+              <label class="field-label" for="f-phone">Teléfono <span class="req-dot" aria-label="requerido"></span></label>
+              <input class="field-input" type="tel" id="f-phone" placeholder="+57 300 000 0000" autocomplete="tel" aria-required="true" oninput="validateField(this,'phone')"/>
+              <div class="field-error" id="e-phone">Ingresa un teléfono válido</div>
+            </div>
+          </div>
+          <div class="field-wrap">
+            <label class="field-label" for="f-email">Correo electrónico <span class="req-dot" aria-label="requerido"></span></label>
+            <input class="field-input" type="email" id="f-email" placeholder="tu@email.com" autocomplete="email" aria-required="true" oninput="validateField(this,'email')"/>
+            <div class="field-error" id="e-email">Ingresa un correo electrónico válido</div>
+          </div>
+          <!-- Anonymous -->
+          <label class="anon-toggle" for="f-anon" style="margin-bottom:24px;">
+            <input type="checkbox" id="f-anon" style="accent-color:var(--coral);width:18px;height:18px;"/>
+            <div>
+              <div style="font-weight:700;font-size:.9rem;font-family:var(--font-title);">Donar de forma anónima</div>
+              <div style="font-size:.78rem;color:var(--gray-mid);">Tu nombre no aparecerá en la lista pública de donantes</div>
+            </div>
+          </label>
+          <div class="form-nav">
+            <div></div>
+            <button class="btn-next" onclick="nextStep(1)" aria-label="Ir al paso 2">
+              Continuar <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 2: Item info ═══ -->
+        <div class="form-step" id="step2" role="region" aria-label="Paso 2: Información del artículo">
+          <div class="fs-title">🎁 ¿Qué vas a donar?</div>
+          <div class="fs-desc">Cuéntanos sobre el artículo. Mientras más detalle, mejor podemos conectarla con el beneficiario ideal.</div>
+
+          <!-- Category -->
+          <div class="field-wrap">
+            <label class="field-label">Categoría <span class="req-dot"></span></label>
+            <div class="cat-pill-grid" id="catGrid" role="radiogroup" aria-label="Categoría del artículo">
+              <div class="cat-item" onclick="selectCat('ropa',this)"       role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">👕</span><span class="ci-label">Ropa</span></div>
+              <div class="cat-item" onclick="selectCat('juguetes',this)"   role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧸</span><span class="ci-label">Juguetes</span></div>
+              <div class="cat-item" onclick="selectCat('utiles',this)"     role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📚</span><span class="ci-label">Útiles</span></div>
+              <div class="cat-item" onclick="selectCat('calzado',this)"    role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">👟</span><span class="ci-label">Calzado</span></div>
+              <div class="cat-item" onclick="selectCat('libros',this)"     role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📖</span><span class="ci-label">Libros</span></div>
+              <div class="cat-item" onclick="selectCat('higiene',this)"    role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧴</span><span class="ci-label">Higiene</span></div>
+              <div class="cat-item" onclick="selectCat('alimentos',this)"  role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🥫</span><span class="ci-label">Alimentos</span></div>
+              <div class="cat-item" onclick="selectCat('otro',this)"       role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📦</span><span class="ci-label">Otro</span></div>
+            </div>
+            <div class="field-error" id="e-cat">Selecciona una categoría</div>
+          </div>
+
+          <div class="form-row2" style="margin-top:4px;">
+            <div class="field-wrap">
+              <label class="field-label" for="f-qty">Cantidad <span class="req-dot"></span></label>
+              <input class="field-input" type="number" id="f-qty" min="1" max="999" placeholder="Ej: 5" aria-required="true" oninput="validateField(this,'qty')" style="width:100%;"/>
+              <div class="field-error" id="e-qty">Ingresa una cantidad válida (mínimo 1)</div>
+            </div>
+            <div class="field-wrap">
+              <label class="field-label">Estado del artículo <span class="req-dot"></span></label>
+              <div class="cond-grid" id="condGrid" role="radiogroup">
+                <div class="cond-btn" onclick="selectCond('nuevo',this)"     role="radio" tabindex="0" aria-checked="false"><span class="cb-emoji">✨</span><span class="cb-label">Nuevo</span></div>
+                <div class="cond-btn" onclick="selectCond('excelente',this)" role="radio" tabindex="0" aria-checked="false"><span class="cb-emoji">👍</span><span class="cb-label">Excelente</span></div>
+                <div class="cond-btn" onclick="selectCond('bueno',this)"     role="radio" tabindex="0" aria-checked="false"><span class="cb-emoji">💛</span><span class="cb-label">Bueno</span></div>
+              </div>
+              <div class="field-error" id="e-cond">Selecciona el estado del artículo</div>
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <label class="field-label" for="f-desc">Descripción detallada <span class="req-dot"></span></label>
+            <textarea class="field-input" id="f-desc" rows="4" placeholder="Ej: 3 bodies de algodón talla 6-12 meses, colores pasteles, sin manchas ni desgaste. Usados solo 3 meses." maxlength="400" aria-required="true" oninput="updateChar(this,'char-desc',400)"></textarea>
+            <div class="char-count"><span id="char-desc">0</span>/400 caracteres</div>
+            <div class="field-error" id="e-desc">La descripción ayuda a la fundación. Mínimo 20 caracteres.</div>
+          </div>
+
+          <!-- Photo upload -->
+          <div class="field-wrap">
+            <label class="field-label" for="photoInput">📷 Foto del artículo <span style="font-size:.75rem;font-weight:400;color:var(--gray-mid);">(opcional, recomendada)</span></label>
+            <div class="photo-upload" id="photoZone" aria-label="Zona de carga de fotos">
+              <div class="map-grid-bg" aria-hidden="true"></div>
+              <input type="file" id="photoInput" multiple accept="image/*" onchange="previewPhotos(this)" aria-label="Subir fotos del artículo"/>
+              <div style="position:relative;z-index:2;">
+                <div style="font-size:2.5rem;margin-bottom:8px;" aria-hidden="true">📷</div>
+                <div style="font-family:var(--font-title);font-weight:700;font-size:.9rem;">Arrastra o haz clic para subir fotos</div>
+                <div style="font-size:.75rem;color:var(--gray-mid);margin-top:4px;">Máximo 3 fotos · JPG, PNG, WebP · Máx. 5MB c/u</div>
+              </div>
+            </div>
+            <div class="photo-preview" id="photoPreview"></div>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn-back" onclick="prevStep(2)">← Atrás</button>
+            <button class="btn-next" onclick="nextStep(2)" aria-label="Ir al paso 3">
+              Continuar <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 3: Pickup logistics ═══ -->
+        <div class="form-step" id="step3" role="region" aria-label="Paso 3: Logística de recogida">
+          <div class="fs-title">📍 ¿Dónde recogemos?</div>
+          <div class="fs-desc">Coordinaremos una visita sin costo. Solo dinos cuándo y dónde.</div>
+
+          <div class="field-wrap">
+            <label class="field-label" for="f-addr">Dirección de recogida <span class="req-dot"></span></label>
+            <input class="field-input" type="text" id="f-addr" placeholder="Calle, número, barrio..." aria-required="true" oninput="validateField(this,'address')"/>
+            <div class="field-error" id="e-addr">Ingresa una dirección válida</div>
+          </div>
+
+          <div class="form-row2">
+            <div class="field-wrap">
+              <label class="field-label" for="f-city">Ciudad <span class="req-dot"></span></label>
+              <select class="field-input" id="f-city" aria-required="true">
+                <option value="">Selecciona...</option>
+                <option>Bogotá</option><option>Medellín</option><option>Cali</option>
+                <option>Barranquilla</option><option>Bucaramanga</option><option>Pereira</option>
+                <option>Manizales</option><option>Cartagena</option><option>Otra ciudad</option>
+              </select>
+              <div class="field-error" id="e-city">Selecciona tu ciudad</div>
+            </div>
+            <div class="field-wrap">
+              <label class="field-label" for="f-zip">Código postal</label>
+              <input class="field-input" type="text" id="f-zip" placeholder="Ej: 110221" maxlength="6"/>
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <label class="field-label" for="f-ref">Referencia o indicaciones adicionales</label>
+            <input class="field-input" type="text" id="f-ref" placeholder="Ej: Piso 4, portería Edificio Los Pinos, preguntar por María"/>
+          </div>
+
+          <!-- Map -->
+          <div class="field-wrap">
+            <label class="field-label">Ubicación en el mapa</label>
+            <div class="map-box" id="mapBox" onclick="confirmMap()" role="button" tabindex="0" aria-label="Confirmar ubicación en el mapa" onkeypress="if(event.key==='Enter')confirmMap()">
+              <div class="map-grid-bg" aria-hidden="true"></div>
+              <!-- Fake interactive map SVG -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.5;" viewBox="0 0 800 200" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 100 Q200 80 400 100 Q600 120 800 100" stroke="rgba(150,150,150,.6)" stroke-width="8" fill="none" stroke-linecap="round"/>
+                <path d="M200 0 Q210 50 200 100 Q190 150 200 200" stroke="rgba(150,150,150,.4)" stroke-width="5" fill="none"/>
+                <path d="M600 0 Q610 50 600 100 Q590 150 600 200" stroke="rgba(150,150,150,.4)" stroke-width="5" fill="none"/>
+              </svg>
+              <div style="position:relative;z-index:2;text-align:center;" id="mapContent">
+                <div style="font-size:2rem;margin-bottom:6px;" aria-hidden="true">📍</div>
+                <div style="font-family:var(--font-title);font-weight:700;font-size:.9rem;">Haz clic para confirmar ubicación</div>
+                <div style="font-size:.75rem;color:var(--gray-mid);margin-top:3px;">Usamos tu dirección para guiar al voluntario</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row2">
+            <div class="field-wrap">
+              <label class="field-label" for="f-date">Fecha preferida <span class="req-dot"></span></label>
+              <input class="field-input" type="date" id="f-date" aria-required="true" onchange="validateField(this,'date')"/>
+              <div class="field-error" id="e-date">Selecciona una fecha válida (mínimo mañana)</div>
+            </div>
+            <div class="field-wrap">
+              <label class="field-label" for="f-time">Franja horaria <span class="req-dot"></span></label>
+              <select class="field-input" id="f-time" aria-required="true">
+                <option value="">Selecciona...</option>
+                <option value="morning">🌅 Mañana (8am – 12pm)</option>
+                <option value="afternoon">☀️ Tarde (12pm – 5pm)</option>
+                <option value="evening">🌙 Noche (5pm – 8pm)</option>
+                <option value="all">📅 Disponible todo el día</option>
+              </select>
+              <div class="field-error" id="e-time">Selecciona una franja horaria</div>
+            </div>
+          </div>
+
+          <div class="form-nav">
+            <button class="btn-back" onclick="prevStep(3)">← Atrás</button>
+            <button class="btn-next" onclick="nextStep(3)" aria-label="Ir al paso 4">
+              Continuar <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 4: Confirm ═══ -->
+        <div class="form-step" id="step4" role="region" aria-label="Paso 4: Confirmación">
+          <div class="fs-title">✅ Confirma tu donación</div>
+          <div class="fs-desc">Revisa los detalles antes de enviar. ¡Ya casi llegas a tu primer impacto!</div>
+
+          <!-- Summary -->
+          <div class="summary-card" id="summaryContent" role="region" aria-label="Resumen de donación">
+            <!-- generado dinámicamente por JS -->
+          </div>
+
+          <!-- Points preview -->
+          <div style="background:linear-gradient(135deg,var(--coral-bg),var(--yellow-bg));border-radius:var(--r-xl);padding:20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;">
+            <span style="font-size:2.5rem;" aria-hidden="true">⭐</span>
+            <div>
+              <div style="font-family:var(--font-title);font-weight:700;">Ganarás <strong style="color:var(--coral);" id="pts-preview">+150 puntos</strong> de bondad</div>
+              <div style="font-size:.78rem;color:var(--gray-mid);margin-top:3px;">Se suman a tu perfil inmediatamente · Desbloqueas beneficios exclusivos</div>
+            </div>
+          </div>
+
+          <!-- T&C -->
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:.875rem;color:var(--carbon-soft);line-height:1.6;margin-bottom:24px;" for="f-terms">
+            <input type="checkbox" id="f-terms" style="margin-top:3px;accent-color:var(--coral);width:17px;height:17px;flex-shrink:0;" aria-required="true"/>
+            Acepto que los artículos donados se entreguen a organizaciones aliadas de TuKids. Entiendo que es una donación voluntaria sin retribución económica. He leído los <a href="#" style="color:var(--coral);" onclick="return false;">Términos y Condiciones</a>.
+          </label>
+
+          <div class="form-nav">
+            <button class="btn-back" onclick="prevStep(4)">← Atrás</button>
+            <button class="btn-submit" onclick="submitDonation()" aria-label="Confirmar y enviar donación">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              Confirmar donación 💖
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /form-card -->
+    </div><!-- /wizard-wrap -->
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FAQ
+════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div style="max-width:680px;margin:0 auto;">
+      <div class="text-center reveal" style="margin-bottom:36px;">
+        <div class="section-badge lilac" style="margin:0 auto 14px;width:fit-content;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Preguntas frecuentes
+        </div>
+        <h2>Todo lo que quieres saber</h2>
+      </div>
+      <div id="faqList" class="reveal">
+        <!-- FAQs generadas por JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     TRANSPARENCIA
+════════════════════════════════════════════════════════ -->
+<section class="section-sm" style="background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));">
+  <div class="container">
+    <div class="text-center reveal" style="margin-bottom:8px;">
+      <h2>El <span style="color:var(--mint-dark);">100%</span> de tu donación<br/>llega a los niños 🌱</h2>
+      <p style="max-width:480px;margin:10px auto 0;">TuKids opera sin fines de lucro en el módulo de donaciones. Cero comisiones, cero burocracia.</p>
+    </div>
+    <div class="trust-grid reveal">
+      <div class="trust-card">
+        <div class="trust-icon" aria-hidden="true">🔍</div>
+        <h5>Transparencia total</h5>
+        <p>Publicamos reportes mensuales de cada donación recibida y entregada, con nombre de fundación y fecha.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon" aria-hidden="true">🤝</div>
+        <h5>Fundaciones verificadas</h5>
+        <p>Trabajamos solo con organizaciones registradas y auditadas. Cada aliado pasa por un proceso de validación.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon" aria-hidden="true">📧</div>
+        <h5>Seguimiento en tiempo real</h5>
+        <p>Recibirás confirmación por email en cada etapa: recogida, entrega a fundación y fotos del impacto final.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SUCCESS MODAL (gamificación completa)
+════════════════════════════════════════════════════════ -->
+<div class="success-screen" id="successScreen" role="dialog" aria-modal="true" aria-labelledby="success-title">
+  <div class="success-modal" id="successModal">
+
+    <!-- Check animado SVG -->
+    <div class="check-circle" aria-hidden="true">
+      <svg class="check-svg" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="25" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+        <polyline class="check-path" points="14 27 22 35 38 17" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div style="font-size:1.7rem;margin-bottom:8px;" aria-hidden="true">🎉</div>
+    <h2 id="success-title" style="font-size:1.5rem;margin-bottom:8px;" id="success-name">¡Gracias, María!</h2>
+    <p style="color:var(--gray-mid);font-size:.88rem;max-width:380px;margin:0 auto 24px;line-height:1.7;">
+      Tu donación fue registrada. Un coordinador te contactará en las próximas <strong>24 horas</strong> para organizar la recogida.<br/>
+      <strong style="color:var(--coral);">Tu generosidad cambia vidas. 💛</strong>
+    </p>
+
+    <!-- Puntos ganados -->
+    <div style="background:linear-gradient(135deg,var(--coral-bg),var(--yellow-bg));border-radius:var(--r-xl);padding:24px;margin-bottom:20px;" role="region" aria-label="Puntos ganados">
+      <div style="font-size:.75rem;color:var(--gray-mid);font-weight:700;font-family:var(--font-title);letter-spacing:.06em;margin-bottom:8px;">PUNTOS GANADOS EN ESTA DONACIÓN</div>
+      <span class="pts-earned" id="ptsEarned" aria-live="polite">+150 ⭐</span>
+      <div style="font-size:.85rem;color:var(--gray-mid);margin-top:10px;" id="ptsTotal">Total acumulado: <strong style="color:var(--coral);">490 puntos</strong></div>
+
+      <!-- Level progress -->
+      <div style="margin-top:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;font-weight:700;margin-bottom:4px;">
+          <span>💫 Colaborador</span><span style="color:var(--coral);">⭐ Benefactor →</span>
+        </div>
+        <div class="lvl-progress-track" aria-hidden="true">
+          <div class="lvl-progress-fill" id="lvlFill"></div>
+        </div>
+        <div style="font-size:.72rem;color:var(--gray-mid);text-align:center;" id="lvlLeft">310 puntos para el siguiente nivel</div>
+      </div>
+    </div>
+
+    <!-- Certificado -->
+    <button class="btn-cert" onclick="downloadCertificate()" aria-label="Descargar certificado de donación">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+      Descargar certificado digital de donación
+    </button>
+
+    <!-- Share -->
+    <div style="font-size:.82rem;color:var(--gray-mid);font-weight:600;margin:18px 0 10px;">Comparte y motiva a tu comunidad 💪</div>
+    <div class="share-row">
+      <button class="sh-btn sh-wa"  onclick="share('wa')"   aria-label="Compartir en WhatsApp">📲 WhatsApp</button>
+      <button class="sh-btn sh-ig"  onclick="share('ig')"   aria-label="Compartir en Instagram">📸 Instagram</button>
+      <button class="sh-btn sh-fb"  onclick="share('fb')"   aria-label="Compartir en Facebook">👍 Facebook</button>
+      <button class="sh-btn sh-cp"  onclick="share('copy')" aria-label="Copiar enlace">🔗 Copiar link</button>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
+      <button class="btn-next" onclick="closeSuccess()" style="background:var(--coral);" aria-label="Hacer otra donación">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        Otra donación
+      </button>
+      <a href="perfil.html" class="btn btn-outline btn-md">Ver mi historial</a>
+    </div>
+  </div>
+</div>
+
+<!-- Confetti canvas -->
+<canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" aria-label="Navegación principal móvil">
+  <div class="mobile-nav-inner">
+    <a href="index.html"      class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html"   class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html"   class="mob-nav-item mob-nav-publish"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="donaciones.html" class="mob-nav-item active" aria-current="page"><span style="font-size:1.2rem;">❤️</span>Donar</a>
+    <a href="perfil.html"     class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════════════ -->
+<script src="js/app.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════════════════════ */
+const POINTS_TABLE = { nuevo:200, excelente:150, bueno:100 };
+const LS_KEY = 'tk_don_draft';
+
+const LEVELS = [
+  { name:'🌱 Sembrador',        min:0,    max:100  },
+  { name:'💫 Colaborador',      min:101,  max:500  },
+  { name:'⭐ Benefactor',       min:501,  max:1500 },
+  { name:'🏆 Héroe Solidario',  min:1501, max:5000 },
+  { name:'👑 Embajador del Cambio', min:5001, max:Infinity },
+];
+
+const FAQS = [
+  { q: '¿Qué artículos puedo donar?',
+    a: 'Ropa, juguetes, útiles escolares, calzado, libros, artículos de higiene y alimentos no perecederos en buen estado. Artículos rotos, sucios o en mal estado no pueden ser aceptados.' },
+  { q: '¿La recogida tiene algún costo?',
+    a: 'No. TuKids coordina la recogida sin costo alguno para el donante. Nuestros voluntarios van hasta tu puerta en la franja horaria que elijas.' },
+  { q: '¿Cómo sé que mi donación llegó a los niños?',
+    a: 'Recibirás un correo de confirmación en cada etapa: recogida, entrega a fundación y, en muchos casos, fotos del impacto. También puedes ver el estado en tu perfil.' },
+  { q: '¿Puedo donar de forma anónima?',
+    a: 'Sí. Simplemente marca la opción "Donar de forma anónima" en el formulario. Tu nombre no aparecer en el feed público, pero sí recibirás tus puntos y el certificado.' },
+  { q: '¿Los puntos tienen algún beneficio real?',
+    a: 'Sí. Los puntos desbloquean descuentos en compras dentro de TuKids, acceso anticipado a campañas exclusivas y, al nivel Embajador, una placa física y reconocimiento en la comunidad.' },
+  { q: '¿Puedo donar desde cualquier ciudad?',
+    a: 'Actualmente tenemos red de voluntarios en Bogotá, Medellín, Cali, Barranquilla, Bucaramanga, Pereira y Manizales. Estamos expandiendo. Si no estás en ninguna, contáctanos.' },
+];
+
+/* ════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════ */
+let currentStep = 1;
+let selectedCat  = '';
+let selectedCond = '';
+let mapConfirmed = false;
+let photoFiles   = [];
+let userPoints   = parseInt(localStorage.getItem('tk_donation_points') || '340');
+
+/* ════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildFAQ();
+  animateCounters();
+  setMinDate();
+  loadDraft();
+  animateCampaignBars();
+});
+
+/* ════════════════════════════════════════════════════════
+   COUNTER ANIMATION
+════════════════════════════════════════════════════════ */
+function animateCounters() {
+  const counters = document.querySelectorAll('.counter-num[data-target]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const duration = 2000;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = Math.floor(current).toLocaleString('es-CO');
+        if (current >= target) clearInterval(timer);
+      }, 16);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => observer.observe(c));
+}
+
+/* ════════════════════════════════════════════════════════
+   CAMPAIGN PROGRESS BARS (animate on scroll)
+════════════════════════════════════════════════════════ */
+function animateCampaignBars() {
+  const fills = document.querySelectorAll('.camp-progress-fill');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = el.style.width;
+      el.style.width = '0';
+      setTimeout(() => { el.style.width = target; }, 100);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.3 });
+  fills.forEach(f => observer.observe(f));
+}
+
+/* ════════════════════════════════════════════════════════
+   FAQ BUILDER
+════════════════════════════════════════════════════════ */
+function buildFAQ() {
+  const container = document.getElementById('faqList');
+  container.innerHTML = FAQS.map((f, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFAQ(${i})" role="button" tabindex="0"
+           aria-expanded="false" aria-controls="faq-a-${i}"
+           onkeypress="if(event.key==='Enter')toggleFAQ(${i})">
+        ${f.q}
+        <div class="faq-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+      <div class="faq-a" id="faq-a-${i}" role="region">${f.a}</div>
+    </div>
+  `).join('');
+}
+function toggleFAQ(i) {
+  const item = document.getElementById(`faq-${i}`);
+  const btn  = item.querySelector('.faq-q');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(it => {
+    it.classList.remove('open');
+    it.querySelector('.faq-q').setAttribute('aria-expanded','false');
+  });
+  if (!wasOpen) {
+    item.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   FORM — Category & Condition selectors
+════════════════════════════════════════════════════════ */
+function selectCat(cat, el) {
+  selectedCat = cat;
+  document.querySelectorAll('.cat-item').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-checked','false'); });
+  el.classList.add('selected'); el.setAttribute('aria-checked','true');
+  document.getElementById('e-cat').classList.remove('show');
+  saveDraft();
+  updatePointsPreview();
+}
+function selectCond(cond, el) {
+  selectedCond = cond;
+  document.querySelectorAll('.cond-btn').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-checked','false'); });
+  el.classList.add('selected'); el.setAttribute('aria-checked','true');
+  document.getElementById('e-cond').classList.remove('show');
+  saveDraft();
+  updatePointsPreview();
+}
+function updatePointsPreview() {
+  const base = POINTS_TABLE[selectedCond] || 100;
+  const qty  = parseInt(document.getElementById('f-qty').value) || 1;
+  const pts  = Math.min(base * qty, 500);
+  const el   = document.getElementById('pts-preview');
+  if(el) el.textContent = `+${pts} puntos`;
+}
+
+/* ════════════════════════════════════════════════════════
+   CHAR COUNTER
+════════════════════════════════════════════════════════ */
+function updateChar(el, countId, max) {
+  const count = el.value.length;
+  document.getElementById(countId).textContent = count;
+  if(count > max * .85) document.getElementById(countId).style.color = 'var(--coral)';
+  else                   document.getElementById(countId).style.color = '';
+}
+
+/* ════════════════════════════════════════════════════════
+   PHOTO PREVIEW
+════════════════════════════════════════════════════════ */
+function previewPhotos(input) {
+  const files = Array.from(input.files).slice(0, 3);
+  photoFiles  = files;
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '';
+  files.forEach((file, i) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const div = document.createElement('div');
+      div.className = 'photo-thumb';
+      div.innerHTML = `<img src="${e.target.result}" alt="Foto ${i+1} del artículo"/><button class="photo-remove" onclick="removePhoto(${i})" aria-label="Eliminar foto ${i+1}">✕</button>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function removePhoto(i) {
+  photoFiles.splice(i, 1);
+  document.getElementById('photoInput').value = '';
+  document.getElementById('photoPreview').innerHTML = '';
+  // re-render remaining
+  photoFiles.forEach((f, idx) => {
+    const r = new FileReader();
+    r.onload = e => {
+      const d = document.createElement('div'); d.className = 'photo-thumb';
+      d.innerHTML = `<img src="${e.target.result}" alt="Foto ${idx+1}"/><button class="photo-remove" onclick="removePhoto(${idx})" aria-label="Eliminar foto ${idx+1}">✕</button>`;
+      document.getElementById('photoPreview').appendChild(d);
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   MAP CONFIRM
+════════════════════════════════════════════════════════ */
+function confirmMap() {
+  mapConfirmed = true;
+  const box = document.getElementById('mapBox');
+  const content = document.getElementById('mapContent');
+  box.classList.add('confirmed');
+  content.innerHTML = `<div style="font-size:2rem;" aria-hidden="true">✅</div><div style="font-family:var(--font-title);font-weight:700;font-size:.9rem;color:var(--mint-dark);">Ubicación confirmada</div><div style="font-size:.75rem;color:var(--gray-mid);margin-top:3px;">${document.getElementById('f-addr').value || 'Dirección registrada'}</div>`;
+  showToast('Ubicación registrada','Tu punto de recogida fue confirmado 📍','mint');
+}
+
+/* ════════════════════════════════════════════════════════
+   VALIDATION
+════════════════════════════════════════════════════════ */
+function validateField(el, type) {
+  const val = el.value.trim();
+  let ok = false;
+  switch(type) {
+    case 'name':    ok = val.length >= 3; break;
+    case 'phone':   ok = /^[+\d\s]{7,15}$/.test(val); break;
+    case 'email':   ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val); break;
+    case 'qty':     ok = parseInt(val) >= 1; break;
+    case 'address': ok = val.length >= 8; break;
+    case 'date':
+      const d = new Date(val);
+      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+      ok = d >= tomorrow;
+      break;
+  }
+  const errEl = document.getElementById('e-' + { name:'name',phone:'phone',email:'email',qty:'qty',address:'addr',date:'date' }[type]);
+  el.classList.toggle('ok-field', ok);
+  el.classList.toggle('error-field', !ok && val.length > 0);
+  if(errEl) errEl.classList.toggle('show', !ok && val.length > 0);
+  saveDraft();
+  return ok;
+}
+
+function validateStep(step) {
+  const errors = [];
+  if(step === 1) {
+    if(!validateField(document.getElementById('f-name'),  'name'))  errors.push('nombre completo');
+    if(!validateField(document.getElementById('f-phone'), 'phone')) errors.push('teléfono');
+    if(!validateField(document.getElementById('f-email'), 'email')) errors.push('correo electrónico');
+  }
+  if(step === 2) {
+    if(!selectedCat)  { document.getElementById('e-cat').classList.add('show'); errors.push('categoría'); }
+    if(!selectedCond) { document.getElementById('e-cond').classList.add('show'); errors.push('estado del artículo'); }
+    if(!validateField(document.getElementById('f-qty'),  'qty'))  errors.push('cantidad');
+    const desc = document.getElementById('f-desc').value.trim();
+    if(desc.length < 20) { document.getElementById('e-desc').classList.add('show'); errors.push('descripción (mín. 20 caracteres)'); }
+    else document.getElementById('e-desc').classList.remove('show');
+  }
+  if(step === 3) {
+    if(!validateField(document.getElementById('f-addr'), 'address')) errors.push('dirección');
+    if(!document.getElementById('f-city').value) { document.getElementById('e-city').classList.add('show'); errors.push('ciudad'); }
+    else document.getElementById('e-city').classList.remove('show');
+    if(!validateField(document.getElementById('f-date'), 'date')) errors.push('fecha de recogida');
+    if(!document.getElementById('f-time').value) { document.getElementById('e-time').classList.add('show'); errors.push('franja horaria'); }
+    else document.getElementById('e-time').classList.remove('show');
+  }
+  if(step === 4) {
+    if(!document.getElementById('f-terms').checked) {
+      errors.push('aceptar términos y condiciones');
+    }
+  }
+  if(errors.length > 0) {
+    showToast('Campos incompletos', `Revisa: ${errors.slice(0,2).join(', ')}${errors.length>2?' y más...':''}`, 'coral');
+    return false;
+  }
+  return true;
+}
+
+/* ════════════════════════════════════════════════════════
+   WIZARD NAVIGATION
+════════════════════════════════════════════════════════ */
+function nextStep(from) {
+  if(!validateStep(from)) return;
+  if(from === 3) buildSummary(); // build summary before step 4
+  goToStep(from + 1);
+}
+function prevStep(from) { goToStep(from - 1); }
+
+function goToStep(step) {
+  // Hide all
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.wp-step').forEach((s, i) => {
+    s.classList.remove('active','done');
+    if(i + 1 < step)  s.classList.add('done');
+    if(i + 1 === step) s.classList.add('active');
+  });
+  document.getElementById(`step${step}`).classList.add('active');
+  currentStep = step;
+  // Scroll to form
+  document.getElementById('donForm').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ════════════════════════════════════════════════════════
+   SUMMARY BUILDER
+════════════════════════════════════════════════════════ */
+const CAT_LABELS = { ropa:'👕 Ropa', juguetes:'🧸 Juguetes', utiles:'📚 Útiles escolares', calzado:'👟 Calzado', libros:'📖 Libros', higiene:'🧴 Higiene', alimentos:'🥫 Alimentos', otro:'📦 Otro' };
+const COND_LABELS = { nuevo:'✨ Nuevo', excelente:'👍 Excelente', bueno:'💛 Buen estado' };
+const TIME_LABELS = { morning:'🌅 Mañana (8am–12pm)', afternoon:'☀️ Tarde (12pm–5pm)', evening:'🌙 Noche (5pm–8pm)', all:'📅 Todo el día' };
+
+function buildSummary() {
+  const name   = document.getElementById('f-name').value;
+  const email  = document.getElementById('f-email').value;
+  const anon   = document.getElementById('f-anon').checked;
+  const cat    = CAT_LABELS[selectedCat] || selectedCat;
+  const cond   = COND_LABELS[selectedCond] || selectedCond;
+  const qty    = document.getElementById('f-qty').value;
+  const desc   = document.getElementById('f-desc').value;
+  const addr   = document.getElementById('f-addr').value;
+  const city   = document.getElementById('f-city').value;
+  const date   = document.getElementById('f-date').value;
+  const timeV  = document.getElementById('f-time').value;
+  const time   = TIME_LABELS[timeV] || timeV;
+  const pts    = Math.min((POINTS_TABLE[selectedCond]||100) * (parseInt(qty)||1), 500);
+
+  document.getElementById('summaryContent').innerHTML = `
+    <div class="summary-row"><div class="sr-key">👤 Donante</div><div class="sr-val">${anon ? '🕵️ Anónimo' : name}</div></div>
+    <div class="summary-row"><div class="sr-key">📧 Email</div><div class="sr-val">${email}</div></div>
+    <div class="summary-row"><div class="sr-key">🎁 Artículo</div><div class="sr-val">${cat} · ${qty} unidad(es)</div></div>
+    <div class="summary-row"><div class="sr-key">✨ Estado</div><div class="sr-val">${cond}</div></div>
+    <div class="summary-row"><div class="sr-key">📝 Descripción</div><div class="sr-val">${desc}</div></div>
+    <div class="summary-row"><div class="sr-key">📍 Dirección</div><div class="sr-val">${addr}, ${city}</div></div>
+    <div class="summary-row"><div class="sr-key">📅 Recogida</div><div class="sr-val">${date} · ${time}</div></div>
+    <div class="summary-row" style="padding-top:12px;"><div class="sr-key" style="color:var(--coral);font-weight:800;">⭐ Puntos a ganar</div><div class="sr-val" style="color:var(--coral);font-family:var(--font-title);font-size:1.1rem;">+${pts} puntos</div></div>
+  `;
+  document.getElementById('pts-preview').textContent = `+${pts} puntos`;
+}
+
+/* ════════════════════════════════════════════════════════
+   SUBMIT
+════════════════════════════════════════════════════════ */
+function submitDonation() {
+  if(!validateStep(4)) return;
+  const name    = document.getElementById('f-name').value;
+  const cond    = selectedCond;
+  const qty     = parseInt(document.getElementById('f-qty').value) || 1;
+  const earned  = Math.min((POINTS_TABLE[cond]||100) * qty, 500);
+  userPoints   += earned;
+  localStorage.setItem('tk_donation_points', userPoints);
+  clearDraft();
+
+  // Determine level
+  const lvl = LEVELS.find(l => userPoints >= l.min && userPoints <= l.max) || LEVELS[4];
+  const next = LEVELS[LEVELS.indexOf(lvl)+1];
+  const progress = next ? Math.round(((userPoints - lvl.min)/(next.min - lvl.min))*100) : 100;
+
+  // Update modal
+  document.getElementById('success-name').textContent = `¡Gracias${name ? ', '+name.split(' ')[0] : ''}! 🎉`;
+  document.getElementById('ptsEarned').textContent = `+${earned} ⭐`;
+  document.getElementById('ptsTotal').innerHTML = `Total acumulado: <strong style="color:var(--coral);">${userPoints.toLocaleString('es-CO')} puntos</strong>`;
+  document.getElementById('lvlLeft').textContent = next ? `${next.min - userPoints} puntos para ${next.name}` : '¡Nivel máximo alcanzado! 👑';
+
+  // Show modal
+  const screen = document.getElementById('successScreen');
+  screen.classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  // Trigger level bar animation
+  setTimeout(() => {
+    document.getElementById('lvlFill').style.width = progress + '%';
+  }, 500);
+
+  // Confetti
+  setTimeout(launchConfetti, 200);
+}
+
+function closeSuccess() {
+  document.getElementById('successScreen').classList.remove('show');
+  document.body.style.overflow = '';
+  // Reset form
+  goToStep(1);
+  selectedCat = ''; selectedCond = '';
+  document.querySelectorAll('.cat-item,.cond-btn').forEach(el => { el.classList.remove('selected'); el.setAttribute('aria-checked','false'); });
+  document.querySelectorAll('.field-input').forEach(el => { el.value = ''; el.classList.remove('ok-field','error-field'); });
+  document.getElementById('photoPreview').innerHTML = '';
+  photoFiles = [];
+}
+
+/* ════════════════════════════════════════════════════════
+   LOCALSTORAGE DRAFT AUTO-SAVE
+════════════════════════════════════════════════════════ */
+function saveDraft() {
+  const draft = {
+    name:  document.getElementById('f-name').value,
+    phone: document.getElementById('f-phone').value,
+    email: document.getElementById('f-email').value,
+    cat:   selectedCat, cond: selectedCond,
+    qty:   document.getElementById('f-qty').value,
+    desc:  document.getElementById('f-desc').value,
+    addr:  document.getElementById('f-addr').value,
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(draft));
+}
+function loadDraft() {
+  try {
+    const d = JSON.parse(localStorage.getItem(LS_KEY));
+    if(!d) return;
+    if(d.name)  document.getElementById('f-name').value  = d.name;
+    if(d.phone) document.getElementById('f-phone').value = d.phone;
+    if(d.email) document.getElementById('f-email').value = d.email;
+    if(d.qty)   document.getElementById('f-qty').value   = d.qty;
+    if(d.desc)  { document.getElementById('f-desc').value = d.desc; updateChar(document.getElementById('f-desc'),'char-desc',400); }
+    if(d.addr)  document.getElementById('f-addr').value  = d.addr;
+    if(d.cat)   document.querySelector(`.cat-item[onclick*="'${d.cat}'"]`)?.click();
+    if(d.cond)  document.querySelector(`.cond-btn[onclick*="'${d.cond}'"]`)?.click();
+    if(Object.values(d).some(v=>v)) showToast('Borrador restaurado','Continuamos donde lo dejaste 💾','mint');
+  } catch(e) {}
+}
+function clearDraft() { localStorage.removeItem(LS_KEY); }
+
+/* ════════════════════════════════════════════════════════
+   MIN DATE
+════════════════════════════════════════════════════════ */
+function setMinDate() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('f-date').min = tomorrow.toISOString().split('T')[0];
+}
+
+/* ════════════════════════════════════════════════════════
+   CONFETTI ENGINE
+════════════════════════════════════════════════════════ */
+function launchConfetti() {
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const COLORS  = ['#FF8C7A','#FFD97D','#7DD8C7','#B8A4E3','#A8D8EA','#FF6461','#fff'];
+  const pieces  = Array.from({length:220}, () => ({
+    x:  Math.random() * canvas.width,
+    y:  Math.random() * canvas.height - canvas.height,
+    w:  5 + Math.random() * 9, h: 4 + Math.random() * 6,
+    rot: Math.random() * 360, rotV: (Math.random()-.5)*7,
+    vx: (Math.random()-.5)*4, vy: 2.5+Math.random()*4,
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    shape: Math.random()>.55 ? 'circle':'rect', life:1
+  }));
+  let frame = 0;
+  function draw() {
+    if(frame++ > 220){ ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rotV; p.vy+=.11;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.globalAlpha=Math.max(0,1-frame/220);
+      if(p.shape==='circle'){ ctx.beginPath(); ctx.arc(0,0,p.w*.5,0,Math.PI*2); ctx.fill(); }
+      else ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ════════════════════════════════════════════════════════
+   CERTIFICATE (simulated)
+════════════════════════════════════════════════════════ */
+function downloadCertificate() {
+  const name  = document.getElementById('f-name').value || 'Donante';
+  const cat   = document.getElementById('f-cat-hidden')?.value || selectedCat;
+  const date  = new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'});
+  const code  = 'TK-DON-' + Math.random().toString(36).substr(2,8).toUpperCase();
+
+  // Build a printable cert page
+  const win = window.open('','_blank','width=700,height=500');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Certificado TuKids</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    body{margin:0;font-family:Inter,sans-serif;background:linear-gradient(135deg,#FFF0EE,#FAFAFA);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .cert{background:#fff;border-radius:24px;padding:52px 60px;max-width:620px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.12);border:3px solid #FFD97D;}
+    h1{font-family:Poppins,sans-serif;font-size:2rem;font-weight:900;color:#2D3436;margin-bottom:6px;}
+    .subtitle{color:#FF8C7A;font-family:Poppins,sans-serif;font-weight:700;font-size:1rem;margin-bottom:28px;}
+    .donante{font-size:1.8rem;font-weight:900;font-family:Poppins,sans-serif;color:#2D3436;border-bottom:3px solid #FFD97D;display:inline-block;padding-bottom:4px;margin:8px 0 20px;}
+    p{color:#636e72;line-height:1.7;max-width:480px;margin:0 auto 16px;}
+    .code{background:#FFF0EE;border-radius:10px;padding:10px 20px;font-family:monospace;font-size:.9rem;color:#FF8C7A;font-weight:700;display:inline-block;margin:8px 0;}
+    .footer{margin-top:28px;font-size:.75rem;color:#b2bec3;}
+    @media print{body{background:#fff;} .cert{box-shadow:none;border-color:#FFD97D;}}
+  </style></head><body>
+  <div class="cert">
+    <div style="font-size:3rem;margin-bottom:10px;">🐦</div>
+    <h1>Certificado de Donación</h1>
+    <div class="subtitle">TuKids · Marketplace solidario</div>
+    <p>Este certificado acredita que</p>
+    <div class="donante">${name}</div>
+    <p>realizó una donación el <strong>${date}</strong>, contribuyendo activamente al bienestar de niños y niñas en situación de vulnerabilidad a través de la red TuKids.</p>
+    <p><strong>Código de donación:</strong></p>
+    <div class="code">${code}</div>
+    <p style="margin-top:16px;font-size:.85rem;">El 100% de los artículos donados son entregados a fundaciones aliadas verificadas. Gracias por ser parte del cambio. 💛</p>
+    <div class="footer">TuKids · tukids.com · donaciones@tukids.com</div>
+    <div style="margin-top:20px;"><button onclick="window.print()" style="background:#FF8C7A;color:#fff;border:none;border-radius:12px;padding:12px 28px;font-family:Poppins,sans-serif;font-weight:700;cursor:pointer;font-size:.9rem;">🖨️ Imprimir / Guardar PDF</button></div>
+  </div></body></html>`);
+  win.document.close();
+  showToast('Certificado generado','Descarga o imprime tu certificado digital 📄','mint');
+}
+
+/* ════════════════════════════════════════════════════════
+   SOCIAL SHARE
+════════════════════════════════════════════════════════ */
+function share(platform) {
+  const msg = encodeURIComponent('¡Acabo de donar en TuKids! 🐦❤️ Artículos 100% para niños de escasos recursos. ¡Únete al cambio! → https://tukids.com/donaciones');
+  const url = encodeURIComponent('https://tukids.com/donaciones');
+  const links = {
+    wa:   `https://wa.me/?text=${msg}`,
+    ig:   null,
+    fb:   `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    tw:   `https://twitter.com/intent/tweet?text=${msg}`,
+    copy: null,
+  };
+  if(platform === 'ig') { showToast('Instagram','Copia el enlace y compártelo en tu historia 📸','mint'); return; }
+  if(platform === 'copy') {
+    navigator.clipboard.writeText('https://tukids.com/donaciones').then(() => showToast('¡Copiado!','Comparte el enlace con tus amigos 🔗','mint'));
+    return;
+  }
+  window.open(links[platform], '_blank');
+}
+
+/* ════════════════════════════════════════════════════════
+   SCROLL HELPERS
+════════════════════════════════════════════════════════ */
+function scrollToForm() { document.getElementById('donForm').scrollIntoView({ behavior:'smooth', block:'start' }); }
+function scrollToHow()  { document.getElementById('howItWorks').scrollIntoView({ behavior:'smooth', block:'start' }); }
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coche Chicco Urban Plus — TuKids</title>
+  <meta name="description" content="Coche Chicco Urban Plus verde oliva en perfecto estado. Verificado por IA. $850.000 en TuKids."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .product-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; padding: 40px 0 80px; }
+    @media(max-width:900px){ .product-layout { grid-template-columns: 1fr; } }
+    /* Gallery */
+    .gallery { display: flex; gap: 14px; }
+    .gallery-thumbs { display: flex; flex-direction: column; gap: 10px; }
+    .gallery-thumb {
+      width: 72px; height: 72px; border-radius: var(--r-md);
+      border: 2px solid var(--fog); overflow: hidden; cursor: pointer;
+      transition: var(--transition);
+    }
+    .gallery-thumb.active, .gallery-thumb:hover { border-color: var(--coral); }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-main {
+      flex: 1; border-radius: var(--r-xl); overflow: hidden;
+      background: var(--fog); aspect-ratio: 1; position: relative;
+    }
+    .gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm);
+      border: none;
+    }
+    .gallery-nav:hover { background: var(--white); box-shadow: var(--shadow-md); }
+    .gallery-prev { left: 12px; }
+    .gallery-next { right: 12px; }
+    /* AI badge */
+    .ia-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--mint-bg), var(--sky-bg));
+      border: 1.5px solid var(--mint); border-radius: var(--r-lg);
+      padding: 10px 16px; font-size: 0.83rem; font-weight: 600;
+      color: var(--mint-dark); margin-bottom: 16px;
+    }
+    /* Price block */
+    .price-block { background: var(--fog); border-radius: var(--r-xl); padding: 20px; margin: 20px 0; }
+    /* Seller card */
+    .seller-card {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--fog); border-radius: var(--r-xl); padding: 16px;
+    }
+    /* Guarantee badge */
+    .guarantee-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--mint-bg), var(--mint-light));
+      border-radius: var(--r-lg); padding: 12px 16px;
+      font-size: 0.83rem; color: var(--mint-dark); font-weight: 600;
+    }
+    /* Specs table */
+    .specs-table { width: 100%; border-collapse: collapse; }
+    .specs-table tr { border-bottom: 1px solid var(--fog); }
+    .specs-table td { padding: 10px 4px; font-size: 0.875rem; }
+    .specs-table td:first-child { color: var(--gray-mid); width: 40%; }
+    .specs-table td:last-child { font-weight: 500; color: var(--carbon); }
+    /* Sticky buy bar mobile */
+    .sticky-buy {
+      display: none; position: fixed; bottom: 73px; left: 0; right: 0;
+      background: var(--white); border-top: 1px solid var(--fog);
+      padding: 12px 16px; z-index: 80; gap: 10px;
+    }
+    @media(max-width:768px){ .sticky-buy { display: flex; } }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div class="search-bar" style="flex:1;max-width:420px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Buscar en TuKids..."/>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="explorar.html" class="nav-link">Explorar</a>
+      <a href="publicar.html" class="nav-link">Vender</a>
+    
+      <a href="donaciones.html" class="nav-link" style="color:var(--coral);font-weight:700;">❤️ Donaciones</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
+      <a href="checkout.html" style="position:relative;">
+        <button class="btn btn-ghost btn-sm" style="position:relative;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-count" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--coral);color:#fff;border-radius:50%;font-size:0.65rem;font-weight:700;display:none;align-items:center;justify-content:center;font-family:var(--font-title);">0</span>
+        </button>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Breadcrumb -->
+<div class="container" style="padding-top:20px;">
+  <div style="display:flex;align-items:center;gap:8px;font-size:0.83rem;color:var(--gray-mid);">
+    <a href="index.html" style="color:var(--gray-mid);">Home</a>
+    <span>›</span>
+    <a href="explorar.html" style="color:var(--gray-mid);">Coches y sillas</a>
+    <span>›</span>
+    <span style="color:var(--carbon);">Coche Chicco Urban Plus</span>
+  </div>
+</div>
+
+<!-- PRODUCT LAYOUT -->
+<div class="container">
+  <div class="product-layout">
+    <!-- LEFT: Gallery -->
+    <div>
+      <div class="gallery">
+        <div class="gallery-thumbs">
+          <div class="gallery-thumb active" onclick="changeImg(this,'images/stroller.png')">
+            <img src="images/stroller.png" alt=""/>
+          </div>
+          <div class="gallery-thumb" onclick="changeImg(this,'images/crib.png')">
+            <img src="images/crib.png" alt=""/>
+          </div>
+          <div class="gallery-thumb" onclick="changeImg(this,'images/toys.png')">
+            <img src="images/toys.png" alt=""/>
+          </div>
+          <div class="gallery-thumb" onclick="changeImg(this,'images/clothes.png')">
+            <img src="images/clothes.png" alt=""/>
+          </div>
+        </div>
+        <div class="gallery-main">
+          <img src="images/stroller.png" alt="Coche Chicco" id="mainImg"/>
+          <button class="gallery-nav gallery-prev" onclick="prevImg()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--carbon)" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="gallery-nav gallery-next" onclick="nextImg()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--carbon)" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <!-- Fav -->
+          <button class="fav-btn" data-id="prod-main" style="top:16px;right:16px;width:44px;height:44px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- IA Analysis -->
+      <div class="ia-badge" style="margin-top:20px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Análisis IA · 47 puntos revisados · Estado: Muy bueno
+      </div>
+      <!-- Specs -->
+      <div class="card" style="padding:20px;margin-top:16px;">
+        <h5 style="margin-bottom:16px;">Especificaciones</h5>
+        <table class="specs-table">
+          <tr><td>Marca</td><td>Chicco</td></tr>
+          <tr><td>Modelo</td><td>Urban Plus</td></tr>
+          <tr><td>Color</td><td>Verde oliva</td></tr>
+          <tr><td>Edad</td><td>0 — 36 meses</td></tr>
+          <tr><td>Peso coche</td><td>8.5 kg</td></tr>
+          <tr><td>Peso máx. bebé</td><td>22 kg</td></tr>
+          <tr><td>Estado</td><td><span style="color:var(--mint-dark);font-weight:700;">⭐⭐⭐⭐ Muy bueno</span></td></tr>
+          <tr><td>Incluye</td><td>Cesta, capota, adaptadores</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- RIGHT: Info -->
+    <div>
+      <!-- Badges -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+        <span class="badge badge-used">♻️ Segunda mano</span>
+        <span class="badge badge-verified">IA Verificado ✓</span>
+        <span class="badge badge-shipping">🚚 Env. gratis</span>
+      </div>
+
+      <h1 style="font-size:1.6rem;margin-bottom:12px;line-height:1.3;">Coche Chicco Urban Plus 4 ruedas — Verde oliva</h1>
+
+      <!-- Rating -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:0.875rem;">
+        <div style="display:flex;gap:4px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--yellow)" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span style="color:var(--gray-mid);">4.0 · 3 reseñas</span>
+        <span>·</span>
+        <span style="color:var(--gray-mid);">234 visitas</span>
+        <span>·</span>
+        <span style="color:var(--coral);">47 ❤️</span>
+      </div>
+
+      <!-- Price block -->
+      <div class="price-block">
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px;">
+          <span style="font-family:var(--font-title);font-size:2rem;font-weight:800;color:var(--carbon);">$850.000</span>
+          <span style="font-size:1.1rem;color:var(--gray-mid);text-decoration:line-through;">$1.200.000</span>
+          <span style="font-size:0.875rem;background:var(--coral);color:#fff;padding:3px 10px;border-radius:9999px;font-weight:700;font-family:var(--font-title);">-29%</span>
+        </div>
+        <div style="font-size:0.83rem;color:var(--mint-dark);font-weight:600;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Pago protegido · Tu dinero llega al vendedor al confirmar recepción
+        </div>
+      </div>
+
+      <!-- CTA buttons -->
+      <div style="display:flex;gap:10px;flex-direction:column;margin-bottom:20px;">
+        <a href="checkout.html">
+          <button id="buyBtn" class="btn btn-primary btn-lg w-full" onclick="addToCartMain()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            Comprar ahora — $850.000
+          </button>
+        </a>
+        <button class="btn btn-outline btn-lg" onclick="showToast('Chat abierto','Puedes preguntar a María 💬','mint')" style="width:100%;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Preguntar al vendedor
+        </button>
+      </div>
+
+      <!-- Seller info -->
+      <div class="seller-card">
+        <div class="profile-avatar" style="width:52px;height:52px;font-size:1.3rem;flex-shrink:0;">M</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-family:var(--font-title);">María González</div>
+          <div style="font-size:0.82rem;color:var(--gray-mid);">⭐ 4.9 · 23 ventas</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <span class="level-badge level-silver">🥈 Plata</span>
+            <span style="font-size:0.75rem;color:var(--gray-mid);">Responde en &lt;1h</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="location='perfil.html'">Ver perfil</button>
+      </div>
+
+      <!-- Guarantees -->
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+        <div class="guarantee-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          Garantía TuKids · Escrow seguro
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--coral-bg);border-radius:var(--r-lg);padding:12px 16px;font-size:0.83rem;color:var(--coral-dark);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Envío gratis · Tracking en tiempo real
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--yellow-bg);border-radius:var(--r-lg);padding:12px 16px;font-size:0.83rem;color:var(--yellow-dark);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+          Devolución gratuita en 7 días
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:0.875rem;color:var(--gray-mid);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Bogotá, Colombia · Publicado hace 2 días
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div class="card" style="padding:28px;margin-bottom:32px;">
+    <h4 style="margin-bottom:16px;">Descripción</h4>
+    <p style="line-height:1.8;">Coche Chicco Urban Plus en excelente estado. Usado por solo 8 meses, mi bebé ya no lo necesita. Incluye cesta inferior grande, capota con protección UV, adaptadores para silla de auto (Chicco), y bolso de paseo. Ruedas en perfecto estado. Color verde oliva muy bonito y práctico. Se puede entregar armado o desarmado.</p>
+    <p style="margin-top:12px;line-height:1.8;">La IA ha detectado un desgaste mínimo en las ruedas traseras (totalmente funcionales) y perfecta conservación del tejido sin manchas ni roturas.</p>
+  </div>
+
+  <!-- Similar products -->
+  <div>
+    <div class="section-header">
+      <div>
+        <div class="section-label mint">Productos similares</div>
+        <h2>También te puede interesar</h2>
+      </div>
+    </div>
+    <div class="products-grid">
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/crib.png" alt="Cuna"/>
+          <button class="fav-btn" data-id="sim1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-used">♻️</span><span class="badge badge-verified">IA ✓</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Cuna Scandi blanca + colchón</div>
+          <div class="price-row"><span class="price-current">$380.000</span><span class="price-original">$750.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar">C</div><span>Carlos · ⭐ 5.0</span></div></div>
+        </div>
+      </div>
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/toys.png" alt="Juguetes"/>
+          <button class="fav-btn" data-id="sim2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-new">Nuevo</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Kit sensorial bebé 0-12m · 8 piezas</div>
+          <div class="price-row"><span class="price-current">$145.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar" style="background:var(--mint-bg);color:var(--mint-dark);">B</div><span>BabyShop · ⭐ 4.8</span></div></div>
+        </div>
+      </div>
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/clothes.png" alt="Ropa"/>
+          <button class="fav-btn" data-id="sim3"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-promo">-40%</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Set bodies orgánicos 0-3m · 4 piezas</div>
+          <div class="price-row"><span class="price-current">$78.000</span><span class="price-original">$130.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar" style="background:var(--lilac-bg);color:var(--lilac-dark);">L</div><span>Laura · ⭐ 4.7</span></div></div>
+        </div>
+      </div>
+      <div class="card product-card" onclick="location='producto.html'">
+        <div class="card-image"><img src="images/diapers.png" alt="Pañales"/>
+          <button class="fav-btn" data-id="sim4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+          <div class="card-badges"><span class="badge badge-new">Nuevo</span></div>
+        </div>
+        <div class="card-body">
+          <div class="product-title">Huggies Little Movers Talla 3 · x62</div>
+          <div class="price-row"><span class="price-current">$68.000</span></div>
+          <div class="seller-row"><div class="seller-info"><div class="seller-avatar" style="background:var(--sky-bg);color:var(--sky-dark);">H</div><span>HuggiesCol · ⭐ 4.9</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky mobile buy bar -->
+<div class="sticky-buy">
+  <div style="flex:1;">
+    <div style="font-family:var(--font-title);font-size:1.1rem;font-weight:800;color:var(--carbon);">$850.000</div>
+    <div style="font-size:0.75rem;color:var(--gray-mid);">Coche Chicco Urban Plus</div>
+  </div>
+  <a href="checkout.html"><button class="btn btn-primary btn-md" onclick="addToCartMain()">Comprar</button></a>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="index.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html" class="mob-nav-item mob-nav-publish"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="#" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat</a>
+    <a href="perfil.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+const galleryImages = ['images/stroller.png','images/crib.png','images/toys.png','images/clothes.png'];
+let currentImg = 0;
+function changeImg(thumb, src) {
+  document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+  const mainImg = document.getElementById('mainImg');
+  mainImg.style.opacity = '0';
+  setTimeout(() => { mainImg.src = src; mainImg.style.opacity = '1'; }, 150);
+  mainImg.style.transition = 'opacity 0.15s ease';
+  currentImg = galleryImages.indexOf(src);
+}
+function nextImg() {
+  currentImg = (currentImg + 1) % galleryImages.length;
+  document.getElementById('mainImg').src = galleryImages[currentImg];
+  document.querySelectorAll('.gallery-thumb').forEach((t,i) => t.classList.toggle('active', i === currentImg));
+}
+function prevImg() {
+  currentImg = (currentImg - 1 + galleryImages.length) % galleryImages.length;
+  document.getElementById('mainImg').src = galleryImages[currentImg];
+  document.querySelectorAll('.gallery-thumb').forEach((t,i) => t.classList.toggle('active', i === currentImg));
+}
+function addToCartMain() {
+  addToCart({ id: 'chicco-urban', name: 'Coche Chicco Urban Plus', price: 850000 });
+}
+</script>
+</body>
+</html>

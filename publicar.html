@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Publicar en TuKids — Vende con IA</title>
+  <meta name="description" content="Publica tu producto en TuKids. La IA analiza el estado y sugiere el precio ideal para productos de segunda mano."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .publish-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 100px; }
+    .photo-zone {
+      border: 2.5px dashed var(--coral-light); border-radius: var(--r-xl);
+      padding: 40px 24px; text-align: center; cursor: pointer;
+      transition: var(--transition); background: var(--coral-bg);
+      position: relative;
+    }
+    .photo-zone:hover { border-color: var(--coral); background: #FFE8E5; }
+    .photo-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .photo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 16px; }
+    .photo-slot {
+      aspect-ratio: 1; border-radius: var(--r-lg); overflow: hidden;
+      background: var(--fog); display: flex; align-items: center;
+      justify-content: center; border: 2px dashed var(--fog);
+      cursor: pointer; transition: var(--transition); position: relative;
+    }
+    .photo-slot.filled { border-color: var(--mint); }
+    .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-slot .slot-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.55); color: #fff;
+      font-size: 0.72rem; font-weight: 600; padding: 5px;
+      text-align: center; font-family: var(--font-title);
+    }
+    .ia-result {
+      background: linear-gradient(135deg, var(--mint-bg), var(--sky-bg));
+      border: 1.5px solid var(--mint); border-radius: var(--r-xl);
+      padding: 28px; margin-top: 20px;
+    }
+    .ia-state-stars { display: flex; gap: 6px; margin: 12px 0; }
+    .ia-star { font-size: 1.4rem; }
+    .ia-price-range {
+      display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .ia-price-option {
+      flex: 1; min-width: 100px; padding: 14px; text-align: center;
+      border-radius: var(--r-lg); border: 2px solid var(--fog);
+      background: var(--white); cursor: pointer; transition: var(--transition);
+    }
+    .ia-price-option.selected { border-color: var(--coral); background: var(--coral-bg); }
+    .ia-price-option .price-label { font-size: 0.75rem; color: var(--gray-mid); margin-bottom: 4px; }
+    .ia-price-option .price-val { font-family: var(--font-title); font-weight: 700; font-size: 1.1rem; color: var(--carbon); }
+    .loading-ia {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+      padding: 32px; background: var(--fog); border-radius: var(--r-xl);
+      margin-top: 20px;
+    }
+    .ia-spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid var(--mint-light);
+      border-top-color: var(--mint);
+      animation: spin 0.9s linear infinite;
+    }
+    .step-panel { display: none; }
+    .step-panel.active { display: block; animation: fadeUp 0.35s ease forwards; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .ship-option {
+      display: flex; align-items: center; gap: 14px; padding: 16px;
+      border: 2px solid var(--fog); border-radius: var(--r-lg); cursor: pointer;
+      transition: var(--transition); background: var(--white);
+    }
+    .ship-option.selected { border-color: var(--coral); background: var(--coral-bg); }
+    .ship-icon { width: 44px; height: 44px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; }
+    .success-screen {
+      text-align: center; padding: 60px 24px;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+    .success-icon {
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--mint-bg), var(--mint));
+      display: flex; align-items: center; justify-content: center;
+      animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div style="flex:1;"></div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="explorar.html" class="nav-link">Explorar</a>
+      <a href="publicar.html" class="nav-link active">Vender</a>
+    
+      <a href="donaciones.html" class="nav-link" style="color:var(--coral);font-weight:700;">❤️ Donaciones</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
+    </div>
+  </div>
+</header>
+
+<div class="publish-wrap">
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:36px;" class="animate-fade-up">
+    <div class="section-label" style="margin:0 auto 16px;width:fit-content;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Publicar producto
+    </div>
+    <h1 style="font-size:1.8rem;">Vende en TuKids</h1>
+    <p>Fácil, rápido y con el mejor precio sugerido por IA.</p>
+  </div>
+
+  <!-- Steps -->
+  <div class="steps" id="stepsBar">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-line" id="sl1"></div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-line" id="sl2"></div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-line" id="sl3"></div>
+    </div>
+    <div class="step-item">
+      <div class="step-circle" id="sc4">4</div>
+      <div class="step-line" id="sl4" style="display:none;"></div>
+    </div>
+    <div class="step-item" style="flex:0;">
+      <div class="step-circle" id="sc5">5</div>
+    </div>
+  </div>
+
+  <!-- ─── STEP 1: Type ─── -->
+  <div class="step-panel active" id="step1">
+    <div class="card" style="padding:32px;">
+      <h3 style="margin-bottom:8px;">¿Qué tipo de producto vas a vender?</h3>
+      <p style="margin-bottom:28px;">Selecciona si el artículo es nuevo o de segunda mano.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="ship-option" id="opt-new" onclick="selectType('new')">
+          <div class="ship-icon" style="background:var(--mint-bg);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;font-family:var(--font-title);">🆕 Producto Nuevo</div>
+            <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:4px;">Artículo sin usar, en caja o perfecto estado.</div>
+          </div>
+        </div>
+        <div class="ship-option" id="opt-used" onclick="selectType('used')">
+          <div class="ship-icon" style="background:var(--yellow-bg);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;font-family:var(--font-title);">♻️ Segunda mano</div>
+            <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:4px;">IA analiza el estado y sugiere el precio ideal.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:12px 16px;background:var(--lilac-bg);border-radius:var(--r-lg);font-size:0.83rem;color:var(--lilac-dark);">
+        <strong>🐦 Tuki tip:</strong> Los productos de segunda mano con análisis IA se venden 3x más rápido.
+      </div>
+      <button class="btn btn-primary btn-md w-full" style="margin-top:24px;" onclick="goStep(2)" id="btnStep1" disabled="true" style="opacity:0.5;">
+        Continuar
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── STEP 2: Photos & IA ─── -->
+  <div class="step-panel" id="step2">
+    <div class="card" style="padding:32px;" id="step2card">
+      <h3 style="margin-bottom:8px;" id="step2title">Sube fotos del producto</h3>
+      <p id="step2desc">Guíate con las siluetas para cada foto.</p>
+      <div class="photo-grid" style="margin-top:24px;">
+        <div class="photo-slot" id="slot1" onclick="simulatePhoto(1)">
+          <div style="text-align:center;padding:12px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div style="font-size:0.75rem;color:var(--gray-mid);margin-top:6px;font-weight:600;">📸 FOTO FRONTAL</div>
+          </div>
+          <div class="slot-label">Vista delantera</div>
+        </div>
+        <div class="photo-slot" id="slot2" onclick="simulatePhoto(2)">
+          <div style="text-align:center;padding:12px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div style="font-size:0.75rem;color:var(--gray-mid);margin-top:6px;font-weight:600;">📸 FOTO LATERAL</div>
+          </div>
+          <div class="slot-label">Vista lateral</div>
+        </div>
+        <div class="photo-slot" id="slot3" onclick="simulatePhoto(3)">
+          <div style="text-align:center;padding:12px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div style="font-size:0.75rem;color:var(--gray-mid);margin-top:6px;font-weight:600;">📸 DETALLES</div>
+          </div>
+          <div class="slot-label">Detalles / desgaste</div>
+        </div>
+      </div>
+      <!-- IA Loading -->
+      <div class="loading-ia" id="iaLoading" style="display:none;">
+        <div class="ia-spinner"></div>
+        <div style="font-family:var(--font-title);font-weight:700;font-size:1.05rem;">Tuki está analizando tus fotos...</div>
+        <div style="font-size:0.875rem;color:var(--gray-mid);">Detectando estado, desgaste y precio de mercado</div>
+        <div id="iaProgress" style="width:100%;max-width:280px;">
+          <div style="height:6px;background:var(--fog);border-radius:9999px;overflow:hidden;">
+            <div id="iaBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--mint),var(--mint-dark));border-radius:9999px;transition:width 0.3s ease;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- IA Result -->
+      <div class="ia-result" id="iaResult" style="display:none;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-title);font-weight:700;font-size:1.05rem;color:var(--carbon);">🤖 Análisis IA completado</div>
+            <div style="font-size:0.83rem;color:var(--gray-mid);">3 fotos analizadas · 47 puntos evaluados</div>
+          </div>
+        </div>
+        <div style="background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:16px;">
+          <div style="font-size:0.83rem;color:var(--gray-mid);margin-bottom:8px;font-weight:600;">ESTADO DEL PRODUCTO</div>
+          <div class="ia-state-stars">
+            <span class="ia-star">⭐</span><span class="ia-star">⭐</span><span class="ia-star">⭐</span><span class="ia-star">⭐</span><span class="ia-star" style="opacity:0.35;">⭐</span>
+          </div>
+          <div style="font-family:var(--font-title);font-size:1.2rem;font-weight:700;color:var(--carbon);">Muy bueno (85%)</div>
+          <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:6px;">Sin arañazos visibles · Ligero desgaste en ruedas · Colores bien conservados</div>
+        </div>
+        <div style="font-size:0.83rem;color:var(--carbon);font-weight:700;margin-bottom:12px;">💰 Elige tu precio:</div>
+        <div class="ia-price-range">
+          <div class="ia-price-option" onclick="selectPrice(this,'$350.000')">
+            <div class="price-label">Vende ya</div>
+            <div class="price-val">$350.000</div>
+            <div style="font-size:0.7rem;color:var(--gray-mid);margin-top:4px;">−23%</div>
+          </div>
+          <div class="ia-price-option selected" onclick="selectPrice(this,'$420.000')">
+            <div class="price-label">⭐ Sugerido IA</div>
+            <div class="price-val">$420.000</div>
+            <div style="font-size:0.7rem;color:var(--mint-dark);margin-top:4px;">Precio óptimo</div>
+          </div>
+          <div class="ia-price-option" onclick="selectPrice(this,'$490.000')">
+            <div class="price-label">Precio alto</div>
+            <div class="price-val">$490.000</div>
+            <div style="font-size:0.7rem;color:var(--gray-mid);margin-top:4px;">+17%</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;align-items:center;">
+          <span style="font-size:0.83rem;color:var(--carbon-soft);">O ingresa tu precio:</span>
+          <input type="text" class="input-field" placeholder="$000.000" id="customPrice" style="height:42px;max-width:150px;font-size:0.95rem;"/>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-md w-full" style="margin-top:24px;display:none;" id="btnStep2" onclick="goStep(3)">
+        Continuar con detalles
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── STEP 3: Details ─── -->
+  <div class="step-panel" id="step3">
+    <div class="card" style="padding:32px;">
+      <h3 style="margin-bottom:24px;">Detalles del producto</h3>
+      <div style="display:flex;flex-direction:column;gap:18px;">
+        <div class="input-group">
+          <label class="input-label">Título del producto *</label>
+          <input type="text" class="input-field" placeholder="Ej: Coche Chicco Urban Plus verde oliva" id="prodTitle"/>
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Categoría *</label>
+            <select class="input-field select-field" id="prodCat">
+              <option value="">Selecciona...</option>
+              <option>🚼 Coches y sillas</option>
+              <option>🛏️ Cunas y moisés</option>
+              <option>👕 Ropa y calzado</option>
+              <option>🧸 Juguetes</option>
+              <option>🍼 Alimentación</option>
+              <option>🛁 Higiene y baño</option>
+              <option>🎒 Portabebés</option>
+              <option>🛡️ Seguridad</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Edad recomendada *</label>
+            <select class="input-field select-field">
+              <option value="">Selecciona...</option>
+              <option>Recién nacido (0-3m)</option>
+              <option>3-6 meses</option>
+              <option>6-12 meses</option>
+              <option>1-2 años</option>
+              <option>2-3 años</option>
+              <option>3+ años</option>
+              <option>Todas las edades</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Marca</label>
+            <input type="text" class="input-field" placeholder="Ej: Chicco, Bugaboo..."/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Precio *</label>
+            <input type="text" class="input-field" placeholder="$000.000" id="prodPrice" value="$420.000"/>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Descripción</label>
+          <div style="position:relative;">
+            <textarea class="input-field textarea-field" placeholder="Describe el estado, características, accesorios incluidos..." id="prodDesc" rows="4"></textarea>
+            <button onclick="generateDescription()" style="position:absolute;bottom:12px;right:12px;font-size:0.75rem;color:var(--coral);font-weight:600;background:var(--coral-bg);border:1px solid var(--coral-light);padding:5px 10px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-title);">
+              ✨ IA auto-generar
+            </button>
+          </div>
+          <div style="font-size:0.75rem;color:var(--gray-mid);">La IA puede generar una descripción automática basada en tus fotos.</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-md w-full" style="margin-top:28px;" onclick="goStep(4)">
+        Continuar con envío
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── STEP 4: Shipping ─── -->
+  <div class="step-panel" id="step4">
+    <div class="card" style="padding:32px;">
+      <h3 style="margin-bottom:24px;">¿Cómo entregarás el producto?</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="ship-option" id="sh1" onclick="selectShip('sh1')">
+          <div class="ship-icon" style="background:var(--coral-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Recogida en casa</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">El mensajero va a tu dirección.</div></div>
+          <span style="font-size:0.83rem;font-weight:600;color:var(--mint-dark);">Gratis</span>
+        </div>
+        <div class="ship-option selected" id="sh2" onclick="selectShip('sh2')">
+          <div class="ship-icon" style="background:var(--mint-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Punto de entrega</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">Lleva a punto de acopio más cercano.</div></div>
+          <span style="font-size:0.83rem;font-weight:600;color:var(--mint-dark);">$0–$8.000</span>
+        </div>
+        <div class="ship-option" id="sh3" onclick="selectShip('sh3')">
+          <div class="ship-icon" style="background:var(--yellow-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Entrega en mano</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">Coordinas directamente con el comprador.</div></div>
+          <span style="font-size:0.83rem;font-weight:600;color:var(--yellow-dark);">Gratis</span>
+        </div>
+      </div>
+      <div class="input-group" style="margin-top:20px;">
+        <label class="input-label">Ciudad de origen *</label>
+        <select class="input-field select-field">
+          <option>Bogotá</option>
+          <option>Medellín</option>
+          <option>Cali</option>
+          <option>Barranquilla</option>
+          <option>Cartagena</option>
+          <option>Bucaramanga</option>
+          <option>Otra ciudad...</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-md w-full" style="margin-top:28px;" onclick="goStep(5)">
+        ¡Publicar ahora!
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── STEP 5: Success ─── -->
+  <div class="step-panel" id="step5">
+    <div class="card" style="padding:48px 32px;">
+      <div class="success-screen">
+        <div class="success-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2>¡Publicado con éxito! 🎉</h2>
+        <p style="max-width:380px;text-align:center;">Tu producto ya está visible en TuKids. Miles de familias podrán encontrarlo.</p>
+        <div style="background:var(--fog);border-radius:var(--r-xl);padding:20px;width:100%;max-width:400px;">
+          <div style="font-size:0.83rem;color:var(--gray-mid);margin-bottom:8px;">Tu publicación</div>
+          <div style="font-family:var(--font-title);font-weight:700;"># TK-48321</div>
+          <div style="display:flex;gap:16px;margin-top:12px;font-size:0.83rem;">
+            <span>👁️ 0 vistas</span>
+            <span>❤️ 0 favoritos</span>
+            <span class="badge badge-new" style="font-size:0.72rem;">Activo</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+          <a href="index.html" class="btn btn-primary btn-md">Ver mi publicación</a>
+          <a href="publicar.html" class="btn btn-outline btn-md" onclick="location.reload();">Publicar otro</a>
+          <a href="perfil.html" class="btn btn-ghost btn-md">Ver mi perfil</a>
+        </div>
+        <div style="padding:16px;background:var(--lilac-bg);border-radius:var(--r-lg);font-size:0.83rem;color:var(--lilac-dark);max-width:400px;text-align:center;">
+          🐦 <strong>Tuki dice:</strong> "¡Excelente! Comparte tu publicación en redes para vender más rápido."
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="index.html" class="mob-nav-item" data-page="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html" class="mob-nav-item mob-nav-publish active" data-page="publicar.html"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="#" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat</a>
+    <a href="perfil.html" class="mob-nav-item" data-page="perfil.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+let productType = null;
+let photosCount = 0;
+
+function selectType(type) {
+  productType = type;
+  document.getElementById('opt-new').classList.remove('selected');
+  document.getElementById('opt-used').classList.remove('selected');
+  document.getElementById('opt-' + type).classList.add('selected');
+  const btn = document.getElementById('btnStep1');
+  btn.removeAttribute('disabled');
+  btn.style.opacity = '1';
+  if (type === 'new') {
+    showToast('¡Perfecto!', 'Publicarás un producto nuevo', 'mint');
+  } else {
+    showToast('¡Genial!', 'Usaremos IA para analizar el estado', 'coral');
+  }
+}
+
+function goStep(n) {
+  const prev = n - 1;
+  document.getElementById('step' + prev)?.classList.remove('active');
+  document.getElementById('step' + n)?.classList.add('active');
+  // Update circles
+  for (let i = 1; i <= 5; i++) {
+    const c = document.getElementById('sc' + i);
+    if (i < n) { c.classList.remove('active'); c.classList.add('done'); c.innerHTML = '✓'; }
+    else if (i === n) { c.classList.add('active'); c.classList.remove('done'); c.innerHTML = i; }
+    else { c.classList.remove('active','done'); c.innerHTML = i; }
+  }
+  for (let i = 1; i <= 4; i++) {
+    const l = document.getElementById('sl' + i);
+    if (l) { if (i < n) l.classList.add('done'); else l.classList.remove('done'); }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function simulatePhoto(num) {
+  const slot = document.getElementById('slot' + num);
+  const imgs = ['images/stroller.png','images/crib.png','images/toys.png'];
+  slot.innerHTML = `<img src="${imgs[num-1]}" alt="Foto ${num}"/><div class="slot-label">${['Frontal','Lateral','Detalles'][num-1]}</div>`;
+  slot.classList.add('filled');
+  photosCount++;
+  if (productType === 'used') {
+    showToast('Foto añadida ✓', `Foto ${num} cargada correctamente`, 'mint');
+    if (photosCount >= 3) {
+      setTimeout(runIA, 600);
+    }
+  } else {
+    if (photosCount >= 1) {
+      document.getElementById('btnStep2').style.display = 'flex';
+    }
+  }
+}
+
+function runIA() {
+  const loading = document.getElementById('iaLoading');
+  const result  = document.getElementById('iaResult');
+  const btn     = document.getElementById('btnStep2');
+  loading.style.display = 'flex';
+  let progress = 0;
+  const bar = document.getElementById('iaBar');
+  const steps_ia = [
+    'Detectando tipo de producto...',
+    'Analizando estado visual...',
+    'Estimando desgaste...',
+    'Consultando precios de mercado...',
+    '¡Análisis completado!'
+  ];
+  let stepIdx = 0;
+  const stepEl = loading.querySelector('div:nth-child(2)');
+  const interval = setInterval(() => {
+    progress += 20;
+    bar.style.width = progress + '%';
+    if (stepIdx < steps_ia.length) { stepEl.textContent = steps_ia[stepIdx++]; }
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loading.style.display = 'none';
+        result.style.display = 'block';
+        btn.style.display = 'flex';
+        showToast('¡IA lista!', 'Estado: Muy bueno · Precio: $420.000', 'mint');
+      }, 400);
+    }
+  }, 350);
+}
+
+function selectPrice(el, price) {
+  document.querySelectorAll('.ia-price-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('prodPrice').value = price;
+  document.getElementById('customPrice').value = price;
+}
+
+function selectShip(id) {
+  ['sh1','sh2','sh3'].forEach(s => document.getElementById(s).classList.remove('selected'));
+  document.getElementById(id).classList.add('selected');
+}
+
+function generateDescription() {
+  const desc = document.getElementById('prodDesc');
+  desc.value = 'Coche de alta calidad en excelente estado. La IA ha detectado mínimo desgaste en las ruedas y perfecta conservación del tejido. Incluye cesta inferior, capota ajustable y barra de empuje regulable en altura. Ideal para bebés de 0 a 36 meses.';
+  showToast('✨ Descripción generada', 'La IA creó una descripción basada en tus fotos', 'mint');
+}
+
+// Setup for step 2
+window._step2Setup = function() {
+  const t = document.getElementById('step2title');
+  const d = document.getElementById('step2desc');
+  if (productType === 'used') {
+    t.textContent = 'Toma 3 fotos para el análisis IA';
+    d.textContent = 'La IA analizará el estado y sugerirá el mejor precio.';
+  } else {
+    t.textContent = 'Sube fotos del producto';
+    d.textContent = 'Agrega hasta 5 fotos claras y atractivas.';
+  }
+};
+</script>
+</body>
+</html>

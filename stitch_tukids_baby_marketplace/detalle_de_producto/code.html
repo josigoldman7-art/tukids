@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chicco Urban Stroller - TuKids</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#e7c269",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#89726e",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-primary-fixed": "#410100",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#f1dedb",
+                        "background": "#fff8f6",
+                        "tertiary": "#765b06",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-tertiary-container": "#513d00",
+                        "primary-container": "#ff8c7a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#7cd7c6",
+                        "surface-container-high": "#f7e4e1",
+                        "primary": "#9e4134",
+                        "secondary": "#006b5e",
+                        "surface": "#fff8f6",
+                        "on-background": "#231918",
+                        "inverse-primary": "#ffb4a8",
+                        "on-primary-container": "#762419",
+                        "secondary-fixed": "#98f3e1",
+                        "on-secondary-fixed-variant": "#005046",
+                        "inverse-on-surface": "#ffedea",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-surface": "#392e2c",
+                        "on-tertiary-fixed": "#251a00",
+                        "surface-tint": "#9e4134",
+                        "surface-bright": "#fff8f6",
+                        "on-primary-fixed-variant": "#7e2a1f",
+                        "outline-variant": "#dcc0bc",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#cba852",
+                        "surface-container-low": "#fff0ee",
+                        "on-surface-variant": "#56423f",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-variant": "#f1dedb",
+                        "on-secondary-container": "#006f62",
+                        "secondary-container": "#95f0df",
+                        "on-secondary-fixed": "#00201b",
+                        "surface-container": "#fdeae7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231918",
+                        "surface-dim": "#e8d6d3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-max": "1280px",
+                        "lg": "48px",
+                        "xl": "80px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Plus Jakarta Sans"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg docked full-width top-0 z-50 shadow-sm shadow-[#FF8C7A]/5 flex justify-between items-center px-6 py-4 w-full h-16 sticky">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="text-2xl font-extrabold text-[#FF8C7A] dark:text-[#FF8C7A] font-['Plus_Jakarta_Sans']">TuKids</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 dark:text-slate-500 hover:opacity-80 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+<button class="text-slate-400 dark:text-slate-500 hover:opacity-80 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto pb-32">
+<!-- Image Gallery Section -->
+<section class="relative w-full aspect-[4/5] md:aspect-video overflow-hidden">
+<div class="flex h-full w-full">
+<img alt="Chicco Urban Stroller" class="w-full h-full object-cover" data-alt="Modern chicco urban stroller in a bright minimalist nursery with soft natural light and warm wood accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3mUf67sS7rAa6GTpNu9ihtmVLqDc8TbYvy6XamCHeIv8SSp0jFiUuVT4SjMumOlYr4g_fXYRx7rXuva0hjSRpX2LuLaDYiApNnuRnvkdhleCF-XpcqmnhG-p_H4uRHMTFdby_s87OYiIb1je7rjDnxeZscptFYKY0g8o64HGDdidOpdwFQlFLZfLmj1rlMrNquu0EFelObmN0k-TU6s4UZtmz-ldRzDc7umBPkN4kGIEKhTsGROMuH47b-I0Wb19MycTHh2lwWbDg"/>
+</div>
+<!-- Swipe Dots -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-container"></div>
+<div class="w-2 h-2 rounded-full bg-white/50"></div>
+<div class="w-2 h-2 rounded-full bg-white/50"></div>
+</div>
+<!-- Badge -->
+<div class="absolute top-6 right-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2 border border-primary-container/10">
+<span class="material-symbols-outlined text-primary-container text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-bold text-primary text-caption">Authenticated</span>
+</div>
+</section>
+<div class="px-6 -mt-8 relative z-10">
+<!-- Product Info Card -->
+<div class="bg-white rounded-lg p-6 shadow-sm shadow-[#FF8C7A]/5 mb-6">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h1 class="font-h2 text-h2 text-on-surface mb-1">Chicco Urban Stroller</h1>
+<p class="text-on-surface-variant font-body-sm">Red &amp; Black Edition • 2022 Model</p>
+</div>
+<div class="text-right">
+<span class="font-h3 text-h3 text-primary">$320.000</span>
+<p class="text-caption text-secondary font-label-bold">Free shipping</p>
+</div>
+</div>
+<!-- AI Analysis Box -->
+<div class="bg-secondary-container/30 border border-secondary-fixed-dim/20 rounded-lg p-4 flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-secondary-fixed rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<p class="font-label-bold text-on-secondary-fixed-variant">IA Analysis</p>
+<p class="text-body-sm text-on-secondary-fixed-variant opacity-80">Condition: Excellent (90%) - Verified by AI</p>
+</div>
+<div class="ml-auto">
+<span class="material-symbols-outlined text-secondary">info</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-4">
+<button class="flex-1 bg-primary-container text-on-primary-container font-label-bold py-4 rounded-full hover:opacity-80 transition-opacity active:scale-95 shadow-md shadow-primary-container/20">
+                        Add to cart
+                    </button>
+<button class="px-6 border-2 border-primary-container/20 rounded-full flex items-center justify-center text-primary-container active:scale-95 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+</div>
+<!-- Seller Profile Section -->
+<div class="bg-white rounded-lg p-6 shadow-sm shadow-[#FF8C7A]/5 mb-6 flex items-center gap-4">
+<div class="relative">
+<img alt="Seller Maria" class="w-14 h-14 rounded-full object-cover" data-alt="Close-up portrait of a smiling young mother in a sunlit garden, warm and friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQfJmtsmNsBL8Ah9e1mjWJrUEms9dUyr7pTH9F06qr3OsunEsB0RS5p-yEMlT2aN8hKBLXSI27QNkIENl5DiIVlzbk0zQYFeJ7Xetx6ds0RYlXk_FPWzf0c_TFBtnD0_7o7BXBq5uMmZdodSNQEQzEqnHnRCk7y8RV_M2CGKHS3cks8nLaC6pjmlBJ9WROnedGfgJ5I2PGhHSXaCp5ThccX8Dd_qhGgG3iM7Y9BQfv3KzQr-AekqoN0Tr45U-6EgOyBylnsw4qICr_"/>
+<div class="absolute -bottom-1 -right-1 bg-tertiary-container w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[12px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<h3 class="font-label-bold text-on-surface">Maria (Silver Seller)</h3>
+<span class="bg-secondary-container px-2 py-0.5 rounded-full text-[10px] text-on-secondary-container font-bold">Verified Parent</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-caption text-on-surface-variant font-bold">4.9</span>
+<span class="text-caption text-on-surface-variant opacity-60 ml-1">• 42 sales</span>
+</div>
+</div>
+<button class="text-primary-container font-label-bold text-caption">View profile</button>
+</div>
+<!-- Escrow Badge -->
+<div class="bg-tertiary-fixed/20 rounded-lg p-4 mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">shield</span>
+<p class="text-body-sm text-on-tertiary-fixed-variant">Protect your purchase with <span class="font-bold">TuKids Escrow</span>. Your money is safe with us until you receive the item.</p>
+</div>
+<!-- Description -->
+<div class="mb-12">
+<h2 class="font-h3 text-h3 text-on-surface mb-4">Description</h2>
+<p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+                    Excellent condition Chicco Urban stroller. Only used for 8 months. Very versatile, can be converted from a bassinet to a toddler seat easily. Includes rain cover and matching footmuff. 
+                </p>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container rounded-lg p-3">
+<p class="text-caption text-on-surface-variant">Brand</p>
+<p class="font-label-bold">Chicco</p>
+</div>
+<div class="bg-surface-container rounded-lg p-3">
+<p class="text-caption text-on-surface-variant">Usage</p>
+<p class="font-label-bold">Minor wear</p>
+</div>
+</div>
+</div>
+<!-- Similar Products -->
+<section class="mb-8">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-h3 text-h3 text-on-surface">Similar products</h2>
+<button class="text-primary-container font-label-bold">See all</button>
+</div>
+<div class="flex overflow-x-auto gap-6 hide-scrollbar -mx-6 px-6">
+<!-- Product 1 -->
+<div class="min-w-[180px] group">
+<div class="aspect-square rounded-lg overflow-hidden mb-3 relative">
+<img alt="Stroller" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Luxury baby stroller in gray fabric, side view, clean studio lighting with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDq-TDMNHsT5Z_qOPRYbbyF2LQckvRiefoJHxseZT4lDdujxl7mMS5FFJOWcHUxllbLLuUlHrgKVdbC9uPd98cJ0QH3kKxoDdBfF_SfQtU_y7-QYdtQDavq_fkBBm8pjtyS7seCUIcrr_vyOvfG2C5IvosN7TyLYfOqH-Fgh_WN-F5bRBK4rCOaY_6tK1wWuGZyU8uR2v1ZmVtVMQWaoLroyhFfezvP5akxZo8hkL-fJ3HqvYy8JwT21gNg5IkHAsv_DZYmFYm9bbT"/>
+<button class="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<p class="text-body-sm font-label-bold truncate">Bugaboo Fox 2</p>
+<p class="text-primary font-bold">$450.000</p>
+</div>
+<!-- Product 2 -->
+<div class="min-w-[180px] group">
+<div class="aspect-square rounded-lg overflow-hidden mb-3 relative">
+<img alt="Stroller" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Compact foldable travel stroller in mint green, isolated on soft beige background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB__1deh0ocEgvFmm2r5sI7igWJ8yBa9o_MA5KdqYDpei-98bGlO4Ih8XR8MsfEJkEroJobgUasz8ldy6q2CC5vfzHFDRSPanZNVVpTn7t74G6omX-CGo-DCJ6aSqzw4NpRt5X9ZwpqjvtSm7ng4hNDu3PlRXLbZ-6h86eq34pfFHvA-G5kSXw8DvW2uyQSCvb7saeaHTxJlS7jxSO81g6ZympF_RuaaU6wJG9CT46CFvjdkvdxTkgnDMZKagugpUiZSvsPmFzzpkDn"/>
+<button class="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<p class="text-body-sm font-label-bold truncate">Yoyo BabyZen</p>
+<p class="text-primary font-bold">$280.000</p>
+</div>
+<!-- Product 3 -->
+<div class="min-w-[180px] group">
+<div class="aspect-square rounded-lg overflow-hidden mb-3 relative">
+<img alt="Stroller" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Sleek black all-terrain baby stroller outdoors on a paved path with blurred park greenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-0XVhzwhiEicdNAUYf27t1AdfGhgwteTEm3oj-OuMcUXhvyk4F9CUvpfF_jDRdwMpQqrw2tqF5TxHOrpUAXtb02rbHskDi_Jk-DG_44McwxsRE-5Utv0b9XF8m01cnJ-4Tnq08tSo66mb82VxjoaxAShXgA9Xue0ro92Y0Nqrptio1cxNfxErr2iMPg5YIiaOqf1KPkIZupl3Bdk-b7YdCb_pJC-nS0ZMcdkhVBJiP6KAr-X_DmwHrY_O-oLW71BqP-cpOfCGqgFv"/>
+<button class="absolute top-2 right-2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<p class="text-body-sm font-label-bold truncate">Graco Modes</p>
+<p class="text-primary font-bold">$195.000</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed due to sub-page intent with back action, but logic dictates shell visibility for top destinations. Here it acts as a persistent sub-menu footer for mobile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white dark:bg-slate-900 shadow-[0_-10px_40px_rgba(255,140,122,0.08)] rounded-t-[32px] z-50">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Sell</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Profile</span>
+</a>
+</nav>
+<!-- Floating Tuki Mascot (Loading/Guide Helper) -->
+<div class="fixed bottom-24 right-6 w-16 h-16 pointer-events-none opacity-90 hidden md:block">
+<div class="bg-white rounded-full p-2 shadow-xl border border-primary-container/10">
+<img alt="Tuki mascot" class="w-full h-full object-contain rounded-full" data-alt="Cute colorful stylized baby toucan mascot character, soft rounded vector style, smiling friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMUh_OWRkIHo0Us6gWJsBASP4ieLCHitxw2djD90u4G2b9DfRlYJj1rnSvO-8dkqvfY-aK-U6P4Whx6ODD3vv_4G3KhEmubKgF7g8lAO7mPTdbotJr1g4-Qq6actVTU8rOLzN3W7tdKaSbKj5XncmqEoU_J3j19iXrxsFb0-lYiLgTkj-ugXWBxjfQ_zsuiGxXynLWyc7FK6UCu04SbD3VCIA--v9ZVcetedVo5AJlEk3fkTs8F4afoKtnLRyMBqgc-UGRG3VJdKY2"/>
+</div>
+</div>
+</body></html>

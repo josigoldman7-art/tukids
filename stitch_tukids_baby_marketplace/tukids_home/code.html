@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#e7c269",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#89726e",
+                        "primary-fixed-dim": "#ffb4a8",
+                        "on-primary-fixed": "#410100",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#f1dedb",
+                        "background": "#fff8f6",
+                        "tertiary": "#765b06",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-tertiary-container": "#513d00",
+                        "primary-container": "#ff8c7a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#7cd7c6",
+                        "surface-container-high": "#f7e4e1",
+                        "primary": "#9e4134",
+                        "secondary": "#006b5e",
+                        "surface": "#fff8f6",
+                        "on-background": "#231918",
+                        "inverse-primary": "#ffb4a8",
+                        "on-primary-container": "#762419",
+                        "secondary-fixed": "#98f3e1",
+                        "on-secondary-fixed-variant": "#005046",
+                        "inverse-on-surface": "#ffedea",
+                        "primary-fixed": "#ffdad4",
+                        "inverse-surface": "#392e2c",
+                        "on-tertiary-fixed": "#251a00",
+                        "surface-tint": "#9e4134",
+                        "surface-bright": "#fff8f6",
+                        "on-primary-fixed-variant": "#7e2a1f",
+                        "outline-variant": "#dcc0bc",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#cba852",
+                        "surface-container-low": "#fff0ee",
+                        "on-surface-variant": "#56423f",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-variant": "#f1dedb",
+                        "on-secondary-container": "#006f62",
+                        "secondary-container": "#95f0df",
+                        "on-secondary-fixed": "#00201b",
+                        "surface-container": "#fdeae7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#231918",
+                        "surface-dim": "#e8d6d3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-max": "1280px",
+                        "lg": "48px",
+                        "xl": "80px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Plus Jakarta Sans"],
+                        "caption": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Plus Jakarta Sans"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h3": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #fff8f6; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scroll-hide::-webkit-scrollbar { display: none; }
+        .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<!-- TopAppBar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg fixed top-0 z-50 w-full h-16 flex justify-between items-center px-6 py-4 shadow-sm shadow-[#FF8C7A]/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
+<img alt="Tuki mascot" class="w-8 h-8" data-alt="Cute 3D baby toucan mascot character with a soft orange beak and playful expression on a mint background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8WfjURl1PjZnZqAcPEQ9yiK_OslsBf681dJtri3lywsQC_T2HaNhVPF1R9AFxJd0lznVEDZkI1vKqA1mpmtGpi7RozOG7VH-nzQPcUI2d8gYWbTjUzuPFClVbNr_VcggbBXTEG2vsgcszsd_TvBWTdwi4FdNQwTChpRsV_BrZFYD2zXmSowV8jhFznKMWAQBNpMYvUmBFml2zDEYE9Pm5fbmCBf7cvXj4VJmTBEesnimSBO8EKuNLXoFdHm-wNfWJPA0aVUOw0skA"/>
+</div>
+<span class="text-2xl font-extrabold text-[#FF8C7A] dark:text-[#FF8C7A] font-h3">TuKids</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 dark:text-slate-500 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</nav>
+<main class="pt-20 pb-28 max-w-container-max mx-auto px-4">
+<!-- Hero & Search -->
+<section class="mt-8 mb-12 text-center flex flex-col items-center">
+<h1 class="font-h1 text-h1 text-primary mb-6">Find the best for your little ones</h1>
+<div class="relative w-full max-w-2xl group">
+<input class="w-full h-14 pl-14 pr-6 rounded-full bg-white border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] focus:ring-2 focus:ring-secondary transition-all placeholder:text-slate-400" placeholder="Search for cribs, toys, or strollers..." type="text"/>
+<div class="absolute left-5 top-1/2 -translate-y-1/2 text-primary-container">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 bg-primary-container text-white px-6 py-2 rounded-full font-label-bold hover:opacity-90 active:scale-95 transition-all">
+                    Search
+                </button>
+</div>
+</section>
+<!-- Age Categories -->
+<section class="mb-12">
+<div class="flex gap-4 overflow-x-auto scroll-hide pb-4">
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-[#FF8C7A]/10 flex items-center justify-center text-primary-container border-2 border-[#FF8C7A]/20">
+<span class="material-symbols-outlined text-3xl" data-icon="child_care">child_care</span>
+</div>
+<span class="font-label-bold text-caption">Newborn</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-[#7DD8C7]/10 flex items-center justify-center text-secondary-container border-2 border-[#7DD8C7]/20">
+<span class="material-symbols-outlined text-3xl" data-icon="baby_changing_station">baby_changing_station</span>
+</div>
+<span class="font-label-bold text-caption">0-6m</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-tertiary-fixed/20 flex items-center justify-center text-tertiary border-2 border-tertiary-fixed/40">
+<span class="material-symbols-outlined text-3xl" data-icon="toys">toys</span>
+</div>
+<span class="font-label-bold text-caption">6-12m</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-primary-fixed/30 flex items-center justify-center text-primary border-2 border-primary-fixed/50">
+<span class="material-symbols-outlined text-3xl" data-icon="directions_run">directions_run</span>
+</div>
+<span class="font-label-bold text-caption">1y+</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-secondary-fixed/30 flex items-center justify-center text-secondary border-2 border-secondary-fixed/50">
+<span class="material-symbols-outlined text-3xl" data-icon="stroller">stroller</span>
+</div>
+<span class="font-label-bold text-caption">Gear</span>
+</div>
+</div>
+</section>
+<!-- Baby Timeline -->
+<section class="mb-16 bg-gradient-to-r from-[#FF8C7A]/5 to-[#7DD8C7]/5 p-8 rounded-xl relative overflow-hidden">
+<div class="absolute -right-4 -top-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-primary-container text-white p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+</div>
+<div>
+<h2 class="font-h3 text-h3 text-on-surface">Your baby is 6 months old!</h2>
+<p class="font-body-sm text-on-surface-variant">Time for high chairs &amp; first solids</p>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto scroll-hide">
+<!-- Timeline Item 1 -->
+<div class="flex-shrink-0 w-64 bg-white p-4 rounded-lg shadow-sm">
+<img class="w-full h-40 object-cover rounded-md mb-4" data-alt="Modern ergonomic wooden high chair with white padding in a bright minimalist dining room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5FGUyzVFFgn7rSmSLkf3VVuFDGiCc7t4OSwP5IQPb9fnul_cMBkqvLTmjp40qvbttKkNnihGclBDLQGv_oQg2tgaIvdwYcTOr7elgVgGH7FQKl7dZpuoP8DQyzpGcyAMnSa9uwQE34G9N8L8ubtKGw08_yxbptR8EsREG8Q33HJXlV2sm-cyBEIc2adPSEX3ASRI90oSUkGzOATcKgotVdrLZQJ47Hgcw2yl_5XjrpmX1lHETqtPp5foZ001h8mExmcjdwMlQN9fL"/>
+<h3 class="font-label-bold text-body-md mb-1">Ergo-Grow High Chair</h3>
+<p class="text-primary-container font-h3">$89.00</p>
+</div>
+<!-- Timeline Item 2 -->
+<div class="flex-shrink-0 w-64 bg-white p-4 rounded-lg shadow-sm">
+<img class="w-full h-40 object-cover rounded-md mb-4" data-alt="Colorful silicone baby feeding set with suction bowl, spoon, and bib on a clean surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8Ru2Tm1JiFG6-MWrS_EBqnvnTrD3P2tfnE6zhYE97690xuX6d-7PajPrdom2KtvQC6JylTBjlZP0r8CqHphn75jqndXh699nMrAo93DauZQShgVI4euF3ZbIYr3lF6V-h9Mt2xYtXJZq6a2H0eIcO7m5qr1MhwDBx-Oyzz-1GfwNSumA7RTrz1VDxocfZpcQ65VgJoqRPyJcoALHZCzSmaUbbisB2PYjRnS8GQAtdDWjGnId71ojLNnQxQ1plpc_kcu9VCXLfLRa3"/>
+<h3 class="font-label-bold text-body-md mb-1">Silicone Feeding Set</h3>
+<p class="text-primary-container font-h3">$24.50</p>
+</div>
+<!-- Timeline Item 3 -->
+<div class="flex-shrink-0 w-64 bg-white p-4 rounded-lg shadow-sm">
+<img class="w-full h-40 object-cover rounded-md mb-4" data-alt="Electric baby food processor and steamer on a kitchen countertop with fresh vegetables" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbVRJ2TB65XQnpZeUcv3b48UFRh0Qv0tPgoi514wraC64zl9f__CU_bwYNxARO4L8cyS8USeG1EOy3-J8kAtodlnz1b-PFJQ77OVc-IMB-viJhyMniVF0--d6QBd9jNlxRaUvYKxKMIFD8Kez3O1XFieVpFt_DXZrazzjn8VoWnv9A7OHAn3huUd2tjB9nwajNdPwC8HMxIBftH-2kXMKKc48fqTEWc2mHqTo6ru11NNwqRIKv_NcvUJnplKAaNZx94E5xQSDrJd1X"/>
+<h3 class="font-label-bold text-body-md mb-1">Puree Maker Pro</h3>
+<p class="text-primary-container font-h3">$115.00</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended Bento Grid -->
+<section class="mb-16">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="font-h2 text-h2 text-on-surface">Recommended for you</h2>
+<p class="font-body-md text-on-surface-variant">Based on your browsing history</p>
+</div>
+<button class="text-primary-container font-label-bold flex items-center gap-1">
+                    See all <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Large Feature Card -->
+<div class="md:col-span-2 md:row-span-2 bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="h-64 relative">
+<img class="w-full h-full object-cover" data-alt="Premium grey designer baby stroller parked in a sun-drenched urban park" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp6-hz-mcg43mSmI8DEdgti3bS6aLTYqNgA3J0BHeuv9Sayg7BfMJpDUhR-w780z6Uiv_NxzYWVC79W8HlxQyJN_AGxl1NewfAyqh53BqDbj0G1eRVAfx-pOcKRS8JLiwRBQ1IbH2QsP0vQ5CnNfIKhYhWnBxytDQRKB38Krz75sWjKUXL3OpYV3L4KRxKmJu9IBmzZGDnN4WtlU8ndEsJPwm7RiCWsh_n13ha8sL-w9HzICd1bd6NMlsKPBhAz76YF7WgZgjRenA5"/>
+<span class="absolute top-4 left-4 bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-full text-caption font-label-bold">New Arrival</span>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-h3 text-h3">Urban Explorer Stroller</h3>
+<button class="text-slate-300 hover:text-primary-container"><span class="material-symbols-outlined" data-icon="favorite">favorite</span></button>
+</div>
+<p class="text-on-surface-variant mb-4 font-body-sm">All-terrain wheels with premium suspension for smooth city walks.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary-container text-h2">$299.99</span>
+<button class="bg-primary-container text-white w-12 h-12 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="bg-white rounded-lg overflow-hidden shadow-sm p-4 flex flex-col">
+<img class="w-full h-32 object-cover rounded-md mb-3" data-alt="Set of organic wooden baby rattles and teething toys on a neutral fabric background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXyXE-920CHPYedmNrAkIAkvhPqZGphwsi41dSDUoRQw9aaOTwhZ8Q9R4T_MyyojHsA68Be3uxb0KljuSi4sbMA5_JwIaGVPq5SKYk1uFO4SUcBp6kMdH54R3huLJ0110f_v4JEsNHB_fXHlFOVZFgGoLnX8ESo5fsnXeV60MnzK_2Uu-rF_1C88oJdOR3NTtmYsxnE7sfSCPi9xEFOFkFQZ2ONmkXqUcMR5zgIZ5kq8wVg4QP5M_6L4EzRjE16W-_nF5igURsxeLZ"/>
+<h4 class="font-label-bold text-body-md">Wooden Teether Set</h4>
+<p class="text-primary-container font-h3 mt-auto">$18.00</p>
+</div>
+<!-- Small Card 2 -->
+<div class="bg-white rounded-lg overflow-hidden shadow-sm p-4 flex flex-col">
+<img class="w-full h-32 object-cover rounded-md mb-3" data-alt="Soft organic cotton baby blanket with a subtle cloud pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKGfGAB8y3TP-fc67al2R4H3YDj3LrWkKS_WHCzSH1wJiTpFLB3s1kZJhe_C5Us7DE-IrgRXAd-VMQd13M9tpqJe3KnR_cGCeR9FYxw_dYlTxtmGdLs3RqJhj4HqewDdUozFeaeSc9frUXFaY16iOhzOhvHZ13-fHubO2nKpFNhz90IEzpixFRK0rN8isr3o5JYike4239JL-kKZhNGnMvXqQJrSJ8oY8YLvk3ciofclMb_wYhVRoyepfil7F7az6LWC1G5KX1QLq5"/>
+<h4 class="font-label-bold text-body-md">Organic Cloud Blanket</h4>
+<p class="text-primary-container font-h3 mt-auto">$32.00</p>
+</div>
+<!-- Small Card 3 -->
+<div class="bg-white rounded-lg overflow-hidden shadow-sm p-4 flex flex-col">
+<img class="w-full h-32 object-cover rounded-md mb-3" data-alt="Soft sage green velvet armchair for nursery with a small plush toy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh5Q1cWLjhYzu49IQa6g6sRzD5me3pHVTJUR7PUfSIlCnHtZ1G6D2In8hegEkVUrGoPvoPZQeTObRP83V2Req3pgrYbZYVSRFobvygYzrd-hkpUF9NWY0-czL3IeE6AYfFW4B-9BuWVJ6aFPcnxUoi7zvV8_eGVLOTFIVL0vj7v8K023VvKzKd03QomBNHn-5nHmqREf3swGsrS1O0aFM3BCqVCKlMIxeC34YK1PjsKcHJEkXhlLbexqnET7lfxxjeSvkkX2JkXRM2"/>
+<h4 class="font-label-bold text-body-md">Velvet Nursery Pouf</h4>
+<p class="text-primary-container font-h3 mt-auto">$45.00</p>
+</div>
+<!-- Small Card 4 -->
+<div class="bg-white rounded-lg overflow-hidden shadow-sm p-4 flex flex-col">
+<img class="w-full h-32 object-cover rounded-md mb-3" data-alt="Modern digital baby monitor with night vision screen on a wooden nightstand" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIxco2Vic8DMdC0h4pRfi8Ulp3tKmClesElzHpnU4e-Aoh-6jMP00FEuu9ef-c6pTnobGx4Hjrl-vXRDrGr_rfoJ9Lzp95oehtHlr3oPQq1ZzYO7GvUYZBp9nV_uFXIzMacBZpcsubaFKJt1bJBNU4EGXgGImsUolsO-rJp7G_fSaWDb9uJruxG1MZT7GakOvjYLbXUqbV8R4zgb9wx0NM-od1ayAehtiyABbmKq2wpJbed23prPlnxiwpuR8r1fiA5BmrGBP0cxsq"/>
+<h4 class="font-label-bold text-body-md">Smart Video Monitor</h4>
+<p class="text-primary-container font-h3 mt-auto">$120.00</p>
+</div>
+</div>
+</section>
+<!-- Featured Stores -->
+<section class="mb-12">
+<h2 class="font-h2 text-h2 text-on-surface mb-8">Trusted Boutique Stores</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Store 1 -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-slate-100 overflow-hidden flex-shrink-0">
+<img alt="Natural Baby" data-alt="Logo for a boutique baby brand using natural textures and earth tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz1LJp0Ictuzjf8fcDxwrA0OPM3rEsHqGp3v5Mtz-1CUyd3AxveM_YdKE8zr869r9fL7-I_0ENVJJLYRLBW_VNcZcOwUBlSQH9qwqzfk-iGVe8XrS3ug502qNjV3sEkGK6s6X75Pa5w34E8bsa65GhQgboEVfpd795JyZVPXGRiMJplSjy4Xy4N1q47svMPGvtbkbvSnMHCJ62uSUH2eN6PC_jWVqyU8X6d4XnUlJ5o5RU0NVWMY3d7Pv-VnEqocwy7LAVkHex7d0Y"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-1">
+<h4 class="font-label-bold text-body-lg">Natural Baby Co.</h4>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-caption text-on-surface-variant">Organic &amp; Eco-friendly</p>
+</div>
+<button class="bg-secondary/10 text-secondary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Store 2 -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-slate-100 overflow-hidden flex-shrink-0">
+<img alt="Tiny Knights" data-alt="Minimalist logo for a children's furniture and decor store" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoYVsCi04iVxQN6e3XP6sq6nRNbwfi4mvG32PzcLyNpZk2zakf13jdj4tEhdmeNf47ejLn0FcJX-FplH8ksZg8IF02RppS7mShQrY5cIPlUeRMJ8NuBr8q_kLu9sjnyn5Cf43bHgOxYKVwFnPImWG4Wv3yRGl4jT5_p51dYwo0R3tfwZ9fegRqDV2hdVhOgIuWfjs3s2Cl4DOoe0QYYsCfSAmtEYehEoR83173uR89prl5aHzV4TYp61udbxSEvMuEGmxnq4Cgvwhx"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-1">
+<h4 class="font-label-bold text-body-lg">Tiny Knights</h4>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-caption text-on-surface-variant">Premium Nursery Decor</p>
+</div>
+<button class="bg-secondary/10 text-secondary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Store 3 -->
+<div class="bg-white p-6 rounded-lg shadow-sm border border-outline-variant/10 flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-slate-100 overflow-hidden flex-shrink-0">
+<img alt="Little Bloom" data-alt="Soft floral logo for a baby clothing boutique" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3NXITT-o10tLDLwLlCZ8IhIEViANLcjrHl7tN99srIo1ix5vXCyRAYAigxd5wM7AEDJ1sKCxNd6nGaSFRzqujrpTjxAL0nKADC1VwLt0h_dj2lv4wir1LTer7G0vAiK8S1J1azPCIRBkcPvHkQP7AFLrR70oUElhxVcby8q4ukoaHMipaIwQ6BXXByosvNWPbxdWClL9ShIAzAoY9du5xfClX4rJIUUrmLrdLsOZ5wybp5zH6Mn5R37M6-oByfCbv57EwRBOg12p"/>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-1">
+<h4 class="font-label-bold text-body-lg">Little Bloom</h4>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-caption text-on-surface-variant">Curated Fashion</p>
+</div>
+<button class="bg-secondary/10 text-secondary p-2 rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Empty State Tuki Mascot -->
+<section class="py-20 flex flex-col items-center text-center">
+<img alt="Tuki guiding" class="w-32 h-32 mb-6" data-alt="Friendly baby toucan mascot holding a magnifying glass over a gift box, clean vector style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC11QiXg76-4fH78TAyVakewOVIX9ltFd-7q0Eexr2pyBQyqj3U9Uil1zxVnLfHon-vALdHjOV7fbAGBU8a8_04Ibm-zIEU07Z7QmIN36SyJpUj_vuKJd5jUHlXh-TRwF_x2IbxgRYiLAw0UHDP2LGWqeaAZhdJwRsc5Gxs-nl4m9tEhRPzZD0o4JDLdi9CKtJrbFtJZYfkGCQcCQo38OA1PrcJCY3pa-ef9xPiX1bFuc1bl3Igk9XbjN-BBehC8caupEEHGBzvPRal"/>
+<h3 class="font-h3 text-h3 text-primary mb-2">Can't find what you need?</h3>
+<p class="text-on-surface-variant max-w-sm mb-8">Tuki is here to help! Try browsing our categories or reach out to our support.</p>
+<button class="px-8 py-3 bg-secondary text-white rounded-full font-label-bold shadow-lg shadow-secondary/20 hover:scale-105 transition-transform">
+                Chat with Tuki
+            </button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white dark:bg-slate-900 shadow-[0_-10px_40px_rgba(255,140,122,0.08)] rounded-t-[32px] z-50">
+<button class="flex flex-col items-center justify-center text-[#FF8C7A] bg-[#FF8C7A]/10 rounded-full px-4 py-1">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full py-1">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary-container scale-125 -mt-6 bg-white rounded-full p-2 shadow-lg">
+<span class="material-symbols-outlined text-4xl" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full py-1">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full py-1">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Profile</span>
+</button>
+</nav>
+</body></html>

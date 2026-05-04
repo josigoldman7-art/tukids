@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tracking Pedido #TK-2847 — TuKids</title>
+  <meta name="description" content="Sigue tu pedido en tiempo real con mapa en vivo y notificaciones en cada etapa."/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <style>
+    .tracking-wrap { max-width: 780px; margin: 0 auto; padding: 32px 24px 100px; }
+    .tracking-header-card {
+      background: linear-gradient(135deg, var(--carbon) 0%, var(--carbon-soft) 100%);
+      border-radius: var(--r-xl); padding: 24px 28px; color: #fff; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    [data-theme="dark"] .tracking-header-card { background: linear-gradient(135deg,#111315 0%,#25282C 100%); }
+    .tracking-card { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+    .timeline-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: ''; position: absolute; left: 19px; top: 32px;
+      width: 2px; height: calc(100% + 0px);
+      background: var(--fog);
+    }
+    .timeline-item.done::before { background: var(--mint); }
+    .timeline-item.active::before { background: linear-gradient(var(--mint), var(--fog)); }
+    .timeline-item:last-child::before { display: none; }
+    .tl-dot {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; z-index: 1; position: relative;
+    }
+    .tl-dot.done   { background: var(--mint); }
+    .tl-dot.active { background: var(--coral); animation: none; box-shadow: 0 0 0 0 rgba(255,140,122,0.4); }
+    .tl-dot.pending{ background: var(--fog); border: 2px solid var(--gray-mid); }
+    .tl-content { flex: 1; padding-bottom: 28px; }
+    .tl-title { font-family: var(--font-title); font-weight: 700; font-size: 0.95rem; }
+    .tl-desc  { font-size: 0.83rem; color: var(--gray-mid); margin-top: 4px; }
+    .tl-time  { font-size: 0.82rem; color: var(--gray-mid); margin-left: auto; flex-shrink: 0; }
+    .tl-actions { display: flex; gap: 8px; margin-top: 10px; }
+    /* Courier card */
+    .courier-card {
+      background: linear-gradient(135deg, var(--coral-bg), var(--yellow-bg));
+      border: 1.5px solid var(--coral-light); border-radius: var(--r-xl);
+      padding: 20px; display: flex; align-items: center; gap: 16px;
+      margin-bottom: 16px;
+    }
+    .courier-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--coral); display: flex; align-items: center;
+      justify-content: center; font-size: 1.5rem; font-weight: 700;
+      color: #fff; font-family: var(--font-title); flex-shrink: 0;
+    }
+    /* ETA pill */
+    .eta-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--carbon); color: #fff; border-radius: 9999px;
+      padding: 8px 18px; font-family: var(--font-title); font-size: 0.9rem; font-weight: 700;
+    }
+    /* Notification history */
+    .notif-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid var(--fog);
+    }
+    .notif-icon { width: 36px; height: 36px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* Rating CTA */
+    .rating-cta {
+      background: linear-gradient(135deg, var(--yellow-bg), var(--coral-bg));
+      border-radius: var(--r-xl); padding: 24px; text-align: center;
+    }
+    /* Progress bar top */
+    .order-progress {
+      display: flex; align-items: center; gap: 0;
+      background: var(--white); border-radius: var(--r-xl);
+      overflow: hidden; height: 8px; margin-bottom: 20px;
+    }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--mint), var(--coral)); border-radius: var(--r-xl); transition: width 1s ease; }
+    /* Map live dot pulse */
+    @keyframes pulse-map {
+      0%   { box-shadow: 0 0 0 0 rgba(255,140,122,0.6); }
+      70%  { box-shadow: 0 0 0 16px rgba(255,140,122,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,140,122,0); }
+    }
+    .map-pulse { animation: pulse-map 2s infinite; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <div style="flex:1;"></div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="explorar.html" class="nav-link">Explorar</a>
+      <a href="perfil.html" class="nav-link">Mi perfil</a>
+    
+      <a href="donaciones.html" class="nav-link" style="color:var(--coral);font-weight:700;">❤️ Donaciones</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
+    </div>
+  </div>
+</header>
+
+<div class="tracking-wrap">
+  <!-- Header Card -->
+  <div class="tracking-header-card animate-fade-up">
+    <div>
+      <div style="font-size:0.78rem;opacity:0.6;font-weight:600;margin-bottom:4px;">TU PEDIDO</div>
+      <h1 style="font-size:1.6rem;color:#fff;margin-bottom:6px;">#TK-2847</h1>
+      <div style="font-size:0.83rem;opacity:0.75;">Coche Chicco Urban Plus · $850.000</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="eta-pill" style="margin-bottom:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        ETA: 4:15 PM
+      </div>
+      <div style="font-size:0.78rem;opacity:0.65;">Faltan aprox. 45 min.</div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="order-progress">
+    <div class="progress-fill" style="width:75%;"></div>
+  </div>
+
+  <!-- Map -->
+  <div class="tracking-card animate-fade-up anim-delay-1" style="padding:0;overflow:hidden;">
+    <div class="map-placeholder" style="height:280px;position:relative;">
+      <div class="map-grid"></div>
+      <!-- Streets simulation -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;" viewBox="0 0 780 280" preserveAspectRatio="none">
+        <path d="M0 140 Q195 120 390 140 Q585 160 780 140" stroke="rgba(255,255,255,0.6)" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <path d="M195 0 Q210 70 195 140 Q180 210 195 280" stroke="rgba(255,255,255,0.6)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M585 0 Q570 70 585 140 Q600 210 585 280" stroke="rgba(255,255,255,0.6)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <!-- Route line -->
+        <path d="M80 180 Q250 100 430 140 Q560 165 680 140" stroke="var(--coral)" stroke-width="4" fill="none" stroke-dasharray="12 6" stroke-linecap="round"/>
+        <!-- Origin -->
+        <circle cx="80" cy="180" r="8" fill="var(--mint)" stroke="white" stroke-width="2"/>
+        <!-- Destination -->
+        <circle cx="680" cy="140" r="10" fill="var(--lilac)" stroke="white" stroke-width="2"/>
+        <!-- Current position -->
+        <circle cx="430" cy="140" r="14" fill="var(--coral)" stroke="white" stroke-width="3" class="map-pulse"/>
+      </svg>
+      <!-- Courier popup -->
+      <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.96);border-radius:var(--r-xl);padding:12px 18px;box-shadow:var(--shadow-xl);display:flex;align-items:center;gap:12px;z-index:10;backdrop-filter:blur(10px);min-width:240px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;font-family:var(--font-title);flex-shrink:0;">JC</div>
+        <div style="flex:1;">
+          <div style="font-family:var(--font-title);font-weight:700;font-size:0.9rem;">Juan Carlos</div>
+          <div style="font-size:0.75rem;color:var(--gray-mid);">⭐ 4.8 · 2,340 entregas</div>
+          <div style="font-size:0.78rem;color:var(--coral);font-weight:600;margin-top:2px;">📍 2.3 km de ti</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button onclick="showToast('Llamando','Conectando con Juan Carlos 📞','mint')" style="width:34px;height:34px;border-radius:50%;background:var(--mint-bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">📞</button>
+          <button onclick="showToast('Chat','Abriendo chat 💬','coral')" style="width:34px;height:34px;border-radius:50%;background:var(--coral-bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;">💬</button>
+        </div>
+      </div>
+      <!-- Legends -->
+      <div style="position:absolute;bottom:12px;left:12px;display:flex;gap:10px;background:rgba(255,255,255,0.92);border-radius:var(--r-lg);padding:8px 12px;font-size:0.72rem;z-index:10;">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--mint);display:inline-block;"></span>Vendedor</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--coral);display:inline-block;"></span>Mensajero</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--lilac);display:inline-block;"></span>Tu casa</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courier info -->
+  <div class="courier-card animate-fade-up anim-delay-2">
+    <div class="courier-avatar">JC</div>
+    <div style="flex:1;">
+      <div style="font-family:var(--font-title);font-weight:700;font-size:1.05rem;">Juan Carlos M.</div>
+      <div style="font-size:0.83rem;color:var(--gray-mid);">Mensajero TuKids · ⭐ 4.8</div>
+      <div style="font-size:0.83rem;color:var(--carbon-soft);margin-top:4px;">🏍️ Moto — Placa MHX 342</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button class="btn btn-primary btn-sm" onclick="showToast('Llamando...','Conectando con Juan Carlos 📞','mint')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 13.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 2.84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 10.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        Llamar
+      </button>
+      <button class="btn btn-outline btn-sm" style="border-color:var(--coral);color:var(--coral);" onclick="showToast('Abriendo chat','Chateando con Juan Carlos','coral')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Chat
+      </button>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="tracking-card animate-fade-up anim-delay-3">
+    <h4 style="margin-bottom:24px;">Estado del pedido</h4>
+    <div>
+      <!-- Step 1: Done -->
+      <div class="timeline-item done" style="margin-bottom:0;">
+        <div class="tl-dot done">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="tl-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tl-title" style="color:var(--mint-dark);">✅ Pedido confirmado</div>
+            <div class="tl-time">10:23 AM</div>
+          </div>
+          <div class="tl-desc">El vendedor recibió tu orden y confirmó disponibilidad</div>
+        </div>
+      </div>
+      <!-- Step 2: Done -->
+      <div class="timeline-item done">
+        <div class="tl-dot done">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="tl-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tl-title" style="color:var(--mint-dark);">✅ Producto empacado</div>
+            <div class="tl-time">11:45 AM</div>
+          </div>
+          <div class="tl-desc">María empacó el producto en embalaje protector</div>
+        </div>
+      </div>
+      <!-- Step 3: Done -->
+      <div class="timeline-item done">
+        <div class="tl-dot done">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="tl-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tl-title" style="color:var(--mint-dark);">✅ Entregado a mensajero</div>
+            <div class="tl-time">02:15 PM</div>
+          </div>
+          <div class="tl-desc">Juan Carlos recogió el paquete en Cra. 8 #45-20</div>
+        </div>
+      </div>
+      <!-- Step 4: Active -->
+      <div class="timeline-item active">
+        <div class="tl-dot active" style="background:var(--coral);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="tl-content">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tl-title" style="color:var(--coral);">🔵 En camino · Juan Carlos</div>
+            <div class="tl-time" style="color:var(--coral);font-weight:600;">03:30 PM</div>
+          </div>
+          <div class="tl-desc">Tu paquete va en camino. A 2.3 km. ETA: 4:15 PM</div>
+          <div class="tl-actions">
+            <button class="btn btn-primary btn-sm" onclick="showToast('Llamando','Conectando 📞','mint')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-5.99-5.99 19.79 19.79 0 01-3.07-8.67A2 2 0 012 2.84h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 10.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Llamar
+            </button>
+            <button class="btn btn-outline btn-sm" style="border-color:var(--coral);color:var(--coral);" onclick="showToast('Chat','Abriendo chat 💬','coral')">💬 Chat</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Reporte','Reportando problema','yellow')">⚠️ Reportar</button>
+          </div>
+        </div>
+      </div>
+      <!-- Step 5: Pending -->
+      <div class="timeline-item" style="opacity:0.45;">
+        <div class="tl-dot pending"></div>
+        <div class="tl-content" style="padding-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="tl-title">⚪ Entregado</div>
+            <div class="tl-time">Est. 4:15 PM</div>
+          </div>
+          <div class="tl-desc">Confirma la recepción para liberar el pago al vendedor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications history -->
+  <div class="tracking-card animate-fade-up anim-delay-4">
+    <h5 style="margin-bottom:16px;">Historial de notificaciones</h5>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:var(--coral-bg);">📦</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:0.875rem;">Paquete recogido</div>
+        <div style="font-size:0.78rem;color:var(--gray-mid);">Juan Carlos recogió tu pedido</div>
+      </div>
+      <span style="font-size:0.75rem;color:var(--gray-mid);">02:15 PM</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:var(--mint-bg);">✅</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:0.875rem;">Pago retenido en escrow</div>
+        <div style="font-size:0.78rem;color:var(--gray-mid);">$850.000 retenidos hasta confirmar recepción</div>
+      </div>
+      <span style="font-size:0.75rem;color:var(--gray-mid);">10:24 AM</span>
+    </div>
+    <div class="notif-item">
+      <div class="notif-icon" style="background:var(--yellow-bg);">🎉</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:0.875rem;">Pedido confirmado</div>
+        <div style="font-size:0.78rem;color:var(--gray-mid);">Tu compra #TK-2847 fue confirmada</div>
+      </div>
+      <span style="font-size:0.75rem;color:var(--gray-mid);">10:23 AM</span>
+    </div>
+    <div class="notif-item" style="border:none;">
+      <div class="notif-icon" style="background:var(--lilac-bg);">📧</div>
+      <div style="flex:1;">
+        <div style="font-weight:600;font-size:0.875rem;">Confirmación enviada</div>
+        <div style="font-size:0.78rem;color:var(--gray-mid);">Email enviado a maria@email.com</div>
+      </div>
+      <span style="font-size:0.75rem;color:var(--gray-mid);">10:23 AM</span>
+    </div>
+  </div>
+
+  <!-- Confirm reception -->
+  <div class="tracking-card" style="background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));border:1.5px solid var(--mint);">
+    <h5 style="margin-bottom:8px;color:var(--mint-dark);">🛡️ ¿Ya recibiste tu producto?</h5>
+    <p style="font-size:0.83rem;color:var(--carbon-soft);margin-bottom:16px;">Confirma la recepción para liberar el pago al vendedor y completar la transacción.</p>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-mint btn-md" onclick="confirmReceipt()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Confirmar recepción
+      </button>
+      <button class="btn btn-ghost btn-md" onclick="showToast('Reporte','Reportando problema con el pedido','coral')">
+        Hay un problema
+      </button>
+    </div>
+  </div>
+
+  <!-- Rating CTA -->
+  <div class="rating-cta animate-fade-up">
+    <div style="font-size:2rem;margin-bottom:10px;">🐦</div>
+    <h4 style="margin-bottom:8px;">¡Tuki quiere saber cómo te fue!</h4>
+    <p style="font-size:0.875rem;color:var(--carbon-soft);margin-bottom:16px;">Califica al vendedor y al mensajero para ayudar a la comunidad TuKids.</p>
+    <div style="display:flex;justify-content:center;gap:8px;font-size:2rem;cursor:pointer;" id="ratingStars">
+      <span onclick="rateOrder(1)" class="rate-star" style="transition:transform 0.15s;">⭐</span>
+      <span onclick="rateOrder(2)" class="rate-star" style="transition:transform 0.15s;">⭐</span>
+      <span onclick="rateOrder(3)" class="rate-star" style="transition:transform 0.15s;">⭐</span>
+      <span onclick="rateOrder(4)" class="rate-star" style="transition:transform 0.15s;">⭐</span>
+      <span onclick="rateOrder(5)" class="rate-star" style="transition:transform 0.15s;">⭐</span>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="index.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="explorar.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Buscar</a>
+    <a href="publicar.html" class="mob-nav-item mob-nav-publish"><div class="mob-pub-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>Vender</a>
+    <a href="#" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Chat</a>
+    <a href="perfil.html" class="mob-nav-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</a>
+  </div>
+</nav>
+
+<script src="js/app.js"></script>
+<script>
+function confirmReceipt() {
+  showToast('¡Confirmado! 🎉', 'Pago liberado al vendedor. ¡Gracias por usar TuKids!', 'mint');
+  setTimeout(() => { showToast('$850.000 liberados', 'El vendedor María González recibió su pago', 'coral'); }, 2000);
+}
+function rateOrder(n) {
+  const stars = document.querySelectorAll('.rate-star');
+  stars.forEach((s,i) => { s.style.transform = i < n ? 'scale(1.3)' : 'scale(1)'; });
+  showToast('¡Gracias!', `Calificaste con ${n} ⭐. Tu reseña ayuda a la comunidad`, 'yellow');
+}
+// Animate progress after load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const fill = document.querySelector('.progress-fill');
+    if (fill) { fill.style.width = '0'; requestAnimationFrame(() => { fill.style.width = '75%'; }); }
+  }, 300);
+});
+</script>
+</body>
+</html>
