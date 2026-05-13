@@ -470,6 +470,7 @@
     .success-modal { padding: 28px 18px; }
   }
   </style>
+  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
@@ -478,7 +479,7 @@
 ════════════════════════════════════════════════════════ -->
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <a href="index.html" class="logo"><img src="images/nuevo_logo_oficial.png" alt="TuKids Logo"/></a>
     <div class="search-bar" style="flex:1;max-width:400px;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-mid)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" placeholder="Buscar productos para tu bebé..."/>
@@ -814,14 +815,10 @@
           <div class="field-wrap">
             <label class="field-label">Categoría <span class="req-dot"></span></label>
             <div class="cat-pill-grid" id="catGrid" role="radiogroup" aria-label="Categoría del artículo">
-              <div class="cat-item" onclick="selectCat('ropa',this)"       role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">👕</span><span class="ci-label">Ropa</span></div>
-              <div class="cat-item" onclick="selectCat('juguetes',this)"   role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧸</span><span class="ci-label">Juguetes</span></div>
-              <div class="cat-item" onclick="selectCat('utiles',this)"     role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📚</span><span class="ci-label">Útiles</span></div>
-              <div class="cat-item" onclick="selectCat('calzado',this)"    role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">👟</span><span class="ci-label">Calzado</span></div>
-              <div class="cat-item" onclick="selectCat('libros',this)"     role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📖</span><span class="ci-label">Libros</span></div>
-              <div class="cat-item" onclick="selectCat('higiene',this)"    role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧴</span><span class="ci-label">Higiene</span></div>
-              <div class="cat-item" onclick="selectCat('alimentos',this)"  role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🥫</span><span class="ci-label">Alimentos</span></div>
-              <div class="cat-item" onclick="selectCat('otro',this)"       role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">📦</span><span class="ci-label">Otro</span></div>
+              <div class="cat-item" onclick="selectCat('bebe',this)"        role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">👶</span><span class="ci-label">Mundo bebé</span></div>
+              <div class="cat-item" onclick="selectCat('nino',this)"        role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧒</span><span class="ci-label">Mundo niño</span></div>
+              <div class="cat-item" onclick="selectCat('alimentacion',this)" role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🍼</span><span class="ci-label">Alimentación</span></div>
+              <div class="cat-item" onclick="selectCat('juguetes',this)"    role="radio" tabindex="0" aria-checked="false"><span class="ci-icon">🧸</span><span class="ci-label">Juguetes y aprendizaje</span></div>
             </div>
             <div class="field-error" id="e-cat">Selecciona una categoría</div>
           </div>
@@ -887,13 +884,10 @@
           <div class="form-row2">
             <div class="field-wrap">
               <label class="field-label" for="f-city">Ciudad <span class="req-dot"></span></label>
-              <select class="field-input" id="f-city" aria-required="true">
-                <option value="">Selecciona...</option>
-                <option>Bogotá</option><option>Medellín</option><option>Cali</option>
-                <option>Barranquilla</option><option>Bucaramanga</option><option>Pereira</option>
-                <option>Manizales</option><option>Cartagena</option><option>Otra ciudad</option>
+              <select class="field-input" id="f-city" aria-required="true" disabled>
+                <option selected>Bogotá</option>
               </select>
-              <div class="field-error" id="e-city">Selecciona tu ciudad</div>
+              <div style="font-size:.72rem;color:var(--gray-mid);margin-top:4px;">Por ahora TuKids opera solo en Bogotá.</div>
             </div>
             <div class="field-wrap">
               <label class="field-label" for="f-zip">Código postal</label>
@@ -906,21 +900,13 @@
             <input class="field-input" type="text" id="f-ref" placeholder="Ej: Piso 4, portería Edificio Los Pinos, preguntar por María"/>
           </div>
 
-          <!-- Map -->
+          <!-- TuKids logistics note -->
           <div class="field-wrap">
-            <label class="field-label">Ubicación en el mapa</label>
-            <div class="map-box" id="mapBox" onclick="confirmMap()" role="button" tabindex="0" aria-label="Confirmar ubicación en el mapa" onkeypress="if(event.key==='Enter')confirmMap()">
-              <div class="map-grid-bg" aria-hidden="true"></div>
-              <!-- Fake interactive map SVG -->
-              <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;opacity:.5;" viewBox="0 0 800 200" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 100 Q200 80 400 100 Q600 120 800 100" stroke="rgba(150,150,150,.6)" stroke-width="8" fill="none" stroke-linecap="round"/>
-                <path d="M200 0 Q210 50 200 100 Q190 150 200 200" stroke="rgba(150,150,150,.4)" stroke-width="5" fill="none"/>
-                <path d="M600 0 Q610 50 600 100 Q590 150 600 200" stroke="rgba(150,150,150,.4)" stroke-width="5" fill="none"/>
-              </svg>
-              <div style="position:relative;z-index:2;text-align:center;" id="mapContent">
-                <div style="font-size:2rem;margin-bottom:6px;" aria-hidden="true">📍</div>
-                <div style="font-family:var(--font-title);font-weight:700;font-size:.9rem;">Haz clic para confirmar ubicación</div>
-                <div style="font-size:.75rem;color:var(--gray-mid);margin-top:3px;">Usamos tu dirección para guiar al voluntario</div>
+            <div style="display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--mint-bg);border:1.5px solid var(--mint);border-radius:var(--r-xl);">
+              <div style="font-size:1.6rem;">🚚</div>
+              <div>
+                <div style="font-weight:700;font-family:var(--font-title);color:var(--mint-dark);">Recogida coordinada por TuKids</div>
+                <div style="font-size:.83rem;color:var(--carbon-soft);margin-top:3px;">Un domiciliario TuKids te contactará por WhatsApp para coordinar la recogida del artículo donado. No necesitas confirmar el mapa.</div>
               </div>
             </div>
           </div>
@@ -1150,7 +1136,7 @@ const FAQS = [
   { q: '¿Los puntos tienen algún beneficio real?',
     a: 'Sí. Los puntos desbloquean descuentos en compras dentro de TuKids, acceso anticipado a campañas exclusivas y, al nivel Embajador, una placa física y reconocimiento en la comunidad.' },
   { q: '¿Puedo donar desde cualquier ciudad?',
-    a: 'Actualmente tenemos red de voluntarios en Bogotá, Medellín, Cali, Barranquilla, Bucaramanga, Pereira y Manizales. Estamos expandiendo. Si no estás en ninguna, contáctanos.' },
+    a: 'Por ahora operamos únicamente en Bogotá. Estamos expandiendo a otras ciudades muy pronto.' },
 ];
 
 /* ════════════════════════════════════════════════════════
@@ -1159,7 +1145,6 @@ const FAQS = [
 let currentStep = 1;
 let selectedCat  = '';
 let selectedCond = '';
-let mapConfirmed = false;
 let photoFiles   = [];
 let userPoints   = parseInt(localStorage.getItem('tk_donation_points') || '340');
 
@@ -1322,18 +1307,6 @@ function removePhoto(i) {
 }
 
 /* ════════════════════════════════════════════════════════
-   MAP CONFIRM
-════════════════════════════════════════════════════════ */
-function confirmMap() {
-  mapConfirmed = true;
-  const box = document.getElementById('mapBox');
-  const content = document.getElementById('mapContent');
-  box.classList.add('confirmed');
-  content.innerHTML = `<div style="font-size:2rem;" aria-hidden="true">✅</div><div style="font-family:var(--font-title);font-weight:700;font-size:.9rem;color:var(--mint-dark);">Ubicación confirmada</div><div style="font-size:.75rem;color:var(--gray-mid);margin-top:3px;">${document.getElementById('f-addr').value || 'Dirección registrada'}</div>`;
-  showToast('Ubicación registrada','Tu punto de recogida fue confirmado 📍','mint');
-}
-
-/* ════════════════════════════════════════════════════════
    VALIDATION
 ════════════════════════════════════════════════════════ */
 function validateField(el, type) {
@@ -1421,7 +1394,7 @@ function goToStep(step) {
 /* ════════════════════════════════════════════════════════
    SUMMARY BUILDER
 ════════════════════════════════════════════════════════ */
-const CAT_LABELS = { ropa:'👕 Ropa', juguetes:'🧸 Juguetes', utiles:'📚 Útiles escolares', calzado:'👟 Calzado', libros:'📖 Libros', higiene:'🧴 Higiene', alimentos:'🥫 Alimentos', otro:'📦 Otro' };
+const CAT_LABELS = { bebe:'👶 Mundo bebé', nino:'🧒 Mundo niño', alimentacion:'🍼 Alimentación', juguetes:'🧸 Juguetes y aprendizaje' };
 const COND_LABELS = { nuevo:'✨ Nuevo', excelente:'👍 Excelente', bueno:'💛 Buen estado' };
 const TIME_LABELS = { morning:'🌅 Mañana (8am–12pm)', afternoon:'☀️ Tarde (12pm–5pm)', evening:'🌙 Noche (5pm–8pm)', all:'📅 Todo el día' };
 

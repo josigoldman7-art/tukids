@@ -38,17 +38,18 @@
     }
     .success-overlay.show .success-dialog { transform: scale(1); }
   </style>
+  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <a href="index.html" class="logo"><img src="images/nuevo_logo_oficial.png" alt="TuKids Logo"/></a>
     <div style="flex:1;"></div>
     <div style="display:flex;align-items:center;gap:8px;font-size:0.875rem;color:var(--gray-mid);">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-      Pago 100% seguro · <strong style="color:var(--carbon);">Garantía TuKids</strong>
+      Pago 100% seguro · <strong style="color:var(--carbon);">Pago protegido TuKids</strong>
     </div>
     <div class="header-actions">
       <button id="themeToggle" class="theme-toggle"><div class="toggle-knob"></div></button>
@@ -94,29 +95,25 @@
           <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
             <div class="input-group">
               <label class="input-label">Ciudad *</label>
-              <select class="input-field select-field">
+              <select class="input-field select-field" disabled>
                 <option selected>Bogotá</option>
-                <option>Medellín</option>
-                <option>Cali</option>
-                <option>Barranquilla</option>
               </select>
+              <div style="font-size:0.72rem;color:var(--gray-mid);margin-top:4px;">Por ahora TuKids opera solo en Bogotá.</div>
             </div>
             <div class="input-group"><label class="input-label">Código postal</label><input type="text" class="input-field" placeholder="110221" value="110221"/></div>
           </div>
           <div class="input-group"><label class="input-label">Instrucciones adicionales</label><input type="text" class="input-field" placeholder="Piso, apto, portería..."/></div>
         </div>
-        <!-- Delivery options -->
+        <!-- Delivery: TuKids handles -->
         <div style="margin-top:20px;">
           <div style="font-weight:600;font-family:var(--font-title);font-size:0.9rem;margin-bottom:12px;color:var(--carbon);">Método de entrega</div>
-          <div class="payment-method selected" id="del1" onclick="selectDel('del1')">
+          <div class="payment-method selected" style="cursor:default;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Envío a domicilio</div><div style="font-size:0.78rem;color:var(--gray-mid);">2–4 días hábiles</div></div>
-            <span style="font-weight:700;color:var(--mint-dark);">Gratis</span>
-          </div>
-          <div class="payment-method" id="del2" onclick="selectDel('del2')">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--carbon-soft)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <div style="flex:1;"><div style="font-weight:600;font-size:0.9rem;">Punto de recogida</div><div style="font-size:0.78rem;color:var(--gray-mid);">Recoge en el día</div></div>
-            <span style="font-weight:700;color:var(--carbon-soft);">$0</span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:0.9rem;">Domicilio TuKids en Bogotá</div>
+              <div style="font-size:0.78rem;color:var(--gray-mid);">Un mensajero de TuKids recoge y entrega · 24–48h</div>
+            </div>
+            <span style="font-weight:700;color:var(--coral);">$10.000</span>
           </div>
         </div>
       </div>
@@ -187,21 +184,19 @@
         </div>
         <!-- Price breakdown -->
         <div style="margin-top:16px;">
-          <div class="price-line"><span>Subtotal</span><span>$850.000</span></div>
-          <div class="price-line"><span>Envío</span><span style="color:var(--mint-dark);font-weight:600;">Gratis</span></div>
-          <div class="price-line"><span>Comisión plataforma</span><span>$85.000</span></div>
-          <div class="price-line"><span style="font-size:0.78rem;color:var(--gray-mid);">Seguro envío</span><span style="font-size:0.78rem;color:var(--gray-mid);">$0</span></div>
-          <div class="price-line total"><span>Total</span><span class="text-coral">$935.000</span></div>
+          <div class="price-line"><span>Valor del producto</span><span>$850.000</span></div>
+          <div class="price-line"><span>Domicilio Bogotá</span><span>$10.000</span></div>
+          <div class="price-line total"><span>Total a pagar</span><span class="text-coral">$860.000</span></div>
         </div>
-        <!-- Escrow -->
+        <!-- Pago protegido -->
         <div style="margin-top:20px;padding:14px;background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));border-radius:var(--r-lg);font-size:0.8rem;">
-          <div style="font-weight:700;color:var(--mint-dark);margin-bottom:6px;">🛡️ Garantía TuKids (Escrow)</div>
+          <div style="font-weight:700;color:var(--mint-dark);margin-bottom:6px;">🛡️ Pago protegido TuKids</div>
           <p style="font-size:0.78rem;color:var(--carbon-soft);margin:0;line-height:1.6;">Tu dinero está retenido en custodia hasta que confirmes la recepción del producto en perfecto estado.</p>
         </div>
         <!-- Submit -->
         <button class="btn btn-primary btn-lg w-full" style="margin-top:20px;" onclick="submitOrder()">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          Pagar $935.000
+          Pagar $860.000
         </button>
         <p style="text-align:center;font-size:0.75rem;color:var(--gray-mid);margin-top:12px;">Al pagar aceptas los <a href="#" style="color:var(--coral);">Términos y condiciones</a> de TuKids</p>
         <!-- Seller info -->
@@ -235,8 +230,8 @@
     <h2 style="margin-bottom:8px;">¡Compra exitosa! 🎉</h2>
     <p style="margin-bottom:8px;">Tu pedido <strong>#TK-2847</strong> ha sido confirmado.</p>
     <div style="background:var(--fog);border-radius:var(--r-lg);padding:16px;margin:20px 0;font-size:0.875rem;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Total pagado</span><span style="font-weight:700;">$935.000</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Entrega estimada</span><span style="font-weight:700;color:var(--mint-dark);">2–4 días</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Total pagado</span><span style="font-weight:700;">$860.000</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="color:var(--gray-mid);">Entrega estimada</span><span style="font-weight:700;color:var(--mint-dark);">24–48h</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--gray-mid);">Confirmación enviada a</span><span style="font-weight:700;">maria@email.com</span></div>
     </div>
     <div style="padding:12px 16px;background:var(--lilac-bg);border-radius:var(--r-lg);font-size:0.83rem;color:var(--lilac-dark);margin-bottom:20px;">

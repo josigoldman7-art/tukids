@@ -82,13 +82,14 @@
       animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
     }
   </style>
+  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><img src="images/logo.png" alt="TuKids Logo"/></a>
+    <a href="index.html" class="logo"><img src="images/nuevo_logo_oficial.png" alt="TuKids Logo"/></a>
     <div style="flex:1;"></div>
     <nav class="header-nav">
       <a href="index.html" class="nav-link">Home</a>
@@ -141,14 +142,14 @@
   <div class="step-panel active" id="step1">
     <div class="card" style="padding:32px;">
       <h3 style="margin-bottom:8px;">¿Qué tipo de producto vas a vender?</h3>
-      <p style="margin-bottom:28px;">Selecciona si el artículo es nuevo o de segunda mano.</p>
+      <p style="margin-bottom:28px;">Elige claramente si tu artículo es de <strong>primera mano (nuevo)</strong> o de <strong>segunda mano</strong>.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
         <div class="ship-option" id="opt-new" onclick="selectType('new')">
           <div class="ship-icon" style="background:var(--mint-bg);">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <div>
-            <div style="font-weight:700;font-family:var(--font-title);">🆕 Producto Nuevo</div>
+            <div style="font-weight:700;font-family:var(--font-title);">🆕 Producto nuevo (primera mano)</div>
             <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:4px;">Artículo sin usar, en caja o perfecto estado.</div>
           </div>
         </div>
@@ -157,16 +158,16 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
           </div>
           <div>
-            <div style="font-weight:700;font-family:var(--font-title);">♻️ Segunda mano</div>
+            <div style="font-weight:700;font-family:var(--font-title);">♻️ Producto de segunda mano</div>
             <div style="font-size:0.83rem;color:var(--gray-mid);margin-top:4px;">IA analiza el estado y sugiere el precio ideal.</div>
           </div>
         </div>
       </div>
       <div style="margin-top:16px;padding:12px 16px;background:var(--lilac-bg);border-radius:var(--r-lg);font-size:0.83rem;color:var(--lilac-dark);">
-        <strong>🐦 Tuki tip:</strong> Los productos de segunda mano con análisis IA se venden 3x más rápido.
+        <strong>🐦 Tips TuKids:</strong> Los productos de segunda mano con análisis IA se venden 3x más rápido.
       </div>
-      <button class="btn btn-primary btn-md w-full" style="margin-top:24px;" onclick="goStep(2)" id="btnStep1" disabled="true" style="opacity:0.5;">
-        Continuar
+      <button class="btn btn-primary btn-md w-full" style="margin-top:24px;" onclick="trySelectType()" id="btnStep1">
+        Seleccionar
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
     </div>
@@ -272,29 +273,18 @@
         <div class="form-row">
           <div class="input-group">
             <label class="input-label">Categoría *</label>
-            <select class="input-field select-field" id="prodCat">
+            <select class="input-field select-field" id="prodCat" onchange="updateSubcats(this.value)">
               <option value="">Selecciona...</option>
-              <option>🚼 Coches y sillas</option>
-              <option>🛏️ Cunas y moisés</option>
-              <option>👕 Ropa y calzado</option>
-              <option>🧸 Juguetes</option>
-              <option>🍼 Alimentación</option>
-              <option>🛁 Higiene y baño</option>
-              <option>🎒 Portabebés</option>
-              <option>🛡️ Seguridad</option>
+              <option value="bebe">👶 Mundo bebé (0–4 años)</option>
+              <option value="nino">🧒 Mundo niño (5–15 años)</option>
+              <option value="alimentacion">🍼 Alimentación</option>
+              <option value="juguetes">🧸 Juguetes y aprendizaje</option>
             </select>
           </div>
           <div class="input-group">
-            <label class="input-label">Edad recomendada *</label>
-            <select class="input-field select-field">
-              <option value="">Selecciona...</option>
-              <option>Recién nacido (0-3m)</option>
-              <option>3-6 meses</option>
-              <option>6-12 meses</option>
-              <option>1-2 años</option>
-              <option>2-3 años</option>
-              <option>3+ años</option>
-              <option>Todas las edades</option>
+            <label class="input-label">Subcategoría</label>
+            <select class="input-field select-field" id="prodSubcat" disabled>
+              <option value="">Selecciona primero una categoría</option>
             </select>
           </div>
         </div>
@@ -305,18 +295,30 @@
           </div>
           <div class="input-group">
             <label class="input-label">Precio *</label>
-            <input type="text" class="input-field" placeholder="$000.000" id="prodPrice" value="$420.000"/>
+            <input type="text" class="input-field" placeholder="$000.000" id="prodPrice" value="$420.000" oninput="updateCommission()"/>
           </div>
         </div>
         <div class="input-group">
           <label class="input-label">Descripción</label>
           <div style="position:relative;">
             <textarea class="input-field textarea-field" placeholder="Describe el estado, características, accesorios incluidos..." id="prodDesc" rows="4"></textarea>
-            <button onclick="generateDescription()" style="position:absolute;bottom:12px;right:12px;font-size:0.75rem;color:var(--coral);font-weight:600;background:var(--coral-bg);border:1px solid var(--coral-light);padding:5px 10px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-title);">
-              ✨ IA auto-generar
+            <button onclick="generateDescription()" type="button" style="position:absolute;bottom:12px;right:12px;font-size:0.75rem;color:var(--coral);font-weight:600;background:var(--coral-bg);border:1px solid var(--coral-light);padding:5px 10px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--font-title);">
+              ✨ Generar con IA
             </button>
           </div>
-          <div style="font-size:0.75rem;color:var(--gray-mid);">La IA puede generar una descripción automática basada en tus fotos.</div>
+          <div style="font-size:0.75rem;color:var(--gray-mid);">La IA puede sugerir una descripción atractiva basada en tus fotos. Puedes editar el texto antes de publicar.</div>
+        </div>
+
+        <!-- Commission breakdown -->
+        <div id="commissionBox" style="margin-top:6px;padding:18px 20px;background:linear-gradient(135deg,var(--mint-bg),var(--sky-bg));border:1.5px solid var(--mint);border-radius:var(--r-xl);">
+          <div style="font-family:var(--font-title);font-weight:700;font-size:0.95rem;color:var(--mint-dark);margin-bottom:10px;">💰 ¿Cuánto recibes tú?</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:0.88rem;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--carbon-soft);">Valor del producto</span><span style="font-weight:600;" id="comProd">$420.000</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--carbon-soft);">Comisión plataforma TuKids (12%)</span><span style="color:var(--coral);font-weight:600;" id="comFee">−$50.400</span></div>
+            <div style="display:flex;justify-content:space-between;border-top:1px dashed var(--mint);padding-top:8px;margin-top:4px;font-family:var(--font-title);font-weight:800;font-size:1rem;">
+              <span>Recibes</span><span class="text-mint" id="comNet">$369.600</span>
+            </div>
+          </div>
         </div>
       </div>
       <button class="btn btn-primary btn-md w-full" style="margin-top:28px;" onclick="goStep(4)">
@@ -329,36 +331,38 @@
   <!-- ─── STEP 4: Shipping ─── -->
   <div class="step-panel" id="step4">
     <div class="card" style="padding:32px;">
-      <h3 style="margin-bottom:24px;">¿Cómo entregarás el producto?</h3>
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div class="ship-option" id="sh1" onclick="selectShip('sh1')">
-          <div class="ship-icon" style="background:var(--coral-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Recogida en casa</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">El mensajero va a tu dirección.</div></div>
-          <span style="font-size:0.83rem;font-weight:600;color:var(--mint-dark);">Gratis</span>
+      <h3 style="margin-bottom:8px;">Entrega TuKids</h3>
+      <p style="margin-bottom:20px;font-size:0.9rem;color:var(--carbon-soft);">Un mensajero de TuKids recogerá el producto en tu dirección y lo llevará al comprador. Tú no te preocupas por la logística.</p>
+
+      <div style="display:flex;align-items:center;gap:14px;padding:18px;border:2px solid var(--mint);background:var(--mint-bg);border-radius:var(--r-xl);">
+        <div class="ship-icon" style="background:var(--mint);width:48px;height:48px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         </div>
-        <div class="ship-option selected" id="sh2" onclick="selectShip('sh2')">
-          <div class="ship-icon" style="background:var(--mint-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--mint-dark)" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Punto de entrega</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">Lleva a punto de acopio más cercano.</div></div>
-          <span style="font-size:0.83rem;font-weight:600;color:var(--mint-dark);">$0–$8.000</span>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-family:var(--font-title);color:var(--mint-dark);">🚚 Domicilio gestionado por TuKids</div>
+          <div style="font-size:0.83rem;color:var(--carbon-soft);margin-top:4px;">TuKids recoge en tu casa y entrega al comprador. Coordinamos contigo por WhatsApp.</div>
         </div>
-        <div class="ship-option" id="sh3" onclick="selectShip('sh3')">
-          <div class="ship-icon" style="background:var(--yellow-bg);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow-dark)" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <div style="flex:1;"><div style="font-weight:700;font-family:var(--font-title);">Entrega en mano</div><div style="font-size:0.83rem;color:var(--gray-mid);margin-top:3px;">Coordinas directamente con el comprador.</div></div>
-          <span style="font-size:0.83rem;font-weight:600;color:var(--yellow-dark);">Gratis</span>
-        </div>
+        <span style="font-size:0.83rem;font-weight:700;color:var(--mint-dark);">Sin costo para ti</span>
       </div>
+
       <div class="input-group" style="margin-top:20px;">
-        <label class="input-label">Ciudad de origen *</label>
-        <select class="input-field select-field">
-          <option>Bogotá</option>
-          <option>Medellín</option>
-          <option>Cali</option>
-          <option>Barranquilla</option>
-          <option>Cartagena</option>
-          <option>Bucaramanga</option>
-          <option>Otra ciudad...</option>
-        </select>
+        <label class="input-label">Dirección de recogida *</label>
+        <input type="text" class="input-field" placeholder="Cra. 15 #93-40, barrio Chicó" id="pickupAddr"/>
       </div>
+      <div class="form-row" style="margin-top:14px;">
+        <div class="input-group">
+          <label class="input-label">Ciudad *</label>
+          <select class="input-field select-field" disabled>
+            <option selected>Bogotá</option>
+          </select>
+          <div style="font-size:0.72rem;color:var(--gray-mid);margin-top:4px;">Por ahora TuKids opera solo en Bogotá.</div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Teléfono de contacto *</label>
+          <input type="tel" class="input-field" placeholder="+57 300 000 0000"/>
+        </div>
+      </div>
+
       <button class="btn btn-primary btn-md w-full" style="margin-top:28px;" onclick="goStep(5)">
         ¡Publicar ahora!
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -418,14 +422,52 @@ function selectType(type) {
   document.getElementById('opt-new').classList.remove('selected');
   document.getElementById('opt-used').classList.remove('selected');
   document.getElementById('opt-' + type).classList.add('selected');
-  const btn = document.getElementById('btnStep1');
-  btn.removeAttribute('disabled');
-  btn.style.opacity = '1';
   if (type === 'new') {
-    showToast('¡Perfecto!', 'Publicarás un producto nuevo', 'mint');
+    showToast('¡Perfecto!', 'Publicarás un producto de primera mano', 'mint');
   } else {
     showToast('¡Genial!', 'Usaremos IA para analizar el estado', 'coral');
   }
+}
+
+function trySelectType() {
+  if (!productType) {
+    showToast('⚠️ Falta seleccionar', 'Selecciona primero el tipo de artículo para continuar.', 'coral');
+    return;
+  }
+  goStep(2);
+}
+
+// Subcategories per main category
+const SUBCATS = {
+  bebe:         ['Coches y sillas','Cunas y moisés','Ropa y calzado','Higiene y baño','Portabebés','Seguridad','Otro'],
+  nino:         ['Ropa y calzado','Mobiliario','Útiles escolares','Deportes','Bicicletas y patines','Tecnología infantil','Otro'],
+  alimentacion: ['Biberones y vasos','Sillas de comer','Fórmulas y papillas','Snacks','Utensilios','Otro'],
+  juguetes:     ['Educativos','Sensoriales 0-12m','Construcción','Peluches','Libros y aprendizaje','Juegos al aire libre','Otro']
+};
+
+function updateSubcats(catVal) {
+  const sub = document.getElementById('prodSubcat');
+  sub.innerHTML = '';
+  if (!catVal) {
+    sub.disabled = true;
+    sub.appendChild(new Option('Selecciona primero una categoría',''));
+    return;
+  }
+  sub.disabled = false;
+  sub.appendChild(new Option('Selecciona...',''));
+  SUBCATS[catVal].forEach(s => sub.appendChild(new Option(s, s)));
+}
+
+function updateCommission() {
+  const raw = document.getElementById('prodPrice').value.replace(/[^0-9]/g,'');
+  const price = parseInt(raw || '0', 10);
+  if (!price) return;
+  const fmt = v => '$' + v.toLocaleString('es-CO');
+  const fee = Math.round(price * 0.12);
+  const net = price - fee;
+  document.getElementById('comProd').textContent = fmt(price);
+  document.getElementById('comFee').textContent = '−' + fmt(fee);
+  document.getElementById('comNet').textContent = fmt(net);
 }
 
 function goStep(n) {
@@ -501,17 +543,30 @@ function selectPrice(el, price) {
   el.classList.add('selected');
   document.getElementById('prodPrice').value = price;
   document.getElementById('customPrice').value = price;
-}
-
-function selectShip(id) {
-  ['sh1','sh2','sh3'].forEach(s => document.getElementById(s).classList.remove('selected'));
-  document.getElementById(id).classList.add('selected');
+  updateCommission();
 }
 
 function generateDescription() {
   const desc = document.getElementById('prodDesc');
-  desc.value = 'Coche de alta calidad en excelente estado. La IA ha detectado mínimo desgaste en las ruedas y perfecta conservación del tejido. Incluye cesta inferior, capota ajustable y barra de empuje regulable en altura. Ideal para bebés de 0 a 36 meses.';
-  showToast('✨ Descripción generada', 'La IA creó una descripción basada en tus fotos', 'mint');
+  const title = (document.getElementById('prodTitle').value || 'Producto para bebé').trim();
+  const cat = document.getElementById('prodCat');
+  const catText = cat.options[cat.selectedIndex]?.text || '';
+  const isUsed = productType === 'used';
+
+  desc.value = '✨ Generando con IA...';
+  desc.disabled = true;
+  setTimeout(() => {
+    const base = isUsed
+      ? `${title} en muy buen estado. La IA detectó conservación general excelente y desgaste mínimo. `
+      : `${title} totalmente nuevo, sin uso previo y en su empaque original. `;
+    const cat_line = catText ? `Pertenece a la categoría ${catText.replace(/^[^\w]+/, '')}. ` : '';
+    const tail = isUsed
+      ? 'Ideal para familias que buscan calidad a un precio accesible y darle una segunda vida a productos infantiles.'
+      : 'Perfecto para regalo o para tu propio bebé, con todas sus etiquetas y garantía del vendedor.';
+    desc.value = base + cat_line + tail;
+    desc.disabled = false;
+    showToast('✨ Descripción sugerida', 'Puedes editar el texto antes de publicar', 'mint');
+  }, 900);
 }
 
 // Setup for step 2

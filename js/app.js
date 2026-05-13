@@ -158,6 +158,58 @@ function initLazyImages() {
   document.querySelectorAll('img[data-src]').forEach(img => imgObserver.observe(img));
 }
 
+/* ── Notification permission prompt ── */
+const NOTIF_KEY = 'tk-notif-pref';
+function initNotificationPrompt() {
+  if (localStorage.getItem(NOTIF_KEY)) return;
+  // Skip on admin / login pages where it'd be noise
+  const path = window.location.pathname.split('/').pop() || '';
+  if (path.startsWith('admin')) return;
+
+  setTimeout(() => {
+    if (document.getElementById('tkNotifOverlay')) return;
+    // Skip si el usuario aún está en pantalla de login (ej: perfil.html sin sesión)
+    const loginShell = document.getElementById('loginShell');
+    if (loginShell && loginShell.offsetParent !== null) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'tkNotifOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s ease;';
+    overlay.innerHTML = `
+      <div style="background:var(--white);border-radius:var(--r-2xl,20px);max-width:440px;width:90%;padding:36px 30px;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.3);transform:scale(.92);transition:transform .35s cubic-bezier(.34,1.56,.64,1);">
+        <div style="font-size:3rem;margin-bottom:12px;">🔔</div>
+        <h3 style="margin-bottom:10px;font-family:var(--font-title);">¿Quieres recibir notificaciones?</h3>
+        <p style="font-size:0.92rem;color:var(--carbon-soft);line-height:1.55;margin-bottom:22px;">
+          Recibirás avisos de TuKids sobre tus <strong>compras, ventas y novedades importantes</strong>: confirmaciones, estado de envíos, validación de productos y mensajes administrativos.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <button id="tkNotifYes" class="btn btn-primary btn-md w-full">Sí, permitir notificaciones</button>
+          <button id="tkNotifNo"  class="btn btn-ghost btn-md w-full">No por ahora</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      overlay.firstElementChild.style.transform = 'scale(1)';
+    });
+    const close = (pref) => {
+      localStorage.setItem(NOTIF_KEY, pref);
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.remove(), 300);
+      if (pref === 'granted') {
+        showToast('🔔 Activadas', 'Te avisaremos de novedades en TuKids', 'mint');
+        if ('Notification' in window && Notification.permission === 'default') {
+          try { Notification.requestPermission(); } catch (_) {}
+        }
+      } else {
+        showToast('Entendido', 'Puedes activarlas más tarde desde tu perfil', 'yellow');
+      }
+    };
+    document.getElementById('tkNotifYes').addEventListener('click', () => close('granted'));
+    document.getElementById('tkNotifNo').addEventListener('click', () => close('denied'));
+  }, 1800);
+}
+
 /* ── Init on DOM ready ── */
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -167,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLazyImages();
   updateCartCount();
   removeSkeleton();
+  initNotificationPrompt();
 });
 
 /* ── Smooth page transitions ── */

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin TuKids — Panel administrativo</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
+  <style>
+    body { background: var(--fog); }
+    .admin-shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+    @media (max-width: 900px) { .admin-shell { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
+    .admin-sidebar {
+      background: var(--carbon); color: #fff; padding: 28px 18px;
+      display: flex; flex-direction: column; gap: 6px; position: sticky; top: 0; height: 100vh;
+    }
+    .admin-sidebar .as-logo { display:flex;align-items:center;gap:10px;margin-bottom:24px; }
+    .admin-sidebar .as-logo img { height: 64px; filter: brightness(10); }
+    .as-title { font-family: var(--font-title); font-size: 0.78rem; font-weight: 800; color: rgba(255,255,255,.4); margin: 18px 8px 6px; letter-spacing: .08em; }
+    .as-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-md);
+      color: rgba(255,255,255,.85); font-size: .9rem; cursor: pointer; transition: all .2s;
+      font-family: var(--font-title); font-weight: 600; border: none; background: none; text-align: left;
+    }
+    .as-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+    .as-item.active { background: var(--coral); color: #fff; }
+    .as-bottom { margin-top: auto; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.1); }
+
+    .admin-main { padding: 32px 36px 100px; max-width: 100%; overflow-x: hidden; }
+    .admin-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    .admin-topbar h1 { font-size: 1.8rem; margin: 0; }
+    .admin-topbar .actions { display:flex; gap:10px; align-items:center; }
+    .admin-card {
+      background: var(--white); border-radius: var(--r-xl); padding: 22px;
+      box-shadow: var(--shadow-sm); margin-bottom: 16px;
+    }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 14px; margin-bottom: 24px; }
+    .kpi-card { background: var(--white); border-radius: var(--r-xl); padding: 20px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+    .kpi-label { font-size: .75rem; color: var(--gray-mid); text-transform: uppercase; font-weight: 700; letter-spacing: .04em; margin-bottom: 6px; }
+    .kpi-value { font-family: var(--font-title); font-size: 1.9rem; font-weight: 800; color: var(--carbon); line-height: 1.1; }
+    .kpi-trend { font-size: .78rem; margin-top: 6px; font-weight: 600; }
+    .kpi-trend.up { color: var(--mint-dark); } .kpi-trend.down { color: var(--coral-dark); }
+    .kpi-card .kpi-ico { position: absolute; top: 14px; right: 14px; font-size: 1.4rem; opacity: .35; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    .data-table th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-mid); font-weight: 700; padding: 12px 10px; border-bottom: 2px solid var(--fog); }
+    .data-table td { padding: 12px 10px; border-bottom: 1px solid var(--fog); color: var(--carbon); }
+    .data-table tr:hover td { background: var(--fog); }
+    .pill {
+      display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: .72rem; font-weight: 700;
+      font-family: var(--font-title);
+    }
+    .pill.ok    { background: var(--mint-bg);   color: var(--mint-dark); }
+    .pill.warn  { background: var(--yellow-bg); color: var(--yellow-dark); }
+    .pill.bad   { background: #FFE5E0; color: var(--coral-dark); }
+    .pill.gray  { background: var(--fog);       color: var(--carbon-soft); }
+
+    .ticket-list { display: flex; flex-direction: column; gap: 10px; }
+    .ticket {
+      display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center;
+      padding: 14px 16px; background: var(--white); border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+      cursor: pointer; transition: all .2s;
+    }
+    .ticket:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .ticket .t-ico { width: 44px; height: 44px; border-radius: 50%; background: var(--coral-bg); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+
+    .bar-chart { display: flex; gap: 8px; align-items: flex-end; height: 180px; padding: 14px 0; }
+    .bar { flex:1; background: linear-gradient(180deg, var(--coral), var(--coral-dark)); border-radius: 6px 6px 0 0; position: relative; min-height: 6px; transition: all .35s ease; }
+    .bar:hover { filter: brightness(1.1); }
+    .bar .b-label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center; font-size: .7rem; color: var(--gray-mid); font-weight: 600; }
+    .bar .b-val   { position: absolute; top: -18px; left: 0; right: 0; text-align: center; font-size: .7rem; color: var(--carbon); font-weight: 700; }
+
+    /* Login screen */
+    .login-shell {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--coral) 0%, var(--coral-dark) 100%);
+      padding: 24px;
+    }
+    .login-card {
+      background: var(--white); border-radius: var(--r-2xl, 24px); padding: 44px 36px;
+      max-width: 420px; width: 100%; box-shadow: 0 30px 60px rgba(0,0,0,.25);
+    }
+    .login-card h2 { margin-bottom: 6px; }
+    .login-card .lbl { display: block; font-size: .78rem; font-weight: 700; color: var(--carbon-soft); margin: 16px 0 6px; font-family: var(--font-title); }
+    .login-card input {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--fog); border-radius: var(--r-lg);
+      font-size: .95rem; font-family: var(--font-body); color: var(--carbon); outline: none; transition: border .2s;
+    }
+    .login-card input:focus { border-color: var(--coral); }
+    .login-error { color: var(--coral-dark); font-size: .82rem; margin-top: 10px; min-height: 18px; }
+
+    /* Filter pills */
+    .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .filter-pill {
+      padding: 6px 14px; border-radius: 9999px; background: var(--white); border: 1.5px solid var(--fog);
+      font-size: .78rem; font-weight: 700; cursor: pointer; font-family: var(--font-title); color: var(--carbon-soft);
+      transition: .2s;
+    }
+    .filter-pill.active { background: var(--carbon); color: #fff; border-color: var(--carbon); }
+  </style>
+</head>
+<body>
+
+<!-- ════ LOGIN SCREEN ════ -->
+<div class="login-shell" id="loginShell">
+  <div class="login-card">
+    <div style="text-align:center;margin-bottom:18px;">
+      <img src="images/nuevo_logo_oficial.png" alt="TuKids" style="height:90px;"/>
+    </div>
+    <h2 style="text-align:center;">Panel administrativo</h2>
+    <p style="text-align:center;color:var(--gray-mid);font-size:.88rem;">Acceso exclusivo del equipo TuKids.</p>
+    <label class="lbl" for="adUser">Usuario</label>
+    <input type="text" id="adUser" placeholder="usuariotukidsadm" autocomplete="username"/>
+    <label class="lbl" for="adPass">Contraseña</label>
+    <input type="password" id="adPass" placeholder="••••••••••" autocomplete="current-password"/>
+    <div class="login-error" id="adErr"></div>
+    <button class="btn btn-primary btn-md w-full" style="margin-top:18px;" onclick="adminLogin()">Ingresar</button>
+    <div style="text-align:center;margin-top:16px;font-size:.78rem;color:var(--gray-mid);">
+      <a href="index.html" style="color:var(--gray-mid);">← Volver al sitio</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════ DASHBOARD ════ -->
+<div class="admin-shell" id="adminShell" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="as-logo">
+      <img src="images/logo_bottom.png" alt="TuKids"/>
+    </div>
+    <div style="font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:.08em;font-weight:700;">ADMIN PANEL</div>
+
+    <div class="as-title">MÉTRICAS</div>
+    <button class="as-item active" data-panel="overview" onclick="showPanel(this)">📊 Resumen</button>
+    <button class="as-item"        data-panel="finance"  onclick="showPanel(this)">💰 Finanzas</button>
+    <button class="as-item"        data-panel="charts"   onclick="showPanel(this)">📈 Estadísticas</button>
+
+    <div class="as-title">OPERACIONES</div>
+    <button class="as-item" data-panel="orders"    onclick="showPanel(this)">🛒 Compras y ventas</button>
+    <button class="as-item" data-panel="tickets"   onclick="showPanel(this)">🧾 Tickets de compra</button>
+    <button class="as-item" data-panel="donations" onclick="showPanel(this)">❤️ Donaciones</button>
+    <button class="as-item" data-panel="delivery"  onclick="showPanel(this)">🚚 Domicilios</button>
+    <button class="as-item" data-panel="returns"   onclick="showPanel(this)">↩️ Devoluciones</button>
+
+    <div class="as-title">PERSONAS</div>
+    <button class="as-item" data-panel="users"    onclick="showPanel(this)">👥 Usuarios</button>
+    <button class="as-item" data-panel="messages" onclick="showPanel(this)">💬 Mensajes y quejas</button>
+
+    <div class="as-bottom">
+      <button class="as-item" onclick="adminLogout()" style="color:#FFB4A8;">🚪 Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div>
+        <h1 id="panelTitle">Resumen</h1>
+        <p style="margin:0;color:var(--gray-mid);font-size:.88rem;">Hola <strong id="adminName">Admin TuKids</strong> · <span id="todayLabel"></span></p>
+      </div>
+      <div class="actions">
+        <select class="sort-select" id="rangeSelect" onchange="applyRange()" style="height:38px;padding:0 12px;border-radius:var(--r-md);border:1.5px solid var(--fog);background:var(--white);font-size:.85rem;">
+          <option value="day">Hoy</option>
+          <option value="week" selected>Esta semana</option>
+          <option value="month">Este mes</option>
+          <option value="year">Este año</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="exportData()">📥 Exportar CSV</button>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Overview ═══ -->
+    <div class="panel active" id="panel-overview">
+      <div class="kpi-grid">
+        <div class="kpi-card"><span class="kpi-ico">👤</span><div class="kpi-label">Usuarios registrados</div><div class="kpi-value" id="kpiUsers">12.847</div><div class="kpi-trend up">▲ 4,2% vs. anterior</div></div>
+        <div class="kpi-card"><span class="kpi-ico">🟢</span><div class="kpi-label">Usuarios activos</div><div class="kpi-value" id="kpiActive">3.412</div><div class="kpi-trend up">▲ 1,8%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">📦</span><div class="kpi-label">Productos publicados</div><div class="kpi-value" id="kpiProducts">48.320</div><div class="kpi-trend up">▲ 3,1%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">💸</span><div class="kpi-label">Ventas completadas</div><div class="kpi-value" id="kpiSales">3.214</div><div class="kpi-trend up">▲ 7,5%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">❤️</span><div class="kpi-label">Donaciones</div><div class="kpi-value" id="kpiDonations">854</div><div class="kpi-trend up">▲ 2,4%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">↩️</span><div class="kpi-label">Devoluciones</div><div class="kpi-value" id="kpiReturns">42</div><div class="kpi-trend down">▼ 0,3%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">🚚</span><div class="kpi-label">Domicilios gestionados</div><div class="kpi-value" id="kpiDeliveries">3.156</div><div class="kpi-trend up">▲ 6,9%</div></div>
+        <div class="kpi-card"><span class="kpi-ico">💰</span><div class="kpi-label">Ingresos por comisión</div><div class="kpi-value" id="kpiCommission">$348M</div><div class="kpi-trend up">▲ 8,2%</div></div>
+      </div>
+
+      <div class="admin-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+          <div>
+            <h3 style="font-size:1.1rem;margin:0;">Total generado por la plataforma</h3>
+            <p style="margin:4px 0 0;font-size:.85rem;color:var(--gray-mid);">Suma de comisiones, domicilios y servicios.</p>
+          </div>
+          <div style="font-family:var(--font-title);font-weight:800;font-size:1.8rem;color:var(--coral);">$412.840.000 COP</div>
+        </div>
+        <div class="bar-chart" id="revenueChart"></div>
+        <div style="text-align:center;font-size:.78rem;color:var(--gray-mid);margin-top:24px;">Últimos 7 días</div>
+      </div>
+
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:12px;">⚡ Actividad reciente</h3>
+        <div id="activityFeed"></div>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Finance ═══ -->
+    <div class="panel" id="panel-finance">
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Ingresos totales</div><div class="kpi-value">$412.8M</div><div class="kpi-trend up">▲ 8,2%</div></div>
+        <div class="kpi-card"><div class="kpi-label">Comisión 12%</div><div class="kpi-value">$348M</div><div class="kpi-trend up">▲ 7,8%</div></div>
+        <div class="kpi-card"><div class="kpi-label">Domicilios</div><div class="kpi-value">$31.5M</div><div class="kpi-trend up">▲ 4,3%</div></div>
+        <div class="kpi-card"><div class="kpi-label">Pagos pendientes</div><div class="kpi-value">$12.1M</div><div class="kpi-trend warn" style="color:var(--yellow-dark);">147 transacciones</div></div>
+        <div class="kpi-card"><div class="kpi-label">Devoluciones (egreso)</div><div class="kpi-value">$4.2M</div><div class="kpi-trend down">42 casos</div></div>
+        <div class="kpi-card"><div class="kpi-label">Saldo en escrow</div><div class="kpi-value">$28.4M</div><div class="kpi-trend up">▲ Activo</div></div>
+      </div>
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:12px;">Últimos pagos procesados</h3>
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Tipo</th><th>Vendedor</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody id="paymentsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Charts ═══ -->
+    <div class="panel" id="panel-charts">
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Usuarios registrados</h3>
+        <div class="filter-pills">
+          <button class="filter-pill active" onclick="setChartRange(this,'day')">Diario</button>
+          <button class="filter-pill"        onclick="setChartRange(this,'month')">Mensual</button>
+          <button class="filter-pill"        onclick="setChartRange(this,'year')">Anual</button>
+        </div>
+        <div class="bar-chart" id="userChart"></div>
+        <div style="text-align:center;font-size:.78rem;color:var(--gray-mid);margin-top:24px;" id="userChartLabel">Últimos 7 días</div>
+      </div>
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Conversiones por categoría</h3>
+        <div id="catChart"></div>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Orders ═══ -->
+    <div class="panel" id="panel-orders">
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Compras y ventas</h3>
+        <div class="filter-pills">
+          <button class="filter-pill active" onclick="filterOrders(this,'all')">Todas</button>
+          <button class="filter-pill" onclick="filterOrders(this,'completed')">Completadas</button>
+          <button class="filter-pill" onclick="filterOrders(this,'cancelled')">Canceladas</button>
+          <button class="filter-pill" onclick="filterOrders(this,'pending')">Pendientes</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Pedido</th><th>Comprador</th><th>Vendedor</th><th>Producto</th><th>Total</th><th>Estado</th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Tickets ═══ -->
+    <div class="panel" id="panel-tickets">
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Tickets de compra</h3>
+        <table class="data-table">
+          <thead><tr><th>Ticket #</th><th>Comprador</th><th>Total</th><th>Comisión</th><th>Domicilio</th><th>Estado pago</th><th>Acciones</th></tr></thead>
+          <tbody id="ticketsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Donations ═══ -->
+    <div class="panel" id="panel-donations">
+      <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+        <div class="kpi-card"><div class="kpi-label">Donaciones este mes</div><div class="kpi-value">854</div></div>
+        <div class="kpi-card"><div class="kpi-label">Familias beneficiadas</div><div class="kpi-value">2.318</div></div>
+        <div class="kpi-card"><div class="kpi-label">Artículos recibidos</div><div class="kpi-value">4.187</div></div>
+      </div>
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Últimas donaciones</h3>
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Donador</th><th>Categoría</th><th>Cantidad</th><th>Recogida</th><th>Estado</th></tr></thead>
+          <tbody id="donBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Delivery ═══ -->
+    <div class="panel" id="panel-delivery">
+      <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+        <div class="kpi-card"><div class="kpi-label">Domicilios hoy</div><div class="kpi-value">87</div></div>
+        <div class="kpi-card"><div class="kpi-label">En tránsito</div><div class="kpi-value">34</div></div>
+        <div class="kpi-card"><div class="kpi-label">Entregados (mes)</div><div class="kpi-value">3.156</div></div>
+        <div class="kpi-card"><div class="kpi-label">Mensajeros activos</div><div class="kpi-value">28</div></div>
+      </div>
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Domicilios en curso</h3>
+        <table class="data-table">
+          <thead><tr><th>Tracking</th><th>Mensajero</th><th>Ruta</th><th>Estado</th><th>ETA</th></tr></thead>
+          <tbody id="deliveryBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Returns ═══ -->
+    <div class="panel" id="panel-returns">
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Solicitudes de devolución</h3>
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Pedido</th><th>Usuario</th><th>Motivo</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="returnsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Users ═══ -->
+    <div class="panel" id="panel-users">
+      <div class="admin-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap;">
+          <h3 style="font-size:1.05rem;margin:0;">Usuarios</h3>
+          <input type="text" id="userSearch" placeholder="Buscar por nombre o email..." oninput="renderUsers()" style="padding:9px 14px;border:1.5px solid var(--fog);border-radius:var(--r-md);font-size:.85rem;min-width:240px;"/>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Nombre</th><th>Email</th><th>Ventas</th><th>Compras</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PANEL: Messages ═══ -->
+    <div class="panel" id="panel-messages">
+      <div class="admin-card">
+        <h3 style="font-size:1.05rem;margin-bottom:14px;">Mensajes y quejas de usuarios</h3>
+        <div class="ticket-list" id="msgList"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════
+   AUTH
+   ════════════════════════════════════════════════════════ */
+const ADMIN_KEY = 'tk-admin-session';
+const CRED = { user: 'usuariotukidsadm', pass: 'tukids$$$0526' };
+
+function adminLogin() {
+  const u = document.getElementById('adUser').value.trim();
+  const p = document.getElementById('adPass').value;
+  const err = document.getElementById('adErr');
+  if (u === CRED.user && p === CRED.pass) {
+    sessionStorage.setItem(ADMIN_KEY, '1');
+    showDashboard();
+  } else {
+    err.textContent = '⚠️ Usuario o contraseña incorrectos.';
+    document.getElementById('adPass').value = '';
+  }
+}
+function adminLogout() {
+  sessionStorage.removeItem(ADMIN_KEY);
+  location.reload();
+}
+function showDashboard() {
+  document.getElementById('loginShell').style.display = 'none';
+  document.getElementById('adminShell').style.display = 'grid';
+  initDashboard();
+}
+if (sessionStorage.getItem(ADMIN_KEY) === '1') {
+  showDashboard();
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginShell').style.display !== 'none') adminLogin();
+});
+
+/* ════════════════════════════════════════════════════════
+   DASHBOARD
+   ════════════════════════════════════════════════════════ */
+const PANEL_TITLES = {
+  overview:'Resumen', finance:'Finanzas', charts:'Estadísticas',
+  orders:'Compras y ventas', tickets:'Tickets de compra',
+  donations:'Donaciones', delivery:'Domicilios', returns:'Devoluciones',
+  users:'Usuarios', messages:'Mensajes y quejas'
+};
+
+function showPanel(btn) {
+  document.querySelectorAll('.as-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const id = btn.dataset.panel;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('panelTitle').textContent = PANEL_TITLES[id];
+}
+
+function applyRange() {
+  const range = document.getElementById('rangeSelect').value;
+  showToast('Rango actualizado', 'Mostrando datos: ' + ({day:'Hoy',week:'Esta semana',month:'Este mes',year:'Este año'})[range], 'mint');
+  renderRevenueChart();
+}
+
+function exportData() {
+  showToast('📥 Exportando...', 'CSV preparado para descarga', 'mint');
+}
+
+/* ════════════════════════════════════════════════════════
+   MOCK DATA
+   ════════════════════════════════════════════════════════ */
+const USERS = [
+  { id:1, name:'María González',  email:'maria@email.com',     sales:23, buys:8,  status:'active', joined:'2025-08-12' },
+  { id:2, name:'Carlos Ramírez',   email:'carlos.r@email.com',  sales:12, buys:14, status:'active', joined:'2025-09-03' },
+  { id:3, name:'Ana Martínez',     email:'ana.m@email.com',     sales:3,  buys:21, status:'active', joined:'2025-10-21' },
+  { id:4, name:'Juan Pérez',       email:'juanpd@email.com',    sales:0,  buys:1,  status:'blocked', joined:'2026-02-01' },
+  { id:5, name:'Laura Sánchez',    email:'laura.s@email.com',   sales:8,  buys:5,  status:'active', joined:'2025-11-15' },
+  { id:6, name:'Pedro Gómez',      email:'pedro.g@email.com',   sales:1,  buys:0,  status:'pending', joined:'2026-05-10' },
+  { id:7, name:'Sofía Herrera',    email:'sofia.h@email.com',   sales:34, buys:12, status:'active', joined:'2025-06-22' },
+  { id:8, name:'Diego Castro',     email:'dcastro@email.com',   sales:5,  buys:18, status:'active', joined:'2026-01-08' }
+];
+
+const ORDERS = [
+  { id:'TK-2847', buyer:'María González',  seller:'Carlos Ramírez', product:'Coche Chicco Urban Plus', total:860000, status:'completed' },
+  { id:'TK-2848', buyer:'Ana Martínez',    seller:'Laura Sánchez',  product:'Cuna Scandi blanca',      total:390000, status:'pending' },
+  { id:'TK-2849', buyer:'Diego Castro',    seller:'Sofía Herrera',  product:'Kit sensorial 8 piezas',  total:155000, status:'completed' },
+  { id:'TK-2850', buyer:'Pedro Gómez',     seller:'María González', product:'Bodies orgánicos 0-3m',   total:88000,  status:'cancelled' },
+  { id:'TK-2851', buyer:'Laura Sánchez',   seller:'Diego Castro',   product:'Silla Bugaboo Bee6',      total:990000, status:'completed' },
+  { id:'TK-2852', buyer:'Carlos Ramírez',  seller:'Ana Martínez',   product:'Moisés mimbre natural',   total:220000, status:'pending' }
+];
+
+const TICKETS = ORDERS.filter(o => o.status !== 'cancelled').map(o => ({
+  ticket: '#'+o.id, buyer:o.buyer, total:o.total, fee:Math.round(o.total*0.12), shipping:10000,
+  pay: o.status === 'completed' ? 'pagado' : 'pendiente'
+}));
+
+const DONATIONS = [
+  { id:'D-1042', donor:'María González', cat:'Mundo bebé',            qty:5, pickup:'2026-05-15', status:'recogido' },
+  { id:'D-1043', donor:'Carlos Ramírez', cat:'Juguetes y aprendizaje', qty:8, pickup:'2026-05-16', status:'agendado' },
+  { id:'D-1044', donor:'Sofía Herrera',  cat:'Alimentación',            qty:12, pickup:'2026-05-14', status:'entregado' },
+  { id:'D-1045', donor:'Diego Castro',   cat:'Mundo niño',              qty:3, pickup:'2026-05-13', status:'recogido' }
+];
+
+const DELIVERIES = [
+  { tracking:'TK-2847', courier:'Juan Carlos M.', route:'Chicó → Cedritos',  status:'en camino',   eta:'4:15 PM' },
+  { tracking:'TK-2849', courier:'Lina Vargas',    route:'Usaquén → Suba',    status:'entregado',   eta:'12:40 PM' },
+  { tracking:'TK-2851', courier:'Andrés Mora',    route:'Salitre → Engativá', status:'recogiendo', eta:'5:30 PM' },
+  { tracking:'TK-2852', courier:'Pilar Ríos',     route:'Chapinero → Teusaquillo', status:'en camino', eta:'6:10 PM' }
+];
+
+const RETURNS = [
+  { id:'R-021', order:'TK-2820', user:'Laura Sánchez', reason:'Producto diferente al descrito', status:'en revisión' },
+  { id:'R-022', order:'TK-2811', user:'Pedro Gómez',   reason:'Llegó dañado',                    status:'aprobada' },
+  { id:'R-023', order:'TK-2799', user:'Diego Castro',  reason:'No corresponde a la talla',       status:'rechazada' }
+];
+
+const MESSAGES = [
+  { id:1, user:'Carlos Ramírez', subject:'No me ha llegado mi pedido TK-2820', priority:'alta',  time:'hace 2 h' },
+  { id:2, user:'Ana Martínez',   subject:'Quiero reportar a un vendedor',       priority:'media', time:'hace 5 h' },
+  { id:3, user:'Sofía Herrera',  subject:'¿Cómo aumento mi nivel?',             priority:'baja',  time:'ayer' },
+  { id:4, user:'Diego Castro',   subject:'El mensajero no llegó a la hora',     priority:'alta',  time:'hace 1 día' }
+];
+
+const PAYMENTS = [
+  { id:'PAY-9081', type:'Liberación', seller:'María González', amount:756800, status:'pagado',   date:'2026-05-13' },
+  { id:'PAY-9082', type:'Comisión',   seller:'—',              amount:103200, status:'pagado',   date:'2026-05-13' },
+  { id:'PAY-9083', type:'Devolución', seller:'Pedro Gómez',    amount:88000,  status:'reintegrado', date:'2026-05-12' },
+  { id:'PAY-9084', type:'Liberación', seller:'Sofía Herrera',  amount:136400, status:'pendiente', date:'2026-05-12' }
+];
+
+const ACTIVITY = [
+  { ico:'🛒', text:'Nueva compra <strong>#TK-2852</strong> · $220.000 · Carlos R.',  time:'hace 3 min' },
+  { ico:'🆕', text:'<strong>Pedro Gómez</strong> se registró en TuKids',             time:'hace 12 min' },
+  { ico:'❤️', text:'Donación <strong>D-1044</strong> entregada (12 artículos)',     time:'hace 28 min' },
+  { ico:'⚠️', text:'Queja de <strong>Carlos R.</strong> sobre pedido TK-2820',      time:'hace 1 h' },
+  { ico:'🚚', text:'<strong>4 domicilios</strong> en tránsito en Bogotá',             time:'hace 1 h' },
+  { ico:'💸', text:'Pago liberado <strong>$756.800</strong> a María González',       time:'hace 2 h' }
+];
+
+const REVENUE_DATA = [22, 38, 31, 55, 47, 68, 72]; // M COP per day
+const USERS_DATA   = [42, 51, 39, 64, 58, 75, 81]; // new users per day
+const CATEGORIES   = [
+  { name:'Mundo bebé',            value: 42, color:'var(--coral)' },
+  { name:'Mundo niño',            value: 18, color:'var(--mint)' },
+  { name:'Alimentación',          value: 22, color:'var(--yellow-dark)' },
+  { name:'Juguetes y aprendizaje',value: 18, color:'var(--lilac)' }
+];
+
+/* ════════════════════════════════════════════════════════
+   RENDER
+   ════════════════════════════════════════════════════════ */
+function statusPill(s) {
+  const map = {
+    completed:['ok','Completada'], pending:['warn','Pendiente'], cancelled:['bad','Cancelada'],
+    active:['ok','Activo'], blocked:['bad','Bloqueado'],
+    pagado:['ok','Pagado'], pendiente:['warn','Pendiente'], reintegrado:['gray','Reintegrado'],
+    recogido:['ok','Recogido'], agendado:['warn','Agendado'], entregado:['ok','Entregado'],
+    'en camino':['warn','En camino'], 'recogiendo':['gray','Recogiendo'],
+    'en revisión':['warn','En revisión'], 'aprobada':['ok','Aprobada'], 'rechazada':['bad','Rechazada']
+  };
+  const [cls, lbl] = map[s] || ['gray', s];
+  return `<span class="pill ${cls}">${lbl}</span>`;
+}
+function fmtCOP(n) { return '$' + n.toLocaleString('es-CO'); }
+
+function renderOrders(filter='all') {
+  const rows = (filter === 'all' ? ORDERS : ORDERS.filter(o => o.status === filter)).map(o => `
+    <tr>
+      <td><strong>#${o.id}</strong></td>
+      <td>${o.buyer}</td>
+      <td>${o.seller}</td>
+      <td>${o.product}</td>
+      <td><strong>${fmtCOP(o.total)}</strong></td>
+      <td>${statusPill(o.status)}</td>
+    </tr>
+  `).join('');
+  document.getElementById('ordersBody').innerHTML = rows || '<tr><td colspan="6" style="text-align:center;color:var(--gray-mid);">Sin resultados</td></tr>';
+}
+function filterOrders(btn, status) {
+  btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders(status);
+}
+
+function renderTickets() {
+  document.getElementById('ticketsBody').innerHTML = TICKETS.map(t => `
+    <tr>
+      <td><strong>${t.ticket}</strong></td>
+      <td>${t.buyer}</td>
+      <td>${fmtCOP(t.total)}</td>
+      <td>${fmtCOP(t.fee)}</td>
+      <td>${fmtCOP(t.shipping)}</td>
+      <td>${statusPill(t.pay)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="viewTicket('${t.ticket}')">Ver</button></td>
+    </tr>
+  `).join('');
+}
+function viewTicket(t) { showToast('Ticket ' + t, 'Detalle del ticket abierto', 'mint'); }
+
+function renderDonations() {
+  document.getElementById('donBody').innerHTML = DONATIONS.map(d => `
+    <tr>
+      <td><strong>${d.id}</strong></td><td>${d.donor}</td><td>${d.cat}</td>
+      <td>${d.qty}</td><td>${d.pickup}</td><td>${statusPill(d.status)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderDelivery() {
+  document.getElementById('deliveryBody').innerHTML = DELIVERIES.map(d => `
+    <tr><td><strong>${d.tracking}</strong></td><td>${d.courier}</td>
+        <td>${d.route}</td><td>${statusPill(d.status)}</td><td>${d.eta}</td></tr>
+  `).join('');
+}
+
+function renderReturns() {
+  document.getElementById('returnsBody').innerHTML = RETURNS.map(r => `
+    <tr>
+      <td><strong>${r.id}</strong></td><td>${r.order}</td><td>${r.user}</td>
+      <td>${r.reason}</td><td>${statusPill(r.status)}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="approveReturn('${r.id}')">✅</button>
+        <button class="btn btn-ghost btn-sm" onclick="rejectReturn('${r.id}')">✖</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function approveReturn(id) { showToast('Devolución aprobada', id + ' lista para reintegro', 'mint'); }
+function rejectReturn(id)  { showToast('Devolución rechazada', id + ' fue cerrada',           'coral'); }
+
+function renderUsers() {
+  const q = (document.getElementById('userSearch')?.value || '').toLowerCase().trim();
+  const list = USERS.filter(u => !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+  document.getElementById('usersBody').innerHTML = list.map(u => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--font-title);">${u.name[0]}</div>
+          <div>
+            <div style="font-weight:600;">${u.name}</div>
+            <div style="font-size:.72rem;color:var(--gray-mid);">Desde ${u.joined}</div>
+          </div>
+        </div>
+      </td>
+      <td>${u.email}</td>
+      <td>${u.sales}</td>
+      <td>${u.buys}</td>
+      <td>${statusPill(u.status)}</td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn btn-ghost btn-sm" onclick="editUser(${u.id})">✏️ Editar</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleBlock(${u.id})" style="color:${u.status === 'blocked' ? 'var(--mint-dark)' : 'var(--coral-dark)'};">${u.status === 'blocked' ? '✅ Desbloquear' : '🚫 Bloquear'}</button>
+      </td>
+    </tr>
+  `).join('');
+}
+function toggleBlock(id) {
+  const u = USERS.find(x => x.id === id); if (!u) return;
+  u.status = u.status === 'blocked' ? 'active' : 'blocked';
+  renderUsers();
+  showToast(u.status === 'blocked' ? '🚫 Usuario bloqueado' : '✅ Usuario desbloqueado', u.name, u.status === 'blocked' ? 'coral' : 'mint');
+}
+function editUser(id) {
+  const u = USERS.find(x => x.id === id); if (!u) return;
+  const name = prompt('Nombre del usuario:', u.name);
+  if (name == null) return;
+  const email = prompt('Email del usuario:', u.email);
+  if (email == null) return;
+  u.name = name.trim() || u.name;
+  u.email = email.trim() || u.email;
+  renderUsers();
+  showToast('✅ Actualizado', 'Datos del usuario guardados', 'mint');
+}
+
+function renderMessages() {
+  const map = { alta:['bad','🔴 Alta'], media:['warn','🟡 Media'], baja:['gray','⚪ Baja'] };
+  document.getElementById('msgList').innerHTML = MESSAGES.map(m => {
+    const [cls, lbl] = map[m.priority];
+    return `
+    <div class="ticket" onclick="openMsg(${m.id})">
+      <div class="t-ico">💬</div>
+      <div>
+        <div style="font-family:var(--font-title);font-weight:700;font-size:.95rem;">${m.subject}</div>
+        <div style="font-size:.8rem;color:var(--gray-mid);margin-top:2px;">De: ${m.user} · ${m.time}</div>
+      </div>
+      <div><span class="pill ${cls}">${lbl}</span></div>
+    </div>`;
+  }).join('');
+}
+function openMsg(id) {
+  const m = MESSAGES.find(x => x.id === id); if (!m) return;
+  showToast('Mensaje abierto', m.subject + ' · ' + m.user, 'mint');
+}
+
+function renderPayments() {
+  document.getElementById('paymentsBody').innerHTML = PAYMENTS.map(p => `
+    <tr>
+      <td><strong>${p.id}</strong></td><td>${p.type}</td><td>${p.seller}</td>
+      <td>${fmtCOP(p.amount)}</td><td>${statusPill(p.status)}</td><td>${p.date}</td>
+    </tr>
+  `).join('');
+}
+
+function renderActivity() {
+  document.getElementById('activityFeed').innerHTML = ACTIVITY.map(a => `
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--fog);align-items:center;">
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--fog);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">${a.ico}</div>
+      <div style="flex:1;font-size:.88rem;color:var(--carbon);">${a.text}</div>
+      <span style="font-size:.75rem;color:var(--gray-mid);">${a.time}</span>
+    </div>
+  `).join('');
+}
+
+function renderRevenueChart() {
+  const data = REVENUE_DATA;
+  const max = Math.max(...data);
+  const labels = ['L','M','M','J','V','S','D'];
+  document.getElementById('revenueChart').innerHTML = data.map((v,i) => `
+    <div class="bar" style="height:${(v/max)*100}%;">
+      <span class="b-val">$${v}M</span>
+      <span class="b-label">${labels[i]}</span>
+    </div>
+  `).join('');
+}
+
+function renderUserChart(range = 'day') {
+  let data, labels;
+  if (range === 'day')   { data = USERS_DATA;                            labels = ['L','M','M','J','V','S','D']; document.getElementById('userChartLabel').textContent = 'Últimos 7 días'; }
+  if (range === 'month') { data = [320,410,380,440,510,470,490,520,560,590,610,650]; labels = ['E','F','M','A','M','J','J','A','S','O','N','D']; document.getElementById('userChartLabel').textContent = 'Últimos 12 meses'; }
+  if (range === 'year')  { data = [4200,5800,7900,11200,12847];          labels = ['2022','2023','2024','2025','2026']; document.getElementById('userChartLabel').textContent = 'Últimos 5 años'; }
+  const max = Math.max(...data);
+  document.getElementById('userChart').innerHTML = data.map((v,i) => `
+    <div class="bar" style="height:${(v/max)*100}%;background:linear-gradient(180deg,var(--mint),var(--mint-dark));">
+      <span class="b-val">${v.toLocaleString('es-CO')}</span>
+      <span class="b-label">${labels[i]}</span>
+    </div>
+  `).join('');
+}
+function setChartRange(btn, r) {
+  btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderUserChart(r);
+}
+
+function renderCatChart() {
+  const total = CATEGORIES.reduce((s,c) => s + c.value, 0);
+  document.getElementById('catChart').innerHTML = CATEGORIES.map(c => `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+      <div style="min-width:170px;font-weight:600;font-size:.88rem;">${c.name}</div>
+      <div style="flex:1;height:12px;background:var(--fog);border-radius:9999px;overflow:hidden;">
+        <div style="height:100%;width:${(c.value/total)*100}%;background:${c.color};border-radius:9999px;"></div>
+      </div>
+      <div style="min-width:50px;text-align:right;font-weight:700;font-family:var(--font-title);">${c.value}%</div>
+    </div>
+  `).join('');
+}
+
+function todayString() {
+  return new Date().toLocaleDateString('es-CO', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+function initDashboard() {
+  document.getElementById('todayLabel').textContent = todayString();
+  renderOrders();
+  renderTickets();
+  renderDonations();
+  renderDelivery();
+  renderReturns();
+  renderUsers();
+  renderMessages();
+  renderPayments();
+  renderActivity();
+  renderRevenueChart();
+  renderUserChart('day');
+  renderCatChart();
+}
+</script>
+</body>
+</html>
