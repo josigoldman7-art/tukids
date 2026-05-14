@@ -58,26 +58,86 @@
       border: 1px solid rgba(0,0,0,0.07);
     }
     .hero-tag:hover { background: var(--coral-bg); color: var(--coral); border-color: var(--coral); }
-    .hero-visual { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; min-height: 380px; }
+    /* ── Hero visual: cartas arrastrables, posiciones iniciales separadas ── */
+    .hero-visual {
+      position: relative; flex: 1 1 500px;
+      min-width: 480px; min-height: 520px;
+    }
+    @media (max-width: 900px) {
+      .hero-visual { min-width: 0; flex-basis: 100%; min-height: 460px; }
+    }
     .hero-product-float {
       position: absolute; background: var(--white); border-radius: var(--r-xl);
-      padding: 14px; box-shadow: var(--shadow-xl);
-      animation: float 3.5s ease-in-out infinite;
+      padding: 10px; box-shadow: var(--shadow-xl);
+      width: 150px; will-change: transform;
+      cursor: grab; user-select: none; touch-action: none;
+      transition: box-shadow .2s ease;
     }
-    .hero-product-float img { width: 160px; height: 160px; object-fit: cover; border-radius: var(--r-lg); }
-    .hp1 { top: 20px; left: 20px; animation-delay: 0s; }
-    .hp2 { bottom: 20px; right: 20px; animation-delay: 1.2s; }
-    .hp3 { top: 50%; left: 50%; transform: translate(-50%,-55%); animation-delay: 0.6s; }
-    .hp3 img { width: 190px; height: 190px; }
+    .hero-product-float:hover { box-shadow: 0 20px 40px rgba(0,0,0,.18); }
+    .hero-product-float.dragging {
+      cursor: grabbing; animation: none !important;
+      z-index: 100; box-shadow: 0 30px 60px rgba(0,0,0,.32);
+    }
+    .hero-product-float img {
+      width: 130px; height: 130px; object-fit: cover;
+      border-radius: var(--r-lg); display: block; pointer-events: none;
+    }
+    .hp3 img { width: 130px; height: 130px; }
+
+    /* Posiciones iniciales: las 3 cartas separadas por ≥ 70px en al menos un eje */
+    .hp1 { top: 10px;  left: 10px;  animation: hp-float-y 4.0s ease-in-out infinite; }
+    .hp3 { top: 10px;  right: 10px; animation: hp-float-x 4.4s ease-in-out infinite; }
+    .hp2 { bottom: 10px; left: 50%; margin-left: -75px;
+           animation: hp-float-y 3.8s ease-in-out 1.6s infinite; }
+    .hero-product-float.moved { animation: none; }
+
+    @keyframes hp-float-y {
+      0%, 100% { transform: translate(var(--ox, 0), 0); }
+      50%       { transform: translate(var(--ox, 0), -7px); }
+    }
+    @keyframes hp-float-x {
+      0%, 100% { transform: translate(0, var(--oy, 0)); }
+      50%       { transform: translate(7px, var(--oy, 0)); }
+    }
+
+    /* Hint flotante */
+    .drag-hint {
+      position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%);
+      font-size: .72rem; color: var(--gray-mid); font-family: var(--font-title);
+      font-weight: 600; opacity: .9; pointer-events: none; white-space: nowrap;
+      animation: hint-fade 8s ease-in-out forwards;
+    }
+    @keyframes hint-fade {
+      0%, 70% { opacity: .9; }
+      100%    { opacity: 0; }
+    }
+
+    /* Móvil: cartas más pequeñas, hint oculto */
+    @media (max-width: 600px) {
+      .hero-product-float { width: 132px; padding: 8px; }
+      .hero-product-float img, .hp3 img { width: 116px; height: 116px; }
+      .hp2 { margin-left: -66px; }
+      .drag-hint { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-product-float { animation: none; }
+    }
+
+    /* Pills laterales, en franja media (entre la fila superior de cartas y hp2) */
     .hero-pill {
       position: absolute; background: var(--white); border-radius: var(--r-xl);
       padding: 12px 16px; box-shadow: var(--shadow-md); display: flex;
       align-items: center; gap: 10px; font-size: 0.82rem; font-weight: 600;
-      font-family: var(--font-title); white-space: nowrap;
+      font-family: var(--font-title); white-space: nowrap; z-index: 3;
+      pointer-events: none;
     }
     .hero-pill .pill-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .pill-1 { top: 8px; right: 0; }
-    .pill-2 { bottom: 20px; left: 0; }
+    .pill-1 { top: 45%; right: -10px; }
+    .pill-2 { top: 55%; left: -10px;  }
+    @media (max-width: 900px) {
+      .pill-1, .pill-2 { display: none; }
+    }
     /* Stats band */
     .stats-band {
       background: var(--white); border-radius: var(--r-xl); padding: 28px 40px;
@@ -211,7 +271,7 @@
         <span class="hero-tag" onclick="location='explorar.html'">♻️ Segunda mano</span>
       </div>
     </div>
-    <div class="hero-visual animate-fade-in anim-delay-2" style="flex:1;min-width:300px;">
+    <div class="hero-visual animate-fade-in anim-delay-2" id="heroVisual">
       <div class="hero-product-float hp3">
         <img src="images/stroller.png" alt="Cocheclito"/>
       </div>
@@ -233,6 +293,7 @@
         </div>
         <div><div style="color:var(--carbon);font-size:0.82rem;">4.9 ⭐ · 23k+ reseñas</div><div style="color:var(--gray-mid);font-size:0.72rem;font-weight:400;">Comunidad de padres</div></div>
       </div>
+      <div class="drag-hint">✋ Puedes arrastrar las cartas</div>
     </div>
   </div>
 </section>
@@ -998,6 +1059,58 @@ document.getElementById('heroSearch').addEventListener('keydown', e => {
 document.getElementById('mainSearch').addEventListener('keydown', e => {
   if (e.key === 'Enter') location.href = 'explorar.html';
 });
+
+/* ── Cartas flotantes arrastrables ── */
+(function initDraggableHeroCards() {
+  const cards = document.querySelectorAll('.hero-product-float');
+  if (!cards.length) return;
+
+  cards.forEach(card => {
+    let dragging = false;
+    let offsetX = 0, offsetY = 0;       // posición acumulada
+    let startX = 0, startY = 0;          // punto donde el usuario empezó a arrastrar
+    let baseX = 0, baseY = 0;            // offset acumulado antes de este arrastre
+
+    function applyTransform() {
+      card.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    card.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      try { card.setPointerCapture(e.pointerId); } catch (_) {}
+      card.classList.add('dragging', 'moved');
+      startX = e.clientX;
+      startY = e.clientY;
+      baseX = offsetX;
+      baseY = offsetY;
+      e.preventDefault();
+    });
+
+    card.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      offsetX = baseX + (e.clientX - startX);
+      offsetY = baseY + (e.clientY - startY);
+      applyTransform();
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      try { card.releasePointerCapture(e.pointerId); } catch (_) {}
+      card.classList.remove('dragging');
+    }
+    card.addEventListener('pointerup', endDrag);
+    card.addEventListener('pointercancel', endDrag);
+
+    // Doble clic → volver a la posición inicial
+    card.addEventListener('dblclick', () => {
+      offsetX = 0; offsetY = 0;
+      card.style.transform = '';
+      card.classList.remove('moved');
+    });
+  });
+})();
 </script>
 </body>
 </html>
